@@ -14,7 +14,17 @@ const routes = [
                     title: 'Overview',
                     breadcrumb: [
                         { label: 'Dashboard', path: 'overview' },
-                        { label: 'Overview', path: 'overview' }
+                    ]
+                }
+            },
+            { 
+                path: 'dashboard/repayment',
+                component: () => import('@/view/dashboard/repayment.vue'),
+                meta: {
+                    title: 'Overview',
+                    breadcrumb: [
+                        { label: 'Dashboard', path: 'overview' },
+                        { label: 'Repayment', path: 'repayment' }
                     ]
                 }
             },

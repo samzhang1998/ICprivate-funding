@@ -22,7 +22,7 @@
     import Navbar from './components/layout/navbar.vue';
 </script>
 
-<style>
+<style scoped>
     .mainpage {
         width: 100%;
         height: 100vh;
@@ -69,5 +69,6 @@
     }
     .main {
         padding: 20px;
+        background: #FAFAFA;
     }
 </style>

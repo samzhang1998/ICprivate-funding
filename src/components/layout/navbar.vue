@@ -2,31 +2,31 @@
     <div class="nav">
         <div class="top">
             <img src="/src/assets/logo.png" alt="logo" class="logo"/>
-            <div class="menu" :class="{ active: route.path === '/dashboard/overview' }" @click="toPage('dashboard')">
+            <div class="menu" :class="{ active: route.path.startsWith('/dashboard') }" @click="toPage('dashboard')">
                 <img src="/src/assets/icons/nav_dashboard.png" alt="menu" />
                 <p>Dashboard</p>
             </div>
-            <div class="menu" :class="{ active: route.path === '/application/applicationlist' }" @click="toPage('application')">
+            <div class="menu" :class="{ active: route.path.startsWith('/application') }" @click="toPage('application')">
                 <img src="/src/assets/icons/nav_application.png" alt="menu" />
                 <p>Application</p>
             </div>
-            <div class="menu" :class="{ active: route.path === '/borrower/borrowerlist' }" @click="toPage('borrower')">
+            <div class="menu" :class="{ active: route.path.startsWith('/borrower') }" @click="toPage('borrower')">
                 <img src="/src/assets/icons/nav_borrower.png" alt="menu" />
                 <p>Borrower</p>
             </div>
-            <div class="menu" :class="{ active: route.path === '/guarantor/guarantorlist' }" @click="toPage('guarantor')">
+            <div class="menu" :class="{ active: route.path.startsWith('/guarantor') }" @click="toPage('guarantor')">
                 <img src="/src/assets/icons/nav_guarantor.png" alt="menu" />
                 <p>Guarantor</p>
             </div>
-            <div class="menu" :class="{ active: route.path === '/broker/brokerlist' }" @click="toPage('broker')">
+            <div class="menu" :class="{ active: route.path.startsWith('/broker') }" @click="toPage('broker')">
                 <img src="/src/assets/icons/nav_broker.png" alt="menu" />
                 <p>Broker</p>
             </div>
-            <div class="menu" :class="{ active: route.path === '/bdm/bdmlist' }" @click="toPage('bdm')">
+            <div class="menu" :class="{ active: route.path.startsWith('/bdm') }" @click="toPage('bdm')">
                 <img src="/src/assets/icons/nav_bdm.png" alt="menu" />
                 <p>BD</p>
             </div>
-            <div class="menu" :class="{ active: route.path === '/branch/branchlist' }" @click="toPage('branch')">
+            <div class="menu" :class="{ active: route.path.startsWith('/branch') }" @click="toPage('branch')">
                 <img src="/src/assets/icons/nav_branch.png" alt="menu" />
                 <p>Branch</p>
             </div>
