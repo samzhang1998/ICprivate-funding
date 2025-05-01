@@ -6,14 +6,14 @@ const routes = [
         path: '/',
         component: Layout,
         children: [
-            { path: '', redirect: '/dashboard/overview' },
+            { path: '', redirect: '/dashboard' },
             { 
-                path: 'dashboard/overview',
+                path: 'dashboard',
                 component: () => import('@/view/dashboard/overview.vue'),
                 meta: {
                     title: 'Overview',
                     breadcrumb: [
-                        { label: 'Dashboard', path: 'overview' },
+                        { label: 'Dashboard', path: '' },
                     ]
                 }
             },
@@ -23,7 +23,7 @@ const routes = [
                 meta: {
                     title: 'Overview',
                     breadcrumb: [
-                        { label: 'Dashboard', path: 'overview' },
+                        { label: 'Dashboard', path: '' },
                         { label: 'Repayment', path: 'repayment' }
                     ]
                 }

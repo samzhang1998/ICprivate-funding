@@ -7,11 +7,41 @@
                 <p>{{ info.num }} repayments</p>
             </div>
         </div>
+        <div class="filters">
+            <el-input v-model="searchedRepayment" style="width: 200px" placeholder="Search..." />
+            <el-select v-model="selectedStatus" placeholder="Select Status" style="width: 200px">
+                <el-option
+                    v-for="item in statuses"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                />
+            </el-select>
+            <div class="date_picker">
+                <el-date-picker
+                    v-model="dateRange"
+                    type="daterange"
+                    start-placeholder="start"
+                    end-placeholder="end"
+                    format="DD MMM"
+                    value-format="YYYY-MM-DD"
+                    :prefix-icon="Calendar"
+                    clearable
+                    style="width: 180px;"
+                />
+            </div>
+            <Search></Search>
+            <Clear></Clear>
+        </div>
+        <div class="container"></div>
     </div>
 </template>
 
 <script setup>
     import { ref } from 'vue';
+    import Calendar from '@/components/icons/calendar.vue';
+    import Search from '@/components/buttons/search.vue';
+    import Clear from '@/components/buttons/clear.vue';
 
     const totalInfo = ref([
         {
@@ -35,7 +65,15 @@
             num: "5"
         }
     ])
-
+    const searchedRepayment = ref("")
+    const statuses = ref([
+        {value: "scheduled", label: "Scheduled"},
+        {value: "dueSoon", label: "Due Soon"},
+        {value: "paid", label: "Paid"},
+        {value: "overdue", label: "Overdue"}
+    ])
+    const selectedStatus = ref("")
+    const dateRange = ref("")
     const itemClass = (index) => {
         switch (index) {
             case 0: return 'item1'
@@ -111,5 +149,32 @@
     }
     .item4 h1 {
         color: #F21515;
+    }
+    .filters {
+        padding: 20px;
+        display: flex;
+        flex-direction: row;
+        justify-content: start;
+        align-items: center;
+        gap: 20px;
+        border-radius: 6px;
+        background: #FFF;
+    }
+    .date_picker {
+        width: 200px;
+    }
+    :deep(.el-date-editor .el-range-input) {
+        width: 50px !important;
+    }
+    :deep(.el-date-editor .el-range__icon) {
+        font-size: 20px;
+    }
+    :deep(.el-date-editor .el-range-separator) {
+        flex: 0;
+    }
+    .container {
+        height: 500px;
+        border-radius: 3px;
+        background: #FFF;
     }
 </style>

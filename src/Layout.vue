@@ -29,6 +29,7 @@
         padding: 0;
         display: flex;
         flex-direction: row;
+        background: #FAFAFA;
     }
     .sidebar {
         width: 17%;
@@ -68,7 +69,6 @@
         align-items: center;
     }
     .main {
-        padding: 20px;
-        background: #FAFAFA;
+        padding: 20px;        
     }
 </style>

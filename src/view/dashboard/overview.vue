@@ -165,7 +165,7 @@
         line-height: normal;
     }
     .content {
-        height: 100px;
+        height: 300px;
     }
     .buttons {
         padding: 20px;

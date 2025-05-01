@@ -65,7 +65,7 @@
     const pageTitle = computed(() => route.meta.title || '')
     const breadcrumbs = computed(() => route.meta.breadcrumb || [])
     const goToSetting = () => {
-        router.push({ path: '/setting' })
+        router.push({ path: '/setting', query: { tab: 'second' } })
     }
     const logout = () => {
         router.push('/login')

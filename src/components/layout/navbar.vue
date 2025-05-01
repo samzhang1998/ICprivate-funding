@@ -56,14 +56,12 @@
     const router = useRouter()
 
     const toPage = (page) => {
-        if (page === "dashboard") {
-            router.push(`/${page}/overview`)
-        } else if (page === "setting") {
+        if (page === "setting") {
             router.push("/setting")
         } else if (page === "notification") {
             router.push("/notification")
         } else {
-            router.push(`/${page}/${page}list`)
+            router.push(`/${page}`)
         }
     }
 </script>
