@@ -2,22 +2,22 @@
     <div class="setting">
         <div class="tabbar">
             <el-tabs v-model="activeName" class="tabs" >
-                <el-tab-pane name="first">
+                <el-tab-pane name="1">
                     <template #label>
                         <div class="label">General Setting</div>
                     </template>
                 </el-tab-pane>
-                <el-tab-pane name="second">
+                <el-tab-pane name="2">
                     <template #label>
                         <div class="label">Account Setting</div>
                     </template>
                 </el-tab-pane>
-                <el-tab-pane name="third">
+                <el-tab-pane name="3">
                     <template #label>
                         <div class="label">Notification</div>
                     </template>
                 </el-tab-pane>
-                <el-tab-pane name="fourth">
+                <el-tab-pane name="4">
                     <template #label>
                         <div class="label">Other</div>
                     </template>
@@ -25,10 +25,10 @@
             </el-tabs>
             <Save @click="saveSetting"></Save>
         </div>
-        <GeneralSetting v-if="activeName === 'first'" :general="general"></GeneralSetting>
-        <AccountSetting v-if="activeName === 'second'" :account="account"></AccountSetting>
-        <Notification v-if="activeName === 'third'" :notification="notification"></Notification>
-        <Other v-if="activeName === 'fourth'"></Other>
+        <GeneralSetting v-if="activeName === '1'" :general="general"></GeneralSetting>
+        <AccountSetting v-if="activeName === '2'" :account="account"></AccountSetting>
+        <Notification v-if="activeName === '3'" :notification="notification"></Notification>
+        <Other v-if="activeName === '4'"></Other>
     </div>
 </template>
 
@@ -42,7 +42,7 @@
     import Other from '@/components/settings/other.vue';
 
     const route = useRoute()
-    const activeName = ref('first')
+    const activeName = ref('1')
     const general = ref({
         selectedLanguage: "English",
         selectedZone: "Sydney UTC+8",

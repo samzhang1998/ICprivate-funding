@@ -13,7 +13,8 @@ const routes = [
                 meta: {
                     title: 'Overview',
                     breadcrumb: [
-                        { label: 'Dashboard', path: '' },
+                        { label: 'Dashboard', path: '/dashboard' },
+                        { label: 'Overview' }
                     ]
                 }
             },
@@ -23,8 +24,8 @@ const routes = [
                 meta: {
                     title: 'Overview',
                     breadcrumb: [
-                        { label: 'Dashboard', path: '' },
-                        { label: 'Repayment', path: 'repayment' }
+                        { label: 'Dashboard', path: '/dashboard' },
+                        { label: 'Repayment' }
                     ]
                 }
             },
@@ -67,7 +68,8 @@ const routes = [
                 meta: {
                     title: 'Application',
                     breadcrumb: [
-                        { label: 'Application', path: 'application' }
+                        { label: 'Application', path: '/application' },
+                        { label: 'Application List' }
                     ]
                 }
             },
@@ -77,7 +79,8 @@ const routes = [
                 meta: {
                     title: 'Application',
                     breadcrumb: [
-                        { label: 'Application', path: 'application' }
+                        { label: 'Application', path: '/application' },
+                        { label: 'Application Detail' }
                     ]
                 }
             },
@@ -87,7 +90,8 @@ const routes = [
                 meta: {
                     title: 'Broker',
                     breadcrumb: [
-                        { label: 'Broker', path: 'broker' }
+                        { label: 'Broker', path: '/broker' },
+                        { label: 'Broker List' }
                     ]
                 }
             },
@@ -97,7 +101,8 @@ const routes = [
                 meta: {
                     title: 'Broker',
                     breadcrumb: [
-                        { label: 'Broker', path: 'broker' }
+                        { label: 'Broker', path: '/broker' },
+                        { label: 'Broker Detail' }
                     ]
                 }
             },
@@ -107,7 +112,8 @@ const routes = [
                 meta: {
                     title: 'Guarantor',
                     breadcrumb: [
-                        { label: 'Guarantor', path: 'guarantor' }
+                        { label: 'Guarantor', path: '/guarantor' },
+                        { label: 'Guarantor List' }
                     ]
                 }
             },
@@ -117,7 +123,8 @@ const routes = [
                 meta: {
                     title: 'Guarantor',
                     breadcrumb: [
-                        { label: 'Guarantor', path: 'guarantor' }
+                        { label: 'Guarantor', path: '/guarantor' },
+                        { label: 'Guarantor Detail' }
                     ]
                 }
             },
@@ -127,7 +134,8 @@ const routes = [
                 meta: {
                     title: 'Borrower',
                     breadcrumb: [
-                        { label: 'Borrower', path: 'borrower' }
+                        { label: 'Borrower', path: '/borrower' },
+                        { label: 'Borrower List' }
                     ]
                 }
             },
@@ -137,7 +145,8 @@ const routes = [
                 meta: {
                     title: 'Borrower',
                     breadcrumb: [
-                        { label: 'Borrower', path: 'borrower' }
+                        { label: 'Borrower', path: '/borrower' },
+                        { label: 'Borrower Detail' }
                     ]
                 }
             },
@@ -147,7 +156,8 @@ const routes = [
                 meta: {
                     title: 'BDM',
                     breadcrumb: [
-                        { label: 'BDM', path: 'bdm' }
+                        { label: 'BDM', path: '/bdm' },
+                        { label: 'BDM List' }
                     ]
                 }
             },
@@ -157,7 +167,8 @@ const routes = [
                 meta: {
                     title: 'BDM',
                     breadcrumb: [
-                        { label: 'BDM', path: 'bdm' }
+                        { label: 'BDM', path: '/bdm' },
+                        { label: 'BDM Detail' }
                     ]
                 }
             },
@@ -167,7 +178,8 @@ const routes = [
                 meta: {
                     title: 'Branch',
                     breadcrumb: [
-                        { label: 'Branch', path: 'branch' }
+                        { label: 'Branch', path: '/branch' },
+                        { label: 'Branch List' }
                     ]
                 }
             },
@@ -177,7 +189,8 @@ const routes = [
                 meta: {
                     title: 'Branch',
                     breadcrumb: [
-                        { label: 'Branch', path: 'branch' }
+                        { label: 'Branch', path: '/branch' },
+                        { label: 'Branch Detail' }
                     ]
                 }
             },
@@ -220,7 +233,7 @@ const routes = [
                 meta: {
                     title: 'Setting',
                     breadcrumb: [
-                        { label: 'Setting', path: 'setting' },
+                        { label: 'Setting', path: '/setting' },
                     ]
                 }
             },
@@ -240,7 +253,7 @@ const routes = [
                 meta: {
                     title: 'Notification',
                     breadcrumb: [
-                        { label: 'Notification', path: 'notification' },
+                        { label: 'Notification', path: '/notification' },
                     ]
                 }
             },

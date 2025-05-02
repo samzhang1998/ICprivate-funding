@@ -204,9 +204,9 @@
     }
     :deep(.el-checkbox){
         --el-checkbox-input-border: 1.5px solid #B2B3BD;
-        --el-checkbox-checked-input-border-color: #FF754C;
-        --el-checkbox-checked-bg-color: #FF754C;
-        --el-checkbox-input-border-color-hover: #FF754C;
+        --el-checkbox-checked-input-border-color: #1F63A9;
+        --el-checkbox-checked-bg-color: #1F63A9;
+        --el-checkbox-input-border-color-hover: #1F63A9;
     }
     :deep(.el-pagination) {
         --el-pagination-button-bg-color: #FFF;
@@ -220,7 +220,7 @@
         font-weight: 500;
     }
     :deep(.el-pager li):hover {
-        border: 1.5px solid #FF754C;
+        border: 1.5px solid #1F63A9;
     }
     :deep(.el-pagination button) {
         padding: 0 15px;
@@ -234,7 +234,7 @@
         line-height: 140%;
     }
     :deep(.el-pagination button):hover {
-        border: 1.5px solid #FF754C;
+        border: 1.5px solid #1F63A9;
     }
     :deep(.el-pagination .btn-prev::after) {
         content: "Previous";        

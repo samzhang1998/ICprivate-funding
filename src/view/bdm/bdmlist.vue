@@ -17,7 +17,7 @@
                         />
                     </el-select>
                 </div>
-                <Search></Search>
+                <Search @click="toBdm"></Search>
                 <Clear></Clear>
             </div>
             <Create :action="action"></Create>
@@ -28,9 +28,12 @@
 
 <script setup>
     import { ref } from 'vue';
+    import { useRouter } from 'vue-router';
     import Search from '@/components/buttons/search.vue';
     import Clear from '@/components/buttons/clear.vue';
     import Create from '@/components/buttons/create.vue';
+
+    const router = useRouter()
 
     const branches = ref([
         {value: "Sydney", label: "Sydney"},
@@ -39,6 +42,10 @@
     const searchedBDM = ref("")
     const selectedBranch = ref("")
     const action = ref("Create BDM")
+
+    const toBdm = () => {
+        router.push(`/bdm/16786541`)
+    }
 </script>
 
 <style scoped>

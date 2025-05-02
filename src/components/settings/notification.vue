@@ -114,6 +114,7 @@
         font-style: normal;
         font-weight: 500;
         line-height: 12px;
+        margin: 0;
     }
     p {
         color: #7A858E;
@@ -122,6 +123,7 @@
         font-style: normal;
         font-weight: 400;
         line-height: 12px;
+        margin: 0;
     }
     .popup_setting {
         width: 100%;

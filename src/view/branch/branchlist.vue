@@ -6,7 +6,7 @@
                     <h1>Search</h1>
                     <el-input v-model="searchedApplication" style="width: 240px" placeholder="Search..." />
                 </div>
-                <Search></Search>
+                <Search @click="toBranch"></Search>
                 <Clear></Clear>
             </div>
             <Create :action="action"></Create>
@@ -17,12 +17,19 @@
 
 <script setup>
     import { ref } from 'vue';
+    import { useRouter } from 'vue-router';
     import Search from '@/components/buttons/search.vue';
     import Clear from '@/components/buttons/clear.vue';
     import Create from '@/components/buttons/create.vue';
 
+    const router = useRouter()
+
     const searchedApplication = ref("")
     const action = ref("Create Branch")
+
+    const toBranch = () => {
+        router.push(`/branch/16786541`)
+    }
 </script>
 
 <style scoped>

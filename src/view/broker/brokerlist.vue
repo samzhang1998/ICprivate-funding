@@ -28,7 +28,7 @@
                         />
                     </el-select>
                 </div>
-                <Search></Search>
+                <Search @click="toBroker"></Search>
                 <Clear></Clear>
             </div>
             <Create :action="action"></Create>
@@ -39,9 +39,12 @@
 
 <script setup>
     import { ref } from 'vue';
+    import { useRouter } from 'vue-router';
     import Search from '@/components/buttons/search.vue';
     import Clear from '@/components/buttons/clear.vue';
     import Create from '@/components/buttons/create.vue';
+
+    const router = useRouter()
 
     const locations = ref([
         {value: "1", label: "1"},
@@ -55,6 +58,10 @@
     const selectedLocation = ref("")
     const selectedincome = ref("")
     const action = ref("Create Broker")
+
+    const toBroker = () => {
+        router.push(`/broker/16786541`)
+    }
 </script>
 
 <style scoped>
