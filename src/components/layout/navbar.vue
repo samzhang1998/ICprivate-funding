@@ -30,9 +30,17 @@
                 <img src="/src/assets/icons/nav_branch.png" alt="menu" />
                 <p>Branch</p>
             </div>
-            <div class="menu">
+            <div class="menu" :class="{ active: route.path.startsWith('/product') }" @click="toPage('product')">
                 <img src="/src/assets/icons/nav_product.png" alt="menu" />
                 <p>Product</p>
+            </div>
+            <div class="menu" :class="{ active: route.path.startsWith('/document') }" @click="toPage('document')">
+                <img src="/src/assets/icons/nav_document.png" alt="menu" />
+                <p>Documents</p>
+            </div>
+            <div class="menu" :class="{ active: route.path.startsWith('/user') }" @click="toPage('user')">
+                <img src="/src/assets/icons/nav_branch.png" alt="menu" />
+                <p>User</p>
             </div>
         </div>
         <div class="bottom">
@@ -50,7 +58,6 @@
 
 <script setup>
     import { useRouter, useRoute } from 'vue-router'
-    import { computed } from 'vue';
 
     const route = useRoute()
     const router = useRouter()

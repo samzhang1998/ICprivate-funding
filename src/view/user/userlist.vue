@@ -1,14 +1,14 @@
 <template>
-    <div class="application">
+    <div class="user">
         <div class="filters">
             <div class="left">
                 <div class="filter">
                     <h1>Search</h1>
-                    <el-input v-model="searchedApplication" style="width: 180px" placeholder="Search..." />
+                    <el-input v-model="searchedApplication" style="width: 200px" placeholder="Search..." />
                 </div>
                 <div class="filter">
                     <h1>Location</h1>
-                    <el-select v-model="selectedLocation" placeholder="Select Location" style="width: 180px">
+                    <el-select v-model="selectedLocation" placeholder="Select Location" style="width: 200px">
                         <el-option
                             v-for="item in locations"
                             :key="item.value"
@@ -19,7 +19,7 @@
                 </div>
                 <div class="filter">
                     <h1>Income Type</h1>
-                    <el-select v-model="selectedincome" placeholder="Select Income Type" style="width: 180px">
+                    <el-select v-model="selectedincome" placeholder="Select Income Type" style="width: 200px">
                         <el-option
                             v-for="item in incomes"
                             :key="item.value"
@@ -28,20 +28,7 @@
                         />
                     </el-select>
                 </div>
-                <div class="date_picker">
-                    <el-date-picker
-                        v-model="dateRange"
-                        type="daterange"
-                        start-placeholder="start"
-                        end-placeholder="end"
-                        format="DD MMM"
-                        value-format="YYYY-MM-DD"
-                        :prefix-icon="Calendar"
-                        clearable
-                        style="width: 180px;"
-                    />
-                </div>
-                <Search @click="toApplication"></Search>
+                <Search @click="toUser"></Search>
                 <Clear></Clear>
             </div>
             <Create :action="action"></Create>
@@ -53,7 +40,6 @@
 <script setup>
     import { ref } from 'vue';
     import { useRouter } from 'vue-router';
-    import Calendar from '@/components/icons/calendar.vue';
     import Search from '@/components/buttons/search.vue';
     import Clear from '@/components/buttons/clear.vue';
     import Create from '@/components/buttons/create.vue';
@@ -71,16 +57,15 @@
     const searchedApplication = ref("")
     const selectedLocation = ref("")
     const selectedincome = ref("")
-    const dateRange = ref("")
-    const action = ref("Create Application")
+    const action = ref("Create User")
 
-    const toApplication = () => {
-        router.push(`/application/15654231`)
+    const toUser = () => {
+        router.push(`/user/16786541`)
     }
 </script>
 
 <style scoped>
-    .application {
+    .user {
         display: flex;
         flex-direction: column;
         gap: 20px;
@@ -115,18 +100,6 @@
         font-weight: 600;
         line-height: 19px;
         margin: 0;
-    }
-    .date_picker {
-        width: 200px;
-    }
-    :deep(.el-date-editor .el-range-input) {
-        width: 50px !important;
-    }
-    :deep(.el-date-editor .el-range__icon) {
-        font-size: 20px;
-    }
-    :deep(.el-date-editor .el-range-separator) {
-        flex: 0;
     }
     .container {
         height: 500px;

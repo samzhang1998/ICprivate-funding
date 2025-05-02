@@ -5,7 +5,7 @@
                 <h1>Application</h1>
                 <div class="num">12</div>
                 <p>Total Applications</p>
-                <button>View Application</button>
+                <button @click="toPage('application')">View Application</button>
             </div>
             <div class="card">
                 <h1>Active Loans</h1>
@@ -70,7 +70,11 @@
     const router = useRouter()
 
     const toPage = (page) => {
-        router.push(`/dashboard/${page}`)
+        if (page === 'application') {
+            router.push("/application")
+        } else {
+            router.push(`/dashboard/${page}`)
+        }
     }
 </script>
 

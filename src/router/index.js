@@ -51,17 +51,17 @@ const routes = [
             //         ]
             //     }
             // },
-            // {
-            //     path: '/product/:productId',
-            //     component: () => import('@/view/product/detail.vue'),
-            //     meta: {
-            //         title: 'Product',
-            //         breadcrumb: [
-            //             { label: 'Product', path: 'management' },
-            //             { label: 'Product Detail', path: ':productId' }
-            //         ]
-            //     }
-            // },
+            {
+                path: '/product',
+                component: () => import('@/view/product.vue'),
+                meta: {
+                    title: 'Product',
+                    breadcrumb: [
+                        { label: 'Product', path: '/product' },
+                        { label: 'Product List' }
+                    ]
+                }
+            },
             { 
                 path: 'application',
                 component: () => import('@/view/application/applicationlist.vue'),
@@ -194,28 +194,28 @@ const routes = [
                     ]
                 }
             },
-            // { 
-            //     path: 'user/list',
-            //     component: () => import('@/view/user/userlist.vue'),
-            //     meta: {
-            //         title: 'User List',
-            //         breadcrumb: [
-            //             { label: 'User', path: 'list' },
-            //             { label: 'User List', path: 'user/list' }
-            //         ]
-            //     }
-            // },
-            // { 
-            //     path: 'user/role-management',
-            //     component: () => import('@/view/user/department.vue'),
-            //     meta: {
-            //         title: 'Role Management',
-            //         breadcrumb: [
-            //             { label: 'User', path: 'list' },
-            //             { label: 'Role Management', path: 'role-management' }
-            //         ]
-            //     }
-            // },
+            { 
+                path: 'user',
+                component: () => import('@/view/user/userlist.vue'),
+                meta: {
+                    title: 'User List',
+                    breadcrumb: [
+                        { label: 'User', path: '/user' },
+                        { label: 'User List' }
+                    ]
+                }
+            },
+            { 
+                path: 'user/:userId',
+                component: () => import('@/view/user/user.vue'),
+                meta: {
+                    title: 'User',
+                    breadcrumb: [
+                        { label: 'User', path: '/user' },
+                        { label: 'User Detail' }
+                    ]
+                }
+            },
             // { 
             //     path: 'user/notification-management',
             //     component: () => import('@/view/user/notification.vue'),
@@ -257,6 +257,16 @@ const routes = [
                     ]
                 }
             },
+            { 
+                path: 'document',
+                component: () => import('@/view/document.vue'),
+                meta: {
+                    title: 'Document',
+                    breadcrumb: [
+                        { label: 'Document', path: '/document' },
+                    ]
+                }
+            }
         ]
     },
     {
