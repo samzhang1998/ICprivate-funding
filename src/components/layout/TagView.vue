@@ -52,7 +52,7 @@ const handleShowView = (item) => {
         justify-content: center;
         align-items: center;
         color: #7A858E;
-        padding: 0 30px;
+        padding: 0 20px;
         cursor: pointer;
         font-size: 14px;
     }

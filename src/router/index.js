@@ -93,6 +93,7 @@ const routes = [
         component: () => import("@/view/broker/brokerlist.vue"),
         meta: {
           title: "Broker",
+          keepAlive: true,
           breadcrumb: [
             { label: "Broker", path: "/broker" },
             { label: "Broker List" },
@@ -115,6 +116,7 @@ const routes = [
         component: () => import("@/view/guarantor/guarantorlist.vue"),
         meta: {
           title: "Guarantor",
+          keepAlive: true,
           breadcrumb: [
             { label: "Guarantor", path: "/guarantor" },
             { label: "Guarantor List" },
@@ -137,6 +139,7 @@ const routes = [
         component: () => import("@/view/borrower/borrowerlist.vue"),
         meta: {
           title: "Borrower",
+          keepAlive: true,
           breadcrumb: [
             { label: "Borrower", path: "/borrower" },
             { label: "Borrower List" },
@@ -159,6 +162,7 @@ const routes = [
         component: () => import("@/view/bdm/bdmlist.vue"),
         meta: {
           title: "BDM",
+          keepAlive: true,
           breadcrumb: [{ label: "BDM", path: "/bdm" }, { label: "BDM List" }],
         },
       },
@@ -175,6 +179,7 @@ const routes = [
         component: () => import("@/view/branch/branchlist.vue"),
         meta: {
           title: "Branch",
+          keepAlive: true,
           breadcrumb: [
             { label: "Branch", path: "/branch" },
             { label: "Branch List" },
@@ -197,6 +202,7 @@ const routes = [
         component: () => import("@/view/user/userlist.vue"),
         meta: {
           title: "User List",
+          keepAlive: true,
           breadcrumb: [
             { label: "User", path: "/user" },
             { label: "User List" },
