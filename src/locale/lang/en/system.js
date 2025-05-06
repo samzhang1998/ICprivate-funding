@@ -1,0 +1,15 @@
+export const system = {
+  dashboard: "Dashboard",
+  application: "Application",
+  borrower: "Borrower",
+  guarantor: "Guarantor",
+  broker: "Broker",
+  bd: "BD",
+  branch: "Branch",
+  product: "Product",
+  documents: "Documents",
+  user: "User",
+  product: "Product",
+  setting: "Setting",
+  notification: "Notification",
+};

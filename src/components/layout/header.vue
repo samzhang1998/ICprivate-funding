@@ -3,35 +3,34 @@
         <div class="title">
             <h1>{{ pageTitle }}</h1>
             <el-breadcrumb :separator-icon="ArrowRight">
-                <el-breadcrumb-item
-                    v-for="(crumb, index) in breadcrumbs"
-                    :key="index"
-                    :to="{ path: crumb.path }"
-                    :replace="true"
-                >
+                <el-breadcrumb-item v-for="(crumb, index) in breadcrumbs" :key="index" :to="{ path: crumb.path }"
+                    :replace="true">
                     {{ crumb.label }}
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="tool">
-            <div class="search">                
+            <div class="search">
                 <img src="/src/assets/icons/search.png" alt="search" />
                 <input placeholder="search..." />
             </div>
-            <el-popover
-                placement="bottom"
-                trigger="hover"
-                width="160"
-                popper-class="user-popover"
-            >
+            <el-select class="language" v-model="language" size="large" @change="handleLanguageChange">
+                <el-option label="en" value="en" />
+                <el-option label="中文" value="zh" />
+            </el-select>
+            <el-popover placement="bottom" trigger="hover" width="160" popper-class="user-popover">
                 <div class="actions">
                     <div class="action_user">{{ user.name }}</div>
                     <div class="action" @click="goToSetting">
-                        <el-icon><Edit /></el-icon>
+                        <el-icon>
+                            <Edit />
+                        </el-icon>
                         <p>Account Setting</p>
                     </div>
                     <div class="action" @click="logout">
-                        <el-icon><Delete /></el-icon>
+                        <el-icon>
+                            <Delete />
+                        </el-icon>
                         <p>Logout</p>
                     </div>
                 </div>
@@ -50,163 +49,198 @@
 </template>
 
 <script setup>
-    import { useRouter, useRoute } from 'vue-router'
-    import { ref, computed } from 'vue'
-    import { ArrowRight } from '@element-plus/icons-vue'
+import { useRouter, useRoute } from 'vue-router'
+import { ref, computed, onMounted } from 'vue'
+import { ArrowRight } from '@element-plus/icons-vue'
+import { useLocale } from '@/hooks/useLocale'
 
-    const router = useRouter()
-    const route = useRoute()
-    const user = ref({
-        name: 'Thomas',
-        location: 'Sydney CBD',
-        role: 'Admin'
-    })
+const router = useRouter()
+const route = useRoute()
+const user = ref({
+    name: 'Thomas',
+    location: 'Sydney CBD',
+    role: 'Admin'
+})
 
-    const pageTitle = computed(() => route.meta.title || '')
-    const breadcrumbs = computed(() => route.meta.breadcrumb || [])
-    const goToSetting = () => {
-        router.push({ path: '/setting', query: { tab: 'second' } })
-    }
-    const logout = () => {
-        router.push('/login')
-    }
+const language = ref('en')
+const { handleLanguageChange } = useLocale()
+
+onMounted(() => {
+    const navigatorLanguage = (navigator.language || 'en').toLocaleLowerCase() // 这是获取浏览器的语言
+    let lang = localStorage.getItem('lang') || navigatorLanguage.split('-')[0] || 'en'
+    language.value = lang
+})
+
+const pageTitle = computed(() => route.meta.title || '')
+const breadcrumbs = computed(() => route.meta.breadcrumb || [])
+const goToSetting = () => {
+    router.push({ path: '/setting', query: { tab: 'second' } })
+}
+const logout = () => {
+    router.push('/login')
+}
 </script>
 
-<style scoped>
-    .header {
-        padding: 27px 20px;
-        background: #fff;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
+<style lang="scss" scoped>
+.header {
+    padding: 27px 20px;
+    background: #fff;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 5px;
+}
+
+h1 {
+    color: #384144;
+    font-size: 1.5rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0;
+}
+
+.el-breadcrumb-item {
+    color: #7A858E;
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.tool {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+.search {
+    width: 250px;
+    height: 32px;
+    padding: 0 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    border-radius: 15px;
+    border: 1px solid #E1E1E1;
+}
+
+.language {
+    width: 80px;
+
+    :deep(.el-select__wrapper) {
+        min-height: 33px;
     }
-    .title {
-        width: 30%;
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-        gap: 5px;
-    }
-    h1 {
-        color: #384144;
-        font-size: 1.5rem;
-        font-style: normal;
-        font-weight: 600;
-        line-height: normal;
-        margin: 0;
-    }
-    .el-breadcrumb-item {
-        color: #7A858E;
-        font-size: 0.75rem;
-        font-style: normal;
-        font-weight: 400;
-        line-height: normal;
-    }
-    .tool {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 20px;
-    }
-    .search {
-        width: 250px;
-        height: 32px;
-        padding: 0 10px;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 10px;
-        border-radius: 15px;
-        border: 1px solid #E1E1E1;
-    }
-    .search img {
-        width: 24px;
-        height: 24px;
-    }
-    input {
-        border: none;
-        width: 90%;
-        background: #FFF;
-        outline: none;
-    }
-    .user {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        gap: 5px;
-        cursor: pointer;
-    }
-    .tag {
-        width: 30px;
-        height: 30px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 50%;
-        background: #2984DE;
-        color: #FFF;
-        font-feature-settings: 'liga' off, 'clig' off;
-        font-size: 0.75rem;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 12px;
-    }
-    .user_info {
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-        gap: 5px;
-    }
-    h2 {
-        color: #384144;
-        font-feature-settings: 'liga' off, 'clig' off;
-        font-size: 0.9rem;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 12px;
-        margin: 0;
-    }
-    p {
-        color: #7A858E;
-        font-feature-settings: 'liga' off, 'clig' off;
-        font-size: 0.75rem;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 12px;
-        margin: 0;
-    }
-    .actions {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-    .action_user {
-        width: 100%;
-        padding-bottom: 10px;
-        border-bottom: 1.5px solid #E1E1E1;
-        color: var(--Color, #272727);
-        font-feature-settings: 'liga' off, 'clig' off;
-        font-size: 0.9rem;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 19px;
-    }
-    .action {
-        display: flex;
-        flex-direction: row;
-        justify-content: start;
-        gap: 10px;
-        align-items: center;
-        cursor: pointer;
-        margin-bottom: 10px;
-    }
-    .action:hover {
-        color: #2984DE;
-    }
-    .action p:hover {
-        color: #2984DE;
-    }
+}
+
+.search img {
+    width: 24px;
+    height: 24px;
+}
+
+input {
+    border: none;
+    width: 90%;
+    background: #FFF;
+    outline: none;
+}
+
+.user {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.tag {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: #2984DE;
+    color: #FFF;
+    font-feature-settings: 'liga' off, 'clig' off;
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 12px;
+}
+
+.user_info {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 5px;
+}
+
+h2 {
+    color: #384144;
+    font-feature-settings: 'liga' off, 'clig' off;
+    font-size: 0.9rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 12px;
+    margin: 0;
+}
+
+p {
+    color: #7A858E;
+    font-feature-settings: 'liga' off, 'clig' off;
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 12px;
+    margin: 0;
+}
+
+.actions {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.action_user {
+    width: 100%;
+    padding-bottom: 10px;
+    border-bottom: 1.5px solid #E1E1E1;
+    color: var(--Color, #272727);
+    font-feature-settings: 'liga' off, 'clig' off;
+    font-size: 0.9rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 19px;
+}
+
+.action {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    gap: 10px;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.action:hover {
+    color: #2984DE;
+}
+
+.action p:hover {
+    color: #2984DE;
+}
 </style>

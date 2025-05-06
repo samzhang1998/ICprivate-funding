@@ -5,7 +5,7 @@ import { Close } from '@element-plus/icons-vue'
 import useTagView from '@/hooks/useTagView'
 const routes = useRoute()
 const router = useRouter()
-const { tagViewList, setTagViewList, removeTagViewList } = useTagView()
+const { tagViewList, selectTagView, setTagViewList, removeTagViewList, updateTagViewCurrent } = useTagView()
 
 onMounted(() => {
     let tag = {
@@ -18,16 +18,21 @@ onMounted(() => {
 
 const closeTag = (item) => {
     removeTagViewList(item)
+    router.push({
+        path: tagViewList.value[selectTagView.value].path
+    })
 }
 
-const handleShowView = (item) => {
+const handleShowView = (item, index) => {
+    updateTagViewCurrent(index)
     router.push(item?.path || '/')
 }
 </script>
 
 <template>
     <div class="tag-view">
-        <div class="item" v-for="(item, index) in tagViewList" :key="index" @click="handleShowView(item)">
+        <div :class="selectTagView === index ? 'item active' : 'item'" v-for="(item, index) in tagViewList" :key="index"
+            @click="handleShowView(item, index)">
             {{ item?.name || '' }}
             <el-icon class="icon" @click.prevent.stop="closeTag(item)">
                 <Close />
@@ -63,6 +68,11 @@ const handleShowView = (item) => {
 
     .item+.item {
         border-left: 1px solid #7A858E;
+    }
+
+    .active {
+        color: #000;
+        font-size: 16px;
     }
 }
 </style>

@@ -13,7 +13,9 @@ export default function useTagView() {
 
     if (findIndex === -1) {
       tagViewList.value = [...tagViewList.value, item];
+      selectTagView.value = tagViewList.value.length - 1;
     } else {
+      selectTagView.value = findIndex;
     }
   }
 
@@ -22,7 +24,19 @@ export default function useTagView() {
     tagViewList.value = tagViewList.value.filter((i) => {
       return i.path !== item.path;
     });
+    const findIndex = tagViewList.value.findIndex((i) => {
+      return i.path === tagViewList.value[selectTagView.value]?.path;
+    });
+    if (findIndex === -1) {
+      selectTagView.value = tagViewList.value.length - 1;
+    }
     if (tagViewList.value.length === 0) {
+      setTagViewList({
+        name: "Overview",
+        path: "/dashboard",
+        fullPath: "/dashboard",
+      });
+      selectTagView.value = 0;
       router.push("/");
     }
   }

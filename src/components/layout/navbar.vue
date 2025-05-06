@@ -4,53 +4,53 @@
             <img src="/src/assets/logo.png" alt="logo" class="logo" />
             <div class="menu" :class="{ active: route.path.startsWith('/dashboard') }" @click="toPage('dashboard')">
                 <img src="/src/assets/icons/nav_dashboard.png" alt="menu" />
-                <p>Dashboard</p>
+                <p>{{ $t('system.dashboard') }}</p>
             </div>
             <div class="menu" :class="{ active: route.path.startsWith('/application') }" @click="toPage('application')">
                 <img src="/src/assets/icons/nav_application.png" alt="menu" />
-                <p>Application</p>
+                <p>{{ $t('system.application') }}</p>
             </div>
             <div class="menu" :class="{ active: route.path.startsWith('/borrower') }" @click="toPage('borrower')">
                 <img src="/src/assets/icons/nav_borrower.png" alt="menu" />
-                <p>Borrower</p>
+                <p>{{ $t('system.borrower') }}</p>
             </div>
             <div class="menu" :class="{ active: route.path.startsWith('/guarantor') }" @click="toPage('guarantor')">
                 <img src="/src/assets/icons/nav_guarantor.png" alt="menu" />
-                <p>Guarantor</p>
+                <p>{{ $t('system.guarantor') }}</p>
             </div>
             <div class="menu" :class="{ active: route.path.startsWith('/broker') }" @click="toPage('broker')">
                 <img src="/src/assets/icons/nav_broker.png" alt="menu" />
-                <p>Broker</p>
+                <p>{{ $t('system.broker') }}</p>
             </div>
             <div class="menu" :class="{ active: route.path.startsWith('/bdm') }" @click="toPage('bdm')">
                 <img src="/src/assets/icons/nav_bdm.png" alt="menu" />
-                <p>BD</p>
+                <p>{{ $t('system.bd') }}</p>
             </div>
             <div class="menu" :class="{ active: route.path.startsWith('/branch') }" @click="toPage('branch')">
                 <img src="/src/assets/icons/nav_branch.png" alt="menu" />
-                <p>Branch</p>
+                <p>{{ $t('system.branch') }}</p>
             </div>
             <div class="menu" :class="{ active: route.path.startsWith('/product') }" @click="toPage('product')">
                 <img src="/src/assets/icons/nav_product.png" alt="menu" />
-                <p>Product</p>
+                <p>{{ $t('system.product') }}</p>
             </div>
             <div class="menu" :class="{ active: route.path.startsWith('/document') }" @click="toPage('document')">
                 <img src="/src/assets/icons/nav_document.png" alt="menu" />
-                <p>Documents</p>
+                <p>{{ $t('system.documents') }}</p>
             </div>
             <div class="menu" :class="{ active: route.path.startsWith('/user') }" @click="toPage('user')">
                 <img src="/src/assets/icons/nav_branch.png" alt="menu" />
-                <p>User</p>
+                <p>{{ $t('system.user') }}</p>
             </div>
         </div>
         <div class="bottom">
             <div class="menu" :class="{ active: route.path === '/setting' }" @click="toPage('setting')">
                 <img src="/src/assets/icons/nav_setting.png" alt="menu" />
-                <p>Setting</p>
+                <p>{{ $t('system.setting') }}</p>
             </div>
             <div class="menu" :class="{ active: route.path === '/notification' }" @click="toPage('notification')">
                 <img src="/src/assets/icons/nav_notification.png" alt="menu" />
-                <p>Notification</p>
+                <p>{{ $t('system.notification') }}</p>
             </div>
         </div>
     </div>
