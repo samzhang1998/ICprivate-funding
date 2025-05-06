@@ -65,34 +65,36 @@
                     <el-collapse-item name="7">
                         <template #title>
                             <div class="title">
-                                <el-icon style="font-size: 20px" :color="isOverviewValid ? '#2984DE' : '#E1E1E1'"><SuccessFilled /></el-icon>
-                                <p :style="{color: isOverviewValid ? '#2984DE' : '#272727'}">Loan Details & Purpose</p>
+                                <el-icon style="font-size: 20px" :color="isLoanDetailValid ? '#2984DE' : '#E1E1E1'"><SuccessFilled /></el-icon>
+                                <p :style="{color: isLoanDetailValid ? '#2984DE' : '#272727'}">Loan Details & Purpose</p>
                             </div>
                         </template>
-                        <LoanDetail></LoanDetail>
+                        <LoanDetail :detail="loanDetail"></LoanDetail>
                     </el-collapse-item>
                     <el-collapse-item name="8">
                         <template #title>
                             <div class="title">
-                                <el-icon style="font-size: 20px" :color="isOverviewValid ? '#2984DE' : '#E1E1E1'"><SuccessFilled /></el-icon>
-                                <p :style="{color: isOverviewValid ? '#2984DE' : '#272727'}">Loan Requirements</p>
+                                <el-icon style="font-size: 20px" :color="isRequirementValid ? '#2984DE' : '#E1E1E1'"><SuccessFilled /></el-icon>
+                                <p :style="{color: isRequirementValid ? '#2984DE' : '#272727'}">Loan Requirements</p>
                             </div>
                         </template>
+                        <LoanRequirement :requirement="loanRequirement"></LoanRequirement>
                     </el-collapse-item>
                     <el-collapse-item name="9">
                         <template #title>
                             <div class="title">
-                                <el-icon style="font-size: 20px" :color="isOverviewValid ? '#2984DE' : '#E1E1E1'"><SuccessFilled /></el-icon>
-                                <p :style="{color: isOverviewValid ? '#2984DE' : '#272727'}">Proposed Exit Strategy</p>
+                                <el-icon style="font-size: 20px" :color="isExitValid ? '#2984DE' : '#E1E1E1'"><SuccessFilled /></el-icon>
+                                <p :style="{color: isExitValid ? '#2984DE' : '#272727'}">Proposed Exit Strategy</p>
                             </div>
                         </template>
+                        <Exit :exit="exit"></Exit>
                     </el-collapse-item>
                 </el-collapse>
             </div>
         </el-scrollbar>
         <div class="buttons">
             <Cancel @click="handleClose"></Cancel>
-            <Save></Save>
+            <Save @click="handleSave"></Save>
         </div>
     </div>
 </template>
@@ -104,6 +106,8 @@
     import Enquiries from './enquiries.vue';
     import GuarantorAsset from './guarantorasset.vue';
     import LoanDetail from './loandetail.vue';
+    import LoanRequirement from './loanrequirement.vue';
+    import Exit from './exit.vue';
     import Cancel from '@/components/buttons/cancel.vue';
     import Save from '@/components/buttons/save.vue';
 
@@ -224,6 +228,35 @@
         totalValue: "",
         totalOwing: ""
     })
+    const loanDetail = ref({
+        loan: "",
+        term: "",
+        date: "",
+        rate: "",
+        purpose: [],
+        purposeOther: "",
+        comments: ""
+    })
+    const loanRequirement = ref({
+        require1: "",
+        amount1: "",
+        require2: "",
+        amount2: "",
+        require3: "",
+        amount3: "",
+        require4: "",
+        amount4: "",
+        require5: "",
+        amount5: "",
+        require6: "",
+        amount6: "",
+        totalAmount: ""
+    })
+    const exit = ref({
+        methods: [],
+        methodOther: "",
+        detail: ""
+    })
 
     watch(
         () => [
@@ -285,6 +318,21 @@
         },
         { immediate: true }
     )
+    watch(
+        () => [
+            loanRequirement.value.amount1,
+            loanRequirement.value.amount2,
+            loanRequirement.value.amount3,
+            loanRequirement.value.amount4,
+            loanRequirement.value.amount5,
+            loanRequirement.value.amount6,
+        ],
+        (newArr) => {
+            const [ a1, a2, a3, a4, a5, a6 ] = newArr.map(v => parseFloat(v) || 0)
+            loanRequirement.value.totalAmount = a1 + a2 + a3 + a4 + a6 + a6
+        },
+        { immediate: true }
+    )
 
     const emit = defineEmits(['close', 'minimize'])
 
@@ -306,6 +354,24 @@
     const isGuarantorAssetValid = computed(() => {
         return Object.values(guarantorAsset.value).every(value => value !== '')
     })
+    const isLoanDetailValid = computed(() => {
+        return Object.values(loanDetail.value).every(value => value !== '')
+    })
+    const isRequirementValid = computed(() => {
+        return Object.values(loanRequirement.value).every(value => value !== '')
+    })
+    const isExitValid = computed(() => {
+        return Object.values(exit.value).every(value => value !== '')
+    })
+    const handleSave = () => {
+        console.log(company.value)
+        console.log(companyAsset.value)
+        console.log(enquiry.value)
+        console.log(guarantorAsset.value)
+        console.log(loanDetail.value)
+        console.log(loanRequirement.value)
+        console.log(exit.value)
+    }
 </script>
 
 <style scoped>
