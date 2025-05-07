@@ -8,7 +8,7 @@
                     <p style="color: #2984DE">Application ID: {{ applicationId }}</p>
                 </div>
                 <div class="buttons">
-                    <button class="calculator">
+                    <button class="calculator" @click="showCalculator">
                         <img src="/src/assets/icons/calculator.png" alt="action" />
                         Calculator
                     </button>
@@ -16,7 +16,7 @@
                         <img src="/src/assets/icons/pdf.png" alt="action" />
                         Generate PDF
                     </button>
-                    <button class="note">
+                    <button class="note" @click="showNote">
                         <img src="/src/assets/icons/note.png" alt="action" />
                         Note
                     </button>
@@ -65,6 +65,20 @@
         <LoanDetail v-if="activeInfo === 6"></LoanDetail>
         <LoanRequirement v-if="activeInfo === 7"></LoanRequirement>
         <Exit v-if="activeInfo === 8"></Exit>
+        <transition name="slide-right-popup">
+            <Calculator
+                v-if="calculator"
+                @close="closeCalculator"
+                @minimize="minimize"
+            ></Calculator>
+        </transition>
+        <transition name="slide-right-popup">
+            <Note
+                v-if="note"
+                @close="closeNote"
+                @minimize="minimize"
+            ></Note>
+        </transition>
     </div>
 </template>
 
@@ -80,6 +94,8 @@
     import LoanDetail from '@/components/application/loandetail.vue';
     import LoanRequirement from '@/components/application/loanrequirement.vue';
     import Exit from '@/components/application/exit.vue';
+    import Calculator from '@/components/popup/calculator.vue';
+    import Note from '@/components/popup/note.vue';
 
     const route = useRoute()
 
@@ -112,12 +128,27 @@
         {name: "Proposed Exit Strategy"}
     ])
     const activeInfo = ref(0)
+    const calculator = ref(false)
+    const note = ref(false)
 
     const currentIndex = computed(() =>
         stages.value.findIndex(s => s.status === 'processing')
     )
     const hasPrev = computed(() => currentIndex.value > 0)
     const hasNext = computed(() => currentIndex.value < stages.value.length - 1)
+
+    const showCalculator = () => {
+        calculator.value = true
+    }
+    const showNote = () => {
+        note.value = true
+    }
+    const closeCalculator = () => {
+        calculator.value = false
+    }
+    const closeNote = () => {
+        note.value = false
+    }
     const nextStage = () => {
         const i = currentIndex.value
         stages.value[i].status = 'complete'
@@ -324,5 +355,16 @@
     }
     .active_tab p {
         color: #FFF;
+    }
+    .slide-right-popup-enter-active, .slide-right-popup-leave-active {
+        transition: all 0.3s ease;
+    }
+    .slide-right-popup-enter-from, .slide-right-popup-leave-to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    .slide-right-popup-enter-to, .slide-right-popup-leave-from {
+        opacity: 1;
+        transform: translateX(0);
     }
 </style>
