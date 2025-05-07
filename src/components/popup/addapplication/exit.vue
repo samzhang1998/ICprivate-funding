@@ -11,7 +11,7 @@
         <h1>Details (If Other)</h1>
         <div class="item">
             <p>Attach copies of supporting documents for your Finance Takeout Method</p>
-            <el-input v-model="exit.detail" />
+            <el-input :rows="2" type="textarea" v-model="exit.detail" />
         </div>
     </div>
 </template>

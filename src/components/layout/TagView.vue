@@ -44,7 +44,7 @@ const handleShowView = (item, index) => {
 <style lang="scss" scoped>
 .tag-view {
     width: 100%;
-    height: 45px;
+    height: 30px;
     background: #F5F7FB;
     display: flex;
     flex-direction: row;
@@ -59,7 +59,7 @@ const handleShowView = (item, index) => {
         color: #7A858E;
         padding: 0 20px;
         cursor: pointer;
-        font-size: 14px;
+        font-size: 12px;
     }
 
     .icon {
@@ -67,12 +67,12 @@ const handleShowView = (item, index) => {
     }
 
     .item+.item {
-        border-left: 1px solid #7A858E;
+        border-left: 1.5px solid #7A858E;
     }
 
     .active {
         color: #000;
-        font-size: 16px;
+        font-size: 12px;
     }
 }
 </style>

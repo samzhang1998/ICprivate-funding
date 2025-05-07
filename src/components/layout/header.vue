@@ -83,7 +83,8 @@ const logout = () => {
 
 <style lang="scss" scoped>
 .header {
-    padding: 27px 20px;
+    height: 100px;
+    padding: 0 20px;
     background: #fff;
     display: flex;
     flex-direction: row;

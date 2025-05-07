@@ -3,7 +3,7 @@
         <div class="popup_title">
             <h1>{{ action }}</h1>
             <div class="close">
-                <el-icon :size="20" style="cursor: pointer; color: #7A858E;" @click="handleMinimize"><Minus /></el-icon>
+                <!-- <el-icon :size="20" style="cursor: pointer; color: #7A858E;" @click="handleMinimize"><Minus /></el-icon> -->
                 <el-icon :size="20" style="cursor: pointer; color: #7A858E;" @click="handleClose"><Close /></el-icon>                    
             </div>
         </div>
@@ -40,10 +40,11 @@
                     <el-collapse-item name="4">
                         <template #title>
                             <div class="title">
-                                <el-icon style="font-size: 20px" :color="isOverviewValid ? '#2984DE' : '#E1E1E1'"><SuccessFilled /></el-icon>
-                                <p :style="{color: isOverviewValid ? '#2984DE' : '#272727'}">Individual Details</p>
+                                <el-icon style="font-size: 20px" :color="isIndividualValid ? '#2984DE' : '#E1E1E1'"><SuccessFilled /></el-icon>
+                                <p :style="{color: isIndividualValid ? '#2984DE' : '#272727'}">Individual Details</p>
                             </div>
                         </template>
+                        <Inividual :borrowers="borrowers" @add="addBorrower" @remove="removeBorrower"></Inividual>
                     </el-collapse-item>
                     <el-collapse-item name="5">
                         <template #title>
@@ -57,10 +58,11 @@
                     <el-collapse-item name="6">
                         <template #title>
                             <div class="title">
-                                <el-icon style="font-size: 20px" :color="isOverviewValid ? '#2984DE' : '#E1E1E1'"><SuccessFilled /></el-icon>
-                                <p :style="{color: isOverviewValid ? '#2984DE' : '#272727'}">Proposed Security Details</p>
+                                <el-icon style="font-size: 20px" :color="isSecurityValid ? '#2984DE' : '#E1E1E1'"><SuccessFilled /></el-icon>
+                                <p :style="{color: isSecurityValid ? '#2984DE' : '#272727'}">Proposed Security Details</p>
                             </div>
                         </template>
+                        <Security :security="security" @add="addSecurity" @remove="removeSecurity"></Security>
                     </el-collapse-item>
                     <el-collapse-item name="7">
                         <template #title>
@@ -104,7 +106,9 @@
     import Company from './company.vue';
     import CompanyAssets from './companyasset.vue';
     import Enquiries from './enquiries.vue';
+    import Inividual from './inividual.vue';
     import GuarantorAsset from './guarantorasset.vue';
+    import Security from './security.vue';
     import LoanDetail from './loandetail.vue';
     import LoanRequirement from './loanrequirement.vue';
     import Exit from './exit.vue';
@@ -180,6 +184,23 @@
         tax: null,
         payment: null
     })
+    const createBorrower = () => {
+        return {
+            title: "",
+            firstName: "",
+            lastName: "",
+            birth: "",
+            license: "",
+            phone: "",
+            mobile: "",
+            email: "",
+            address: "",
+            occupation: "",
+            employer: "",
+            type: ""
+        }
+    }
+    const borrowers = ref([ createBorrower() ])
     const guarantorAsset = ref({
         address1: "",
         address1Value: "",
@@ -228,6 +249,27 @@
         totalValue: "",
         totalOwing: ""
     })
+    const createSecurity = () => {
+        return {
+            address: "",
+            type: [],
+            typeOther: "",
+            bedroom: "",
+            bathroom: "",
+            carSpace: "",
+            buildingSize: "",
+            landSize: "",
+            description: [],
+            mortgage1: "",
+            mortgage2: "",
+            debt1: "",
+            debt2: "",
+            valuation: [],
+            est: "",
+            purchase: ""
+        }
+    }
+    const security = ref([ createSecurity() ])
     const loanDetail = ref({
         loan: "",
         term: "",
@@ -342,6 +384,26 @@
     const handleMinimize = () => {
         emit('minimize')
     }
+    const addBorrower = () => {
+        if (borrowers.value.length < 2) {
+            borrowers.value.push(createBorrower())
+        }
+    }
+    const removeBorrower = (idx) => {
+        if (borrowers.value.length > 1) {
+            borrowers.value.splice(idx, 1)
+        }
+    }
+    const addSecurity = () => {
+        if (security.value.length < 3) {
+            security.value.push(createSecurity())
+        }
+    }
+    const removeSecurity = (idx) => {
+        if (security.value.length > 1) {
+            security.value.splice(idx, 1)
+        }
+    }
     const isCompanyValid = computed(() => {
         return Object.values(company.value).every(value => value !== '')
     })
@@ -351,8 +413,18 @@
     const isEnquiryValid = computed(() => {
         return Object.values(enquiry.value).every(value => value !== null)
     })
+    const isIndividualValid = computed(() => {
+        return borrowers.value.every(borrower =>
+            Object.values(borrower).every(value => value !== '')
+        )
+    })
     const isGuarantorAssetValid = computed(() => {
         return Object.values(guarantorAsset.value).every(value => value !== '')
+    })
+    const isSecurityValid = computed(() => {
+        return security.value.every(security =>
+            Object.values(security).every(value => value !== '')
+        )
     })
     const isLoanDetailValid = computed(() => {
         return Object.values(loanDetail.value).every(value => value !== '')
@@ -367,7 +439,9 @@
         console.log(company.value)
         console.log(companyAsset.value)
         console.log(enquiry.value)
+        console.log(borrowers.value)
         console.log(guarantorAsset.value)
+        console.log(security.value)
         console.log(loanDetail.value)
         console.log(loanRequirement.value)
         console.log(exit.value)
