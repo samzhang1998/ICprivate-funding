@@ -11,7 +11,6 @@ onMounted(() => {
     let tag = {
         name: routes?.meta?.title || '',
         path: routes?.path || '',
-        fullPath: routes?.fullPath || '',
     }
     setTagViewList(tag)
 })

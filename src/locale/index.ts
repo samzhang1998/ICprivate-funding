@@ -7,12 +7,12 @@ const messages = {
   zh,
 };
 const language = (navigator.language || "en").toLocaleLowerCase(); // 这是获取浏览器的语言
-console.log(
-  "🚀 ~ file: index.ts:10 ~ language:",
-  localStorage.getItem("lang"),
-  language,
-  messages
-);
+// console.log(
+//   "🚀 ~ file: index.ts:10 ~ language:",
+//   localStorage.getItem("lang"),
+//   language,
+//   messages
+// );
 
 const i18n = createI18n({
   legacy: false, // 使用 Composition API 模式，则需要将其设置为false

@@ -34,7 +34,6 @@ export default function useTagView() {
       setTagViewList({
         name: "Overview",
         path: "/dashboard",
-        fullPath: "/dashboard",
       });
       selectTagView.value = 0;
       router.push("/");
