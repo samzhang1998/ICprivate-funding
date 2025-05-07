@@ -132,7 +132,7 @@
     }
     .part {
         padding: 20px 0;
-        border-top: 1px solid #E8EBEE;
+        border-top: 1.5px solid #E8EBEE;
     }
     h1 {
         color: #384144;

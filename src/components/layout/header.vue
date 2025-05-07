@@ -14,9 +14,23 @@
                 <img src="/src/assets/icons/search.png" alt="search" />
                 <input placeholder="search..." />
             </div>
-            <el-select class="language" v-model="language" size="large" @change="handleLanguageChange">
-                <el-option label="en" value="en" />
-                <el-option label="中文" value="zh" />
+            <el-select class="language" 
+                v-model="language" 
+                size="large"
+                placeholder="" 
+                @change="handleLanguageChange"
+            >
+                <template #prefix>
+                    <div class="pre">
+                        <img :src="language === 'en' ? engIcon : chsIcon" alt="flag" class="flag" />
+                    </div>
+                </template>
+                <el-option value="en">
+                    <img src="@/assets/icons/eng.png" alt="eng" class="flag" />
+                </el-option>
+                <el-option value="zh">
+                    <img src="@/assets/icons/chs.png" alt="chs" class="flag" />
+                </el-option>
             </el-select>
             <el-popover placement="bottom" trigger="hover" width="160" popper-class="user-popover">
                 <div class="actions">
@@ -53,6 +67,8 @@ import { useRouter, useRoute } from 'vue-router'
 import { ref, computed, onMounted } from 'vue'
 import { ArrowRight } from '@element-plus/icons-vue'
 import { useLocale } from '@/hooks/useLocale'
+import engIcon from '@/assets/icons/eng.png'
+import chsIcon from '@/assets/icons/chs.png'
 
 const router = useRouter()
 const route = useRoute()
@@ -137,12 +153,24 @@ h1 {
 }
 
 .language {
-    width: 80px;
-
+    width: 60px;
     :deep(.el-select__wrapper) {
-        min-height: 33px;
-    }
+        min-height: 32px;
+        padding: 0 7px;
+        border-radius: 23px;
+        gap: 3px;
+    } 
 }
+.flag {
+    width: 25px;
+    height: 25px;
+}
+.pre {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 
 .search img {
     width: 24px;
