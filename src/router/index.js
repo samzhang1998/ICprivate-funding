@@ -24,7 +24,7 @@ export const constantRoutes = [
     },
   },
   {
-    path: "/dashboard",
+    path: "/",
     component: Layout,
     redirect: "/dashboard/index",
     meta: {

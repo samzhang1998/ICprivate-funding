@@ -23,25 +23,16 @@
 
 <script setup>
 import { reactive } from 'vue'
-import axios from 'axios'
+import { api } from '@/api'
 const user = reactive({
     email: '',
     password: ''
 })
 
-const login = () => {
+const login = async () => {
     console.log('login', user)
-    axios.post('https://3.25.246.57/api/users/auth/login/', {
-        "email": "fanhongyuan897@gmail.com",
-        "password": "Eminem.cn1"
-    })
-        .then(function (response) {
-            console.log(response);
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-
+    const data = await api.login(user)
+    console.log(data)
 }
 </script>
 
