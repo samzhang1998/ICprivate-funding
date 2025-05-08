@@ -12,7 +12,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://3.25.246.57",
+        target: "http://3.25.83.191",
         changeOrigin: true,
         // secure: false,  // 如果是https接口，需要配置这个参数
       },

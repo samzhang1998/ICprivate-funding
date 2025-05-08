@@ -25,8 +25,8 @@
 import { reactive } from 'vue'
 import { api } from '@/api'
 const user = reactive({
-    email: '',
-    password: ''
+    email: 'admin@example.com',
+    password: 'qweasdzxc1234'
 })
 
 const login = async () => {
