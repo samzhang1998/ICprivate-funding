@@ -14,7 +14,10 @@ const sendRequest = axios.create({
 sendRequest.interceptors.request.use(
   async (config) => {
     // 发送之前 处理请求头等信息
-    config.headers["auth-token"] = "";
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers["authorization"] = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => {
@@ -31,10 +34,10 @@ sendRequest.interceptors.response.use(
     }
     // 结合响应状态处理请求结果。
     const responseData = response.data;
-    return responseData;
+    return [null, responseData];
   },
-  async (error) => {
-    return Promise.reject(message);
+  (error) => {
+    return [error, null];
   }
 );
 

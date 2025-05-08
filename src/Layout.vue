@@ -29,6 +29,20 @@
 import Header from '@/components/layout/header.vue';
 import Navbar from './components/layout/navbar.vue';
 import TagView from './components/layout/TagView.vue';
+
+//请求示例
+// import { onMounted } from 'vue';
+// import { api } from '@/api'
+
+// onMounted(async () => {
+//     const [err, res] = await api.notifications()
+//     if (!err) {
+//         console.log(res);
+//     } else {
+//         console.log(err)
+//     }
+// })
+
 </script>
 
 <style scoped>

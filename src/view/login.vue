@@ -24,15 +24,24 @@
 <script setup>
 import { reactive } from 'vue'
 import { api } from '@/api'
+import { useRouter } from 'vue-router'
 const user = reactive({
     email: 'admin@example.com',
     password: 'qweasdzxc1234'
 })
 
+const router = useRouter()
+
 const login = async () => {
-    console.log('login', user)
-    const data = await api.login(user)
-    console.log(data)
+    const [err, res] = await api.login(user)
+    if (!err) {
+        console.log(res);
+        localStorage.setItem('token', res.access)
+        localStorage.setItem('refresh', res.refresh)
+        router.replace('/')
+    } else {
+        console.log(err)
+    }
 }
 </script>
 
