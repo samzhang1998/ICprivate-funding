@@ -20,6 +20,10 @@
                         <p>{{ overview.role }}</p>
                     </div>
                     <div class="info">
+                        <p style="color: #7A858E">Address</p>
+                        <p>{{ overview.address }}</p>
+                    </div>
+                    <div class="info">
                         <p style="color: #7A858E">Phone Number</p>
                         <p>{{ overview.phone }}</p>
                     </div>
@@ -48,6 +52,7 @@
     const overview = ref({
         name: "User One",
         role: "Admin",
+        address: "address",
         email: "User@gmail.com",
         phone: "0456875426"
     })

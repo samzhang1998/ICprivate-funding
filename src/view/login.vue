@@ -32,8 +32,8 @@ const user = reactive({
 const login = () => {
     console.log('login', user)
     axios.post('https://3.25.246.57/api/users/auth/login/', {
-        "email": "user@example.com",
-        "password": "asdf1234"
+        "email": "fanhongyuan897@gmail.com",
+        "password": "Eminem.cn1"
     })
         .then(function (response) {
             console.log(response);

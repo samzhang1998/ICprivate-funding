@@ -11,7 +11,8 @@
 
 <style scoped>
     button {
-        padding: 7px 20px;
+        height: 32px;
+        padding: 0 20px;
         border-radius: 4px;
         background: #2984DE;
         display: flex;

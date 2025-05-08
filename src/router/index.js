@@ -24,9 +24,9 @@ export const constantRoutes = [
     },
   },
   {
-    path: "/",
+    path: "/dashboard",
     component: Layout,
-    redirect: "/dashboard",
+    redirect: "/dashboard/index",
     meta: {
       hidden: false,
       title: "Dashboard",
@@ -36,7 +36,7 @@ export const constantRoutes = [
     },
     children: [
       {
-        path: "dashboard",
+        path: "/dashboard/index",
         component: () => import("@/view/dashboard/overview.vue"),
         meta: {
           title: "Overview",
@@ -48,7 +48,7 @@ export const constantRoutes = [
         },
       },
       {
-        path: "dashboard/repayment",
+        path: "/dashboard/repayment",
         component: () => import("@/view/dashboard/repayment.vue"),
         meta: {
           title: "Overview",
@@ -300,7 +300,7 @@ export const constantRoutes = [
         path: "/application/index",
         component: () => import("@/view/application/applicationlist.vue"),
         meta: {
-          title: "Application List",
+          title: "Application",
           keepAlive: true,
           breadcrumb: [
             { label: "Application", path: "/application" },
@@ -309,10 +309,10 @@ export const constantRoutes = [
         },
       },
       {
-        path: "application/:applicationId",
+        path: "/application/:applicationId",
         component: () => import("@/view/application/application.vue"),
         meta: {
-          title: "Application Detail",
+          title: "Application",
           breadcrumb: [
             { label: "Application", path: "/application" },
             { label: "Application Detail" },
@@ -347,7 +347,7 @@ export const constantRoutes = [
         },
       },
       {
-        path: "borrower/:borrowerId",
+        path: "/borrower/:borrowerId",
         component: () => import("@/view/borrower/borrower.vue"),
         meta: {
           title: "Borrower",
@@ -376,7 +376,7 @@ export const constantRoutes = [
         path: "/guarantor/index",
         component: () => import("@/view/guarantor/guarantorlist.vue"),
         meta: {
-          title: "Guarantor List",
+          title: "Guarantor",
           keepAlive: true,
           breadcrumb: [
             { label: "Guarantor", path: "/guarantor" },
@@ -388,7 +388,7 @@ export const constantRoutes = [
         path: "/guarantor/:guarantorId",
         component: () => import("@/view/guarantor/guarantor.vue"),
         meta: {
-          title: "Guarantor Detail",
+          title: "Guarantor",
           breadcrumb: [
             { label: "Guarantor", path: "/guarantor" },
             { label: "Guarantor Detail" },
@@ -414,7 +414,7 @@ export const constantRoutes = [
         path: "/broker/index",
         component: () => import("@/view/broker/brokerlist.vue"),
         meta: {
-          title: "Broker List",
+          title: "Broker",
           keepAlive: true,
           breadcrumb: [
             { label: "Broker", path: "/broker" },
@@ -426,7 +426,7 @@ export const constantRoutes = [
         path: "/broker/:brokerId",
         component: () => import("@/view/broker/broker.vue"),
         meta: {
-          title: "Broker Detail",
+          title: "Broker",
           breadcrumb: [
             { label: "Broker", path: "/broker" },
             { label: "Broker Detail" },
@@ -452,7 +452,7 @@ export const constantRoutes = [
         path: "/bdm/index",
         component: () => import("@/view/bdm/bdmlist.vue"),
         meta: {
-          title: "BDM List",
+          title: "BDM",
           keepAlive: true,
           breadcrumb: [{ label: "BDM", path: "/bdm" }, { label: "BDM List" }],
         },
@@ -461,7 +461,7 @@ export const constantRoutes = [
         path: "/bdm/:bdmId",
         component: () => import("@/view/bdm/bdm.vue"),
         meta: {
-          title: "Detail",
+          title: "BDM",
           breadcrumb: [{ label: "BDM", path: "/bdm" }, { label: "BDM Detail" }],
         },
       },
@@ -484,7 +484,7 @@ export const constantRoutes = [
         path: "/branch/index",
         component: () => import("@/view/branch/branchlist.vue"),
         meta: {
-          title: "Branch List",
+          title: "Branch",
           keepAlive: true,
           breadcrumb: [
             { label: "Branch", path: "/branch" },
@@ -496,7 +496,7 @@ export const constantRoutes = [
         path: "/branch/:branchId",
         component: () => import("@/view/branch/branch.vue"),
         meta: {
-          title: "Branch Detail",
+          title: "Branch",
           breadcrumb: [
             { label: "Branch", path: "/branch" },
             { label: "Branch Detail" },
