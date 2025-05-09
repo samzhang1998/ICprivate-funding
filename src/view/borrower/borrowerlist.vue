@@ -4,7 +4,7 @@
             <div class="left">
                 <div class="filter">
                     <h1>Search</h1>
-                    <el-input v-model="searchedApplication" style="width: 200px" placeholder="Search..." />
+                    <el-input v-model="selected.search" style="width: 200px" placeholder="Search..." />
                 </div>
                 <div class="filter">
                     <h1>Location</h1>
@@ -98,7 +98,7 @@
                     background
                     :total="borrowers.length"
                     :page-size="pageSize"
-                    :current-page="currentPage"
+                    :current-page="selected.page"
                     @current-change="handlePageChange"
                 />
             </div>
@@ -115,8 +115,9 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { onMounted, ref } from 'vue';
     import { useRouter } from 'vue-router';
+    import { api } from '@/api';
     import AddBorrower from '@/components/popup/addborrower.vue';
     import Search from '@/components/buttons/search.vue';
     import Clear from '@/components/buttons/clear.vue';
@@ -136,7 +137,10 @@
         {value: "1", label: "1"},
         {value: "2", label: "2"}
     ])
-    const searchedApplication = ref("")
+    const selected = ref({
+        search: "",
+        page: 1,
+    })
     const selectedLocation = ref("")
     const selectedincome = ref("")
     const action = ref("Create Borrower")
@@ -171,12 +175,24 @@
         }
     ])
     const pageSize = 10
-    const currentPage = ref(1)
     const borrowerListTable = ref()
     const selectedItem = ref([])
     const selectAll = ref(false)
     const isSelected = ref(false)
 
+    onMounted(() => {
+        getBorrowers()
+    })
+
+    const getBorrowers = async () => {
+        const [err, res] = await api.borrowers(selected)
+        if (!err) {
+            console.log(res);
+            // borrowers.value = res.results
+        } else {
+            console.log(err)
+        }
+    }
     const toBorrower = () => {
         router.push(`/borrower/16786541`)
     }
@@ -222,7 +238,7 @@
         selectedItem.value = []
     }    
     const handlePageChange = (page) => {
-        currentPage.value = page
+        selected.value.page = page
     }
 </script>
 

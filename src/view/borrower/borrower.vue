@@ -73,7 +73,8 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { onMounted, ref } from 'vue';
+    import { api } from '@/api';
     import { useRoute } from 'vue-router';
 
     const route = useRoute()
@@ -97,6 +98,20 @@
         totalAmount: "$9,000,000.00",
         outstanding: "$7,500,000.00"
     })
+
+    onMounted(() => {
+        getBorrower()
+    })
+
+    const getBorrower = async () => {
+        const [err, res] = await api.borrower(borrowerId)
+        if (!err) {
+            console.log(res);
+            // borrowers.value = res.results
+        } else {
+            console.log(err)
+        }
+    }
 </script>
 
 <style scoped>

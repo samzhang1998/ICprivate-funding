@@ -46,7 +46,7 @@
             </div>
             <Create :action="action" @click="addApplication"></Create>
         </div>
-        <div class="container"></div>
+        <div class="container">{{ token }}</div>
         <transition name="slide-right-popup">
             <AddApplication
                 v-if="popup"
@@ -69,6 +69,7 @@
 
     const router = useRouter()
     const popup = ref(false)
+    const token = localStorage.getItem("token")
 
     const locations = ref([
         {value: "1", label: "1"},
@@ -150,9 +151,11 @@
         flex: 0;
     }
     .container {
+        padding: 20px;
         height: 500px;
         border-radius: 3px;
         background: #FFF;
+        display: flex;
     }
     .slide-right-popup-enter-active, .slide-right-popup-leave-active {
         transition: all 0.3s ease;

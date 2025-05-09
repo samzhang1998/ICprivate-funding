@@ -56,7 +56,8 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { onMounted, ref } from 'vue';
+    import { api } from '@/api';
     import { useRoute } from 'vue-router';
 
     const route = useRoute()
@@ -74,6 +75,20 @@
         email: "branch@gmail.com",
         manager: "Manager Name"
     })
+
+    onMounted(() => {
+        getBranch()
+    })
+
+    const getBranch = async () => {
+        const [err, res] = await api.branches(branchId)
+        if (!err) {
+            console.log(res);
+            // borrowers.value = res.results
+        } else {
+            console.log(err)
+        }
+    }
 </script>
 
 <style scoped>

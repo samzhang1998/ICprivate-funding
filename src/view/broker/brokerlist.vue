@@ -4,13 +4,13 @@
             <div class="left">
                 <div class="filter">
                     <h1>Search</h1>
-                    <el-input v-model="searchedApplication" style="width: 200px" placeholder="Search..." />
+                    <el-input v-model="selected.search" style="width: 200px" placeholder="Search..." />
                 </div>
                 <div class="filter">
-                    <h1>Location</h1>
-                    <el-select v-model="selectedLocation" placeholder="Select Location" style="width: 200px">
+                    <h1>Branch</h1>
+                    <el-select v-model="selected.branch" placeholder="Select Branch" style="width: 200px">
                         <el-option
-                            v-for="item in locations"
+                            v-for="item in branches"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value"
@@ -47,9 +47,9 @@
                 <el-table-column prop="name" label="Name" min-width="139" />
                 <el-table-column prop="company" label="Company" width="130" />
                 <el-table-column prop="phone" label="Phone" width="130" />
-                <el-table-column prop="bd" label="BD" min-width="120" />
+                <el-table-column prop="application_count" label="Applications" min-width="120" />
                 <el-table-column prop="email" label="Email Address" min-width="225" />
-                <el-table-column prop="branch" label="Branch" width="160" />
+                <el-table-column prop="branch_name" label="Branch" width="160" />
                 <el-table-column label="Action" align="center" width="60">
                     <template #default="{row}">
                         <el-popover
@@ -98,7 +98,7 @@
                     background
                     :total="brokers.length"
                     :page-size="pageSize"
-                    :current-page="currentPage"
+                    :current-page="selected.page"
                     @current-change="handlePageChange"
                 />
             </div>
@@ -115,8 +115,9 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { onMounted, ref } from 'vue';
     import { useRouter } from 'vue-router';
+    import { api } from '@/api'
     import AddBroker from'@/components/popup/addbroker.vue';
     import Search from '@/components/buttons/search.vue';
     import Clear from '@/components/buttons/clear.vue';
@@ -128,7 +129,7 @@
     const router = useRouter()
     const popup = ref(false)
 
-    const locations = ref([
+    const branches = ref([
         {value: "1", label: "1"},
         {value: "2", label: "2"}
     ])
@@ -136,8 +137,10 @@
         {value: "1", label: "1"},
         {value: "2", label: "2"}
     ])
-    const searchedApplication = ref("")
-    const selectedLocation = ref("")
+    const selected = ref({
+        branch: "",
+        page: 1,
+    })
     const selectedincome = ref("")
     const action = ref("Create Broker")
     const popupAction = ref("")
@@ -147,36 +150,48 @@
             name: "Broker Name",
             company: "company name",
             phone: "0000 000 0000",
-            bd: "Riley Smith",
+            application_count: 5,
             email: "rileysmith@example.com",
-            branch: "Sydney Center",
+            branch_name: "Sydney Center",
         },
         {
             id: 22222,
             name: "Broker Name",
             company: "company name",
             phone: "0000 000 0000",
-            bd: "Riley Smith",
+            application_count: 1,
             email: "rileysmith@example.com",
-            branch: "Sydney Center",
+            branch_name: "Sydney Center",
         },
         {
             id: 33333,
             name: "Broker Name",
             company: "company name",
             phone: "0000 000 0000",
-            bd: "Riley Smith",
+            application_count: 8,
             email: "rileysmith@example.com",
-            branch: "Sydney Center",
+            branch_name: "Sydney Center",
         }
     ])
     const pageSize = 10
-    const currentPage = ref(1)
     const brokerListTable = ref()
     const selectedItem = ref([])
     const selectAll = ref(false)
     const isSelected = ref(false)
 
+    onMounted(() => {
+        getBrokers()
+    })
+
+    const getBrokers = async () => {
+        const [err, res] = await api.brokers(selected.value)
+        if (!err) {
+            console.log(res);
+            // brokers.value = res.results
+        } else {
+            console.log(err)
+        }
+    }
     const toBroker = () => {
         router.push(`/broker/16786541`)
     }
@@ -222,7 +237,7 @@
         selectedItem.value = []
     }    
     const handlePageChange = (page) => {
-        currentPage.value = page
+        selected.value.page = page
     }
 </script>
 

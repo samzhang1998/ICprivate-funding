@@ -4,7 +4,7 @@
             <div class="left">
                 <div class="filter">
                     <h1>Search</h1>
-                    <el-input v-model="searchedApplication" style="width: 200px" placeholder="Search..." />
+                    <el-input v-model="selected.search" style="width: 200px" placeholder="Search..." />
                 </div>
                 <div class="filter">
                     <h1>Location</h1>
@@ -115,8 +115,9 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { onMounted, ref } from 'vue';
     import { useRouter } from 'vue-router';
+    import { api } from '@/api';
     import AddGuarantor from '@/components/popup/addguarantor.vue';
     import Search from '@/components/buttons/search.vue';
     import Clear from '@/components/buttons/clear.vue';
@@ -136,7 +137,9 @@
         {value: "1", label: "1"},
         {value: "2", label: "2"}
     ])
-    const searchedApplication = ref("")
+    const selected = ref({
+        search: ""
+    })
     const selectedLocation = ref("")
     const selectedincome = ref("")
     const action = ref("Create Guarantor")
@@ -177,6 +180,19 @@
     const selectAll = ref(false)
     const isSelected = ref(false)
 
+    onMounted(() => {
+        getGuarantors()
+    })
+
+    const getGuarantors = async () => {
+        const [err, res] = await api.guarantors(selected)
+        if (!err) {
+            console.log(res);
+            // borrowers.value = res.results
+        } else {
+            console.log(err)
+        }
+    }
     const toGuarantor = () => {
         router.push(`/guarantor/16786541`)
     }

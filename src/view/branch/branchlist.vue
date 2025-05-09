@@ -4,7 +4,7 @@
             <div class="left">
                 <div class="filter">
                     <h1>Search</h1>
-                    <el-input v-model="searchedApplication" style="width: 240px" placeholder="Search..." />
+                    <el-input v-model="selected.search" style="width: 240px" placeholder="Search..." />
                 </div>
                 <Search @click="toBranch"></Search>
                 <Clear></Clear>
@@ -93,8 +93,9 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { onMounted, ref } from 'vue';
     import { useRouter } from 'vue-router';
+    import { api } from '@/api';
     import AddBranch from '@/components/popup/addbranch.vue';
     import Search from '@/components/buttons/search.vue';
     import Clear from '@/components/buttons/clear.vue';
@@ -106,7 +107,9 @@
     const router = useRouter()
     const popup = ref(false)
 
-    const searchedApplication = ref("")
+    const selected = ref({
+        search: ""
+    })
     const action = ref("Create Branch")
     const popupAction = ref("")
     const branches = ref([
@@ -145,6 +148,19 @@
     const selectAll = ref(false)
     const isSelected = ref(false)
 
+    onMounted(() => {
+        getBranches()
+    })
+
+    const getBranches = async () => {
+        const [err, res] = await api.branches(selected)
+        if (!err) {
+            console.log(res);
+            // borrowers.value = res.results
+        } else {
+            console.log(err)
+        }
+    }
     const toBranch = () => {
         router.push(`/branch/16786541`)
     }

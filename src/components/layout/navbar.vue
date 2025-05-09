@@ -3,7 +3,11 @@
         <div class="top">
             <img src="/src/assets/logo.png" alt="logo" class="logo" />
             <template v-for="item in topList" :key="item.path">
-                <div class="menu" :class="{active: $route.path.startsWith(item.path)}" v-if="!item.meta.hidden" @click="toPage(item)">
+                <div class="menu" 
+                    :class="{active: item.path === '/' ? $route.path.startsWith('/dashboard') : $route.path.startsWith(item.path)}" 
+                    v-if="!item.meta.hidden" 
+                    @click="toPage(item)"
+                >
                     <img :src="item.meta.icon" alt="menu" />
                     <p>{{ $t(item.meta.i18nTitle) }}</p>
                 </div>

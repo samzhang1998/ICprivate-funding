@@ -52,17 +52,17 @@
                 <el-table-column label="Action" align="center" width="150">
                     <template #default="{row}">
                         <div class="actions">
-                            <div class="view">
+                            <div class="view" @click="handleView(row)">
                                 <el-icon :size="20" 
                                     color="#2984DE"
                                 ><View /></el-icon>
                             </div>
-                            <div class="download">
+                            <div class="download" @click="handleDownload(row)">
                                 <el-icon :size="20" 
                                     color="#7A858E"
                                 ><Download /></el-icon>
                             </div>
-                            <div class="upload">
+                            <div class="upload" @click="handleUpload(row)">
                                 <el-icon :size="20" 
                                     color="#1AAD0A"
                                 ><Upload /></el-icon>
@@ -124,7 +124,8 @@
             application: "RF-128719274",
             person: "testaccount@gmail.com",
             time: "8/5/2025",
-            version: "1"
+            version: "1",
+            file: ""
         },
         {
             title: "Alex Meng",
@@ -132,7 +133,8 @@
             application: "RF-128719274",
             person: "testaccount@gmail.com",
             time: "8/5/2025",
-            version: "1"
+            version: "1",
+            file: ""
         },
         {
             title: "Alex Meng",
@@ -140,7 +142,8 @@
             application: "RF-128719274",
             person: "testaccount@gmail.com",
             time: "8/5/2025",
-            version: "1"
+            version: "1",
+            file: ""
         }
     ])
     const pageSize = 10
@@ -164,15 +167,22 @@
         isSelected.value = false
     }
     const handleView = (row) => {
-        router.push(`/user/${row.id}`)
+        console.log("document", row.id)
     }
-    const handleEdit = (row) => {
-        const id = row.name
-        popupAction.value = `Edit ${id}`
-        popup.value = true
+    const handleDownload = (row) => {
+        console.log("document", row.name)
     }
-    const handleDelete = (row) => {
-        docs.value = docs.value.filter(item => item !== row)
+    const handleUpload = (row) => {
+        const input = document.createElement('input')
+        input.type = 'file'
+        input.onchange = (e) => {
+            const file = e.target.files[0]
+            if (file) {
+                row.file = file
+                console.log("file", row.file)
+            }
+        }
+        input.click()
     }
     const deleteSelect = () => {
         console.log("selected", selectedItem)

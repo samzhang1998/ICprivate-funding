@@ -16,7 +16,16 @@ export function notifications(params) {
   });
 }
 
+export function logout(params) {
+  return sendRequest({
+    url: "/api/users/auth/login/",
+    method: "post",
+    data: params,
+  });
+}
+
 export const userApi = {
   login,
   notifications,
+  logout,
 };

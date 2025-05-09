@@ -22,10 +22,6 @@
                             <el-input v-model="overview.name" />
                         </div>
                         <div class="item">
-                            <p>Broker ID</p>
-                            <el-input v-model="overview.id" />
-                        </div>
-                        <div class="item">
                             <p>Company Name</p>
                             <el-input v-model="overview.company" />
                         </div>
@@ -43,7 +39,7 @@
                         </div>
                         <div class="item">
                             <p>Branch</p>
-                            <el-select v-model="overview.branch" placeholder="Please Select...">
+                            <el-select v-model="overview.branch_id" placeholder="Please Select...">
                                 <el-option
                                     v-for="item in branches"
                                     :key="item.value"
@@ -52,10 +48,10 @@
                                 />
                             </el-select>
                         </div>
-                        <div class="item">
+                        <!-- <div class="item">
                             <p>Lisence Number</p>
                             <el-input v-model="overview.license" />
-                        </div>
+                        </div> -->
                     </div>
                 </el-collapse-item>
                 <el-collapse-item name="2">
@@ -68,19 +64,19 @@
                     <div class="form">
                         <div class="item">
                             <p>Bank Name</p>
-                            <el-input v-model="commission.bank" />
+                            <el-input v-model="commission.commission_bank_name" />
                         </div>
                         <div class="item">
                             <p>Account Name</p>
-                            <el-input v-model="commission.accountName" />
+                            <el-input v-model="commission.commission_account_name" />
                         </div>
                         <div class="item">
                             <p>Account No.</p>
-                            <el-input v-model="commission.accountNo" />
+                            <el-input v-model="commission.commission_account_number" />
                         </div>
                         <div class="item">
                             <p>BSB</p>
-                            <el-input v-model="commission.bsb" />
+                            <el-input v-model="commission.commission_bsb" />
                         </div>
                     </div>
                 </el-collapse-item>
@@ -88,15 +84,17 @@
         </div>
         <div class="buttons">
             <Cancel @click="handleClose"></Cancel>
-            <Save></Save>
+            <Save @click="addBroker"></Save>
         </div>
     </div>
 </template>
 
 <script setup>
     import { ref, computed } from 'vue';
+    import { api } from '@/api';
     import Cancel from '../buttons/cancel.vue';
     import Save from '../buttons/save.vue';
+
 
     const props = defineProps({
         action: String
@@ -105,23 +103,24 @@
     const activeNames = ref("1")
     const overview = ref({
         name: "",
-        id: "",
         company: "",
         address: "",
         phone: "",
         email: "",
-        branch: "",
-        license: ""
+        branch_id: "",
+        // license: "",
+        user: 0,
+        bdms: []        
     })
     const commission = ref({
-        bank: "",
-        accountName: "",
-        accountNo: "",
-        bsb: ""
+        commission_bank_name: "",
+        commission_account_name: "",
+        commission_account_number: "",
+        commission_bsb: ""
     })
     const branches = ref([
-        {value: "1", label: "1"},
-        {value: "2", label: "2"}
+        {value: "111111", label: "Sydney Center"},
+        {value: "222222", label: "Melbourne Center"}
     ])
 
     const emit = defineEmits(['close', 'minimize'])
@@ -138,6 +137,19 @@
     const isCommissionValid = computed(() => {
         return Object.values(commission.value).every(value => value !== '')
     })
+    const addBroker = async () => {
+        const data = {
+            ...overview.value,
+            ...commission.value
+        }
+        const [err, res] = await api.addBrokers(data)
+        if (!err) {
+            console.log(res);
+            emit('close')
+        } else {
+            console.log(err)
+        }
+    }
 </script>
 
 <style scoped>

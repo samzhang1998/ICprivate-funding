@@ -34,7 +34,8 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { onMounted, ref } from 'vue';
+    import { api } from '@/api';
     import { useRoute } from 'vue-router';
 
     const route = useRoute()
@@ -51,6 +52,20 @@
         email: "BDM@gmail.com",
         phone: "0456875426"
     })
+
+    onMounted(() => {
+        getBdm()
+    })
+
+    const getBdm = async () => {
+        const [err, res] = await api.bdm(bdmId)
+        if (!err) {
+            console.log(res);
+            // borrowers.value = res.results
+        } else {
+            console.log(err)
+        }
+    }
 </script>
 
 <style scoped>

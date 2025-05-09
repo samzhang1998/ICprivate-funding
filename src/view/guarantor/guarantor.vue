@@ -54,7 +54,8 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { onMounted, ref } from 'vue';
+    import { api } from '@/api';
     import { useRoute } from 'vue-router';
 
     const route = useRoute()
@@ -76,6 +77,20 @@
         income: "$200,000.00",
         score: "85"
     })
+
+    onMounted(() => {
+        getGuarantor()
+    })
+
+    const getGuarantor = async () => {
+        const [err, res] = await api.guarantor(guarantorId)
+        if (!err) {
+            console.log(res);
+            // borrowers.value = res.results
+        } else {
+            console.log(err)
+        }
+    }
 </script>
 
 <style scoped>

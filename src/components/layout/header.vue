@@ -93,6 +93,8 @@ const goToSetting = () => {
     router.push({ path: '/setting', query: { tab: 'second' } })
 }
 const logout = () => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('refresh')
     router.push('/login')
 }
 </script>

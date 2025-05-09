@@ -4,7 +4,7 @@
             <div class="left">
                 <div class="filter">
                     <h1>Search</h1>
-                    <el-input v-model="searchedBDM" style="width: 240px" placeholder="Search..." />
+                    <el-input v-model="selected.search" style="width: 240px" placeholder="Search..." />
                 </div>
                 <div class="filter">
                     <h1>Filter Branch</h1>
@@ -87,7 +87,7 @@
                     background
                     :total="bdms.length"
                     :page-size="pageSize"
-                    :current-page="currentPage"
+                    :current-page="selected.page"
                     @current-change="handlePageChange"
                 />
             </div>
@@ -104,8 +104,9 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { onMounted, ref } from 'vue';
     import { useRouter } from 'vue-router';
+    import { api } from '@/api';
     import AddBdm from '@/components/popup/addbdm.vue';
     import Search from '@/components/buttons/search.vue';
     import Clear from '@/components/buttons/clear.vue';
@@ -121,7 +122,10 @@
         {value: "Sydney", label: "Sydney"},
         {value: "Melbourne", label: "Melbourne"}
     ])
-    const searchedBDM = ref("")
+    const selected = ref({
+        search: "",
+        page: 1
+    })
     const selectedBranch = ref("")
     const action = ref("Create BDM")
     const popupAction = ref("")
@@ -155,12 +159,24 @@
         }
     ])
     const pageSize = 10
-    const currentPage = ref(1)
     const bdmListTable = ref()
     const selectedItem = ref([])
     const selectAll = ref(false)
     const isSelected = ref(false)
 
+    onMounted(() => {
+        getBdms()
+    })
+
+    const getBdms = async () => {
+        const [err, res] = await api.bdms(selected.value)
+        if (!err) {
+            console.log(res);
+            // borrowers.value = res.results
+        } else {
+            console.log(err)
+        }
+    }
     const toBdm = () => {
         router.push(`/bdm/16786541`)
     }
@@ -205,7 +221,7 @@
         selectedItem.value = []
     }    
     const handlePageChange = (page) => {
-        currentPage.value = page
+        selected.value.page = page
     }
 </script>
 

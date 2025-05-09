@@ -85,7 +85,8 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { onMounted, ref } from 'vue';
+    import { api } from '@/api';
     import { useRoute } from 'vue-router';
 
     const route = useRoute()
@@ -112,6 +113,20 @@
         contact: "Name",
         email: "broker@gmail.com"
     })
+
+    onMounted(() => {
+        getBroker()
+    })
+
+    const getBroker = async () => {
+        const [err, res] = await api.broker(brokerId)
+        if (!err) {
+            console.log(res);
+            // brokers.value = res.results
+        } else {
+            console.log(err)
+        }
+    }
 </script>
 
 <style scoped>
