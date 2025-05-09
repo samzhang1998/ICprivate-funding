@@ -1,6 +1,6 @@
-import { userApi } from "./user/index";
-import { brokerApi } from "./user/broker";
-import { borrowerApi } from "./user/borrowers";
+import { userApi } from "./user";
+import { brokerApi } from "./broker";
+import { borrowerApi } from "./borrowers";
 
 export const api = {
   ...userApi,

@@ -29,7 +29,6 @@ import { computed } from 'vue'
 import { constantRoutes } from '@/router'
 import { useRouter } from 'vue-router'
 import useTagView from '@/hooks/useTagView'
-console.log("🚀 ~ constantRoutes:", constantRoutes)
 
 const router = useRouter()
 

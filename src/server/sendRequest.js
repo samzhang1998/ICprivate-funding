@@ -1,7 +1,10 @@
 import axios from "axios";
 
 const api_base_url = import.meta.env.VITE_API_BASE_URL;
+import { ElMessage } from "element-plus";
+import useSystem from "@/hooks/useSystem";
 
+const { logOut } = useSystem();
 // console.log(api_base_url);
 
 const sendRequest = axios.create({
@@ -14,9 +17,10 @@ const sendRequest = axios.create({
 sendRequest.interceptors.request.use(
   async (config) => {
     // 发送之前 处理请求头等信息
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers["authorization"] = `Bearer ${token}`;
+    let userInfo = localStorage.getItem("userInfo");
+    if (userInfo) {
+      userInfo = JSON.parse(userInfo);
+      config.headers["authorization"] = `Bearer ${userInfo.access}`;
     }
     return config;
   },
@@ -28,16 +32,18 @@ sendRequest.interceptors.request.use(
 // 添加响应拦截
 sendRequest.interceptors.response.use(
   (response) => {
-    const { config } = response;
-    if (config?.returnWholeResponse) {
-      return response;
-    }
     // 结合响应状态处理请求结果。
     const responseData = response.data;
     return [null, responseData];
   },
   (error) => {
-    return [error, null];
+    const response = error.response;
+    //处理401鉴权失败
+    if (response?.status === 401) {
+      ElMessage.error(response.data.detail);
+      logOut();
+    }
+    return [response.data, null];
   }
 );
 

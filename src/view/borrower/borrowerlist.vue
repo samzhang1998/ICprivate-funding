@@ -185,7 +185,7 @@
     })
 
     const getBorrowers = async () => {
-        const [err, res] = await api.borrowers(selected)
+        const [err, res] = await api.borrowers(selected.value)
         if (!err) {
             console.log(res);
             // borrowers.value = res.results

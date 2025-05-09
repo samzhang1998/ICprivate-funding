@@ -22,22 +22,28 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive, onMounted } from 'vue'
 import { api } from '@/api'
 import { useRouter } from 'vue-router'
+import useSystem from '@/hooks/useSystem'
+
+const router = useRouter()
+const { setUserInfo, logOut } = useSystem()
+
 const user = reactive({
     email: 'admin@example.com',
     password: 'qweasdzxc1234'
 })
 
-const router = useRouter()
+onMounted(() => {
+    logOut()
+})
+
 
 const login = async () => {
     const [err, res] = await api.login(user)
     if (!err) {
-        console.log(res);
-        localStorage.setItem('token', res.access)
-        localStorage.setItem('refresh', res.refresh)
+        setUserInfo(res)
         router.replace('/')
     } else {
         console.log(err)

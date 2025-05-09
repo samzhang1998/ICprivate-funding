@@ -14,12 +14,7 @@
                 <img src="/src/assets/icons/search.png" alt="search" />
                 <input placeholder="search..." />
             </div>
-            <el-select class="language" 
-                v-model="language" 
-                size="large"
-                placeholder="" 
-                @change="handleLanguageChange"
-            >
+            <el-select class="language" v-model="language" size="large" placeholder="" @change="handleLanguageChange">
                 <template #prefix>
                     <div class="pre">
                         <img :src="language === 'en' ? engIcon : chsIcon" alt="flag" class="flag" />
@@ -34,14 +29,14 @@
             </el-select>
             <el-popover placement="bottom" trigger="hover" width="160" popper-class="user-popover">
                 <div class="actions">
-                    <div class="action_user">{{ user.name }}</div>
+                    <div class="action_user">{{ userInfo.name || userInfo.email }}</div>
                     <div class="action" @click="goToSetting">
                         <el-icon>
                             <Edit />
                         </el-icon>
                         <p>Account Setting</p>
                     </div>
-                    <div class="action" @click="logout">
+                    <div class="action" @click="logOut">
                         <el-icon>
                             <Delete />
                         </el-icon>
@@ -52,8 +47,8 @@
                     <div class="user">
                         <div class="tag">TD</div>
                         <div class="user_info">
-                            <h2>{{ user.name }}</h2>
-                            <p>{{ user.location }} - {{ user.role }}</p>
+                            <h2>{{ userInfo.name || userInfo.email }}</h2>
+                            <p>{{ userInfo?.location || user.location }} - {{ userInfo.role }}</p>
                         </div>
                     </div>
                 </template>
@@ -70,6 +65,9 @@ import { useLocale } from '@/hooks/useLocale'
 import engIcon from '@/assets/icons/eng.png'
 import chsIcon from '@/assets/icons/chs.png'
 
+import useSystem from '@/hooks/useSystem'
+
+const { userInfo, logOut } = useSystem()
 const router = useRouter()
 const route = useRoute()
 const user = ref({
@@ -91,11 +89,6 @@ const pageTitle = computed(() => route.meta.title || '')
 const breadcrumbs = computed(() => route.meta.breadcrumb || [])
 const goToSetting = () => {
     router.push({ path: '/setting', query: { tab: 'second' } })
-}
-const logout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('refresh')
-    router.push('/login')
 }
 </script>
 
@@ -156,17 +149,20 @@ h1 {
 
 .language {
     width: 60px;
+
     :deep(.el-select__wrapper) {
         min-height: 32px;
         padding: 0 7px;
         border-radius: 23px;
         gap: 3px;
-    } 
+    }
 }
+
 .flag {
     width: 25px;
     height: 25px;
 }
+
 .pre {
     display: flex;
     flex-direction: row;
