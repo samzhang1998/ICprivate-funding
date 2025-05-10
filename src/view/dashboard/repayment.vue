@@ -36,7 +36,7 @@ const statuses = ref([
     { value: "overdue", label: "Overdue" }
 ])
 const paginationInfo = ref({
-    total: 100,
+    total: 10,
 })
 const selectedStatus = ref("")
 const dateRange = ref("")
