@@ -40,7 +40,7 @@ sendRequest.interceptors.response.use(
     const response = error.response;
     //处理401鉴权失败
     if (response?.status === 401) {
-      ElMessage.error(response.data.detail);
+      ElMessage.error(response.data.detail || response.data.error);
       logOut();
     }
     return [response.data, null];
