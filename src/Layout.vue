@@ -9,7 +9,7 @@
                 <TagView></TagView>
                 <!-- <div class="navbar"></div> -->
             </el-header>
-            <el-scrollbar>
+            <el-scrollbar class="app-main">
                 <el-main class="main">
                     <router-view>
                         <template #default="{ Component, route }">
@@ -87,7 +87,12 @@ import TagView from './components/layout/TagView.vue';
     top: 0;
 }
 
+.app-main {
+    height: calc(100vh - 130px);
+}
+
 .main {
+    height: calc(100vh - 130px);
     padding: 20px;
 }
 </style>
