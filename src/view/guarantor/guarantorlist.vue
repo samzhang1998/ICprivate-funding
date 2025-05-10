@@ -98,7 +98,7 @@
                     background
                     :total="guarantors.length"
                     :page-size="pageSize"
-                    :current-page="currentPage"
+                    :current-page="selected.page"
                     @current-change="handlePageChange"
                 />
             </div>
@@ -138,7 +138,8 @@
         {value: "2", label: "2"}
     ])
     const selected = ref({
-        search: ""
+        search: "",
+        page: 1
     })
     const selectedLocation = ref("")
     const selectedincome = ref("")
@@ -174,7 +175,6 @@
         }
     ])
     const pageSize = 10
-    const currentPage = ref(1)
     const guarantorListTable = ref()
     const selectedItem = ref([])
     const selectAll = ref(false)
@@ -185,7 +185,7 @@
     })
 
     const getGuarantors = async () => {
-        const [err, res] = await api.guarantors(selected)
+        const [err, res] = await api.guarantors(selected.value)
         if (!err) {
             console.log(res);
             // borrowers.value = res.results
@@ -238,7 +238,7 @@
         selectedItem.value = []
     }    
     const handlePageChange = (page) => {
-        currentPage.value = page
+        selected.page.value = page
     }
 </script>
 

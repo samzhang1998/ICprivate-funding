@@ -76,7 +76,7 @@
                     background
                     :total="branches.length"
                     :page-size="pageSize"
-                    :current-page="currentPage"
+                    :current-page="selected.page"
                     @current-change="handlePageChange"
                 />
             </div>
@@ -108,7 +108,8 @@
     const popup = ref(false)
 
     const selected = ref({
-        search: ""
+        search: "",
+        page: 1
     })
     const action = ref("Create Branch")
     const popupAction = ref("")
@@ -142,7 +143,6 @@
         }
     ])
     const pageSize = 10
-    const currentPage = ref(1)
     const branchListTable = ref()
     const selectedItem = ref([])
     const selectAll = ref(false)
@@ -153,7 +153,7 @@
     })
 
     const getBranches = async () => {
-        const [err, res] = await api.branches(selected)
+        const [err, res] = await api.branches(selected.value)
         if (!err) {
             console.log(res);
             // borrowers.value = res.results
@@ -205,7 +205,7 @@
         selectedItem.value = []
     }    
     const handlePageChange = (page) => {
-        currentPage.value = page
+        selected.page.value = page
     }
 </script>
 
