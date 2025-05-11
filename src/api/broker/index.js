@@ -34,6 +34,13 @@ export function branch(params) {
     method: "get",
   });
 }
+export function addBranches(params) {
+  return sendRequest({
+    url: "/api/brokers/branches/",
+    method: "post",
+    data: params,
+  });
+}
 
 export function bdms(params) {
   return sendRequest({
@@ -48,6 +55,13 @@ export function bdm(params) {
     method: "get",
   });
 }
+export function addBdms(params) {
+  return sendRequest({
+    url: "/api/brokers/bdms/",
+    method: "post",
+    data: params,
+  });
+}
 
 export const brokerApi = {
   brokers,
@@ -55,6 +69,8 @@ export const brokerApi = {
   addBrokers,
   branches,
   branch,
+  addBranches,
   bdms,
   bdm,
+  addBdms
 };

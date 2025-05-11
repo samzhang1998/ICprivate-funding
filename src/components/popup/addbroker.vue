@@ -142,6 +142,7 @@
             ...overview.value,
             ...commission.value
         }
+        console.log(data)
         const [err, res] = await api.addBrokers(data)
         if (!err) {
             console.log(res);

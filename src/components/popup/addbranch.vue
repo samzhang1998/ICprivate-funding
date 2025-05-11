@@ -33,7 +33,7 @@
                             <p>Email Address</p>
                             <el-input v-model="overview.email" />
                         </div>
-                        <div class="item">
+                        <!-- <div class="item">
                             <p>Manager</p>
                             <el-select v-model="overview.manager" placeholder="Please Select...">
                                 <el-option
@@ -43,20 +43,21 @@
                                     :value="item.value"
                                 />
                             </el-select>
-                        </div>
+                        </div> -->
                     </div>
                 </el-collapse-item>
             </el-collapse>
         </div>
         <div class="buttons">
             <Cancel @click="handleClose"></Cancel>
-            <Save></Save>
+            <Save @click="addBranch"></Save>
         </div>
     </div>
 </template>
 
 <script setup>
     import { ref, computed } from 'vue';
+    import { api } from '@/api';
     import Cancel from '../buttons/cancel.vue';
     import Save from '../buttons/save.vue';
 
@@ -70,7 +71,7 @@
         address: "",
         phone: "",
         email: "",
-        manager: ""
+        // manager: ""
     })
     const managers = ref([
         {value: "1", label: "1"},
@@ -88,6 +89,19 @@
     const isOverviewValid = computed(() => {
         return Object.values(overview.value).every(value => value !== '')
     })
+    const addBranch = async () => {
+        const data = {
+            ...overview.value
+        }
+        console.log(data)
+        const [err, res] = await api.addBranches(data)
+        if (!err) {
+            console.log(res);
+            emit('close')
+        } else {
+            console.log(err)
+        }
+    }
 </script>
 
 <style scoped>

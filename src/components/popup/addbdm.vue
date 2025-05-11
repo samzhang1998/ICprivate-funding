@@ -33,19 +33,31 @@
                             <p>Email Address</p>
                             <el-input v-model="overview.email" />
                         </div>
+                        <div class="item">
+                            <p>Branch</p>
+                            <el-select v-model="overview.branch_id" placeholder="Please Select...">
+                                <el-option
+                                    v-for="item in branches"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                />
+                            </el-select>
+                        </div>
                     </div>
                 </el-collapse-item>
             </el-collapse>
         </div>
         <div class="buttons">
             <Cancel @click="handleClose"></Cancel>
-            <Save></Save>
+            <Save @click="addBdm"></Save>
         </div>
     </div>
 </template>
 
 <script setup>
     import { ref, computed } from 'vue';
+    import { api } from '@/api';
     import Cancel from '../buttons/cancel.vue';
     import Save from '../buttons/save.vue';
 
@@ -54,7 +66,12 @@
     })
 
     const activeNames = ref("1")
+    const branches = ref([
+        {value: "111111", label: "Sydney Center"},
+        {value: "222222", label: "Melbourne Center"}
+    ])
     const overview = ref({
+        branch_id: "",
         name: "",
         address: "",
         phone: "",
@@ -72,6 +89,19 @@
     const isOverviewValid = computed(() => {
         return Object.values(overview.value).every(value => value !== '')
     })
+    const addBdm = async () => {
+        const data = {
+            ...overview.value
+        }
+        console.log(data)
+        const [err, res] = await api.addBdms(data)
+        if (!err) {
+            console.log(res);
+            emit('close')
+        } else {
+            console.log(err)
+        }
+    }
 </script>
 
 <style scoped>
