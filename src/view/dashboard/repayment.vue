@@ -89,7 +89,7 @@ const handleChange = (currantPage) => {
     </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .repayment {
     display: flex;
     flex-direction: column;

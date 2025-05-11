@@ -46,7 +46,19 @@
             </div>
             <Create :action="action" @click="addApplication"></Create>
         </div>
-        <div class="container">{{ token }}</div>
+        <div class="container">
+            <div class="tab-bar">
+                <div
+                    v-for="tab in tabs"
+                    :key="tab.name"
+                    :class="['tab-item', { active: activeTab === tab.name }]"
+                    :style="{ minWidth: tab.width }"
+                    @click="activeTab = tab.name"
+                >
+                    {{ tab.label }}
+                </div>
+            </div> 
+        </div>
         <transition name="slide-right-popup">
             <AddApplication
                 v-if="popup"
@@ -69,7 +81,6 @@
 
     const router = useRouter()
     const popup = ref(false)
-    const token = localStorage.getItem("token")
 
     const locations = ref([
         {value: "1", label: "1"},
@@ -79,6 +90,25 @@
         {value: "1", label: "1"},
         {value: "2", label: "2"}
     ])
+    const tabs = [
+        { name: 'all', label: 'All', width: '32px' },
+        { name: 'ic', label: 'Submit to IC', width: '58px' },
+        { name: 'pre', label: 'Pre-assessment', width: '86px' },
+        { name: 'full', label: 'Full Assessment', width: '88px' },
+        { name: 'aip', label: 'AIP', width: '37px' },
+        { name: 'finalReview', label: 'Submit to Final Review', width: '89px' },
+        { name: 'funder', label: 'Submit to Funder', width: '73px' },
+        { name: 'conditional', label: 'Conditional Approval', width: '80px' },
+        { name: 'formal', label: 'Formal Approval', width: '69px' },
+        { name: 'solicitor', label: 'Instruct to Solicitor', width: '77px' },
+        { name: 'issued', label: 'Loan Doc Issued', width: '72px' },
+        { name: 'returned', label: 'Loan Doc Returned', width: '72px' },
+        { name: 'booked', label: 'Settlement Date Booked', width: '90px' },
+        { name: 'settled', label: 'Settled', width: '59px' },
+        { name: 'decline', label: 'Decline', width: '61px' },
+        { name: 'withdrawal', label: 'Withdrawal', width: '82px' },
+    ]
+    const activeTab = ref('all')
     const searchedApplication = ref("")
     const selectedLocation = ref("")
     const selectedincome = ref("")
@@ -157,6 +187,37 @@
         background: #FFF;
         display: flex;
     }
+    .tab-bar {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        border-bottom: 1px solid #ccc;
+        height: 44px;
+        overflow: hidden;
+    }
+    .tab-item {
+        display: flex;
+        color: #949494;
+        padding: 5px 9px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        border-radius: 4px 4px 0 0;
+        font-size: 0.6rem;
+        font-style: normal;
+        font-weight: 400;
+        transition: background 0.2s;
+    }
+    .tab-item:hover {
+        background: #e0e0e0;
+    }
+    .tab-item.active {
+        background: #2984DE;
+        color: white;
+        padding: 5px 9px;
+    }
+
     .slide-right-popup-enter-active, .slide-right-popup-leave-active {
         transition: all 0.3s ease;
     }
