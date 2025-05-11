@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onActivated } from 'vue'
 import { useRouter } from 'vue-router'
 import { api } from '@/api'
 import { ApplicationTable, NotificationTable, UpcomingTable } from './components'
@@ -7,7 +7,7 @@ import { ApplicationTable, NotificationTable, UpcomingTable } from './components
 const router = useRouter()
 const loadingData = ref(false)
 
-onMounted(() => {
+onActivated(() => {
   getApplicationStatus()
   getApplicationVolume()
   getRepaymentCompliance()
