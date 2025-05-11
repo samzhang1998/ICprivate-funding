@@ -115,7 +115,7 @@
 </template>
 
 <script setup>
-    import { onMounted, ref } from 'vue';
+    import { onActivated, ref } from 'vue';
     import { useRouter } from 'vue-router';
     import { api } from '@/api';
     import AddGuarantor from '@/components/popup/addguarantor.vue';
@@ -180,7 +180,7 @@
     const selectAll = ref(false)
     const isSelected = ref(false)
 
-    onMounted(() => {
+    onActivated(() => {
         getGuarantors()
     })
 

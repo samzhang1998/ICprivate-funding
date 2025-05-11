@@ -4,7 +4,7 @@
             <div class="left">
                 <div class="filter">
                     <h1>Search</h1>
-                    <el-input v-model="searchedApplication" style="width: 200px" placeholder="Search..." />
+                    <el-input v-model="selected.search" style="width: 200px" placeholder="Search..." />
                 </div>
                 <div class="filter">
                     <h1>Location</h1>
@@ -31,7 +31,7 @@
                 <Search @click="toUser"></Search>
                 <Clear></Clear>
             </div>
-            <Create :action="action"></Create>
+            <Create :action="action" @click="addUser"></Create>
         </div>
         <div class="container">
             <el-table
@@ -98,17 +98,27 @@
                     background
                     :total="users.length"
                     :page-size="pageSize"
-                    :current-page="currentPage"
+                    :current-page="selected.page"
                     @current-change="handlePageChange"
                 />
             </div>
         </div>
+        <transition name="slide-right-popup">
+            <AddUser
+                v-if="popup"
+                :action="popupAction"
+                @close="close"
+                @minimize="minimize"
+            ></AddUser>
+        </transition>
     </div>
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { ref, onActivated } from 'vue';
     import { useRouter } from 'vue-router';
+    import { api } from '@/api';
+    import AddUser from '@/components/popup/adduser.vue';
     import Search from '@/components/buttons/search.vue';
     import Clear from '@/components/buttons/clear.vue';
     import Create from '@/components/buttons/create.vue';
@@ -127,7 +137,10 @@
         {value: "1", label: "1"},
         {value: "2", label: "2"}
     ])
-    const searchedApplication = ref("")
+    const selected = ref({
+        search: "",
+        page: 1
+    })
     const selectedLocation = ref("")
     const selectedincome = ref("")
     const action = ref("Create User")
@@ -162,14 +175,36 @@
         }
     ])
     const pageSize = 10
-    const currentPage = ref(1)
     const userListTable = ref()
     const selectedItem = ref([])
     const selectAll = ref(false)
     const isSelected = ref(false)
 
+    onActivated(() => {
+        getUsers()
+    })
+
+    const getUsers = async () => {
+        const [err, res] = await api.users(selected.value)
+        if (!err) {
+            console.log(res);
+            // borrowers.value = res.results
+        } else {
+            console.log(err)
+        }
+    }
     const toUser = () => {
         router.push(`/user/16786541`)
+    }
+    const addUser = () => {
+        popupAction.value = "Add User"
+        popup.value = true
+    }
+    const close = () => {
+        popup.value = false
+    }
+    const minimize = () => {
+        
     }
     const handleSelectionChange = (row) => {
         selectedItem.value = row

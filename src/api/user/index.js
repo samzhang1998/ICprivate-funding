@@ -16,6 +16,21 @@ export function notifications(params) {
   });
 }
 
+export function users(params) {
+  return sendRequest({
+    url: "/api/users/users/",
+    method: "get",
+    params: params,
+  });
+}
+export function addUsers(params) {
+  return sendRequest({
+    url: "/api/users/users/",
+    method: "post",
+    data: params,
+  });
+}
+
 export function logout(params) {
   return sendRequest({
     url: "/api/users/auth/login/",
@@ -27,5 +42,7 @@ export function logout(params) {
 export const userApi = {
   login,
   notifications,
+  users,
+  addUsers,
   logout,
 };
