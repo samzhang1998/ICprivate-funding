@@ -143,7 +143,7 @@ const deleteSelect = () => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .application {
     display: flex;
     flex-direction: column;
