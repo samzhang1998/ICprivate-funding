@@ -36,7 +36,7 @@
         <div class="container">
             <el-table
                 ref="guarantorListTable"
-                :data="guarantors"
+                :data="paginatedData"
                 style="width: 100%"
                 :default-sort="{ prop: 'id', order: 'ascending' }"
                 :cell-style="{ padding: '10px 0' }"
@@ -115,7 +115,7 @@
 </template>
 
 <script setup>
-    import { onActivated, ref } from 'vue';
+    import { onActivated, ref, computed } from 'vue';
     import { useRouter } from 'vue-router';
     import { api } from '@/api';
     import AddGuarantor from '@/components/popup/addguarantor.vue';
@@ -174,7 +174,7 @@
             state: "Xxx",
         }
     ])
-    const pageSize = 10
+    const pageSize = 2
     const guarantorListTable = ref()
     const selectedItem = ref([])
     const selectAll = ref(false)
@@ -184,6 +184,10 @@
         getGuarantors()
     })
 
+    const paginatedData = computed(() => {
+        const start = (selected.value.page - 1) * pageSize
+        return guarantors.value.slice(start, start + pageSize)
+    })
     const getGuarantors = async () => {
         const [err, res] = await api.guarantors(selected.value)
         if (!err) {
@@ -194,7 +198,7 @@
         }
     }
     const toGuarantor = () => {
-        router.push(`/guarantor/16786541`)
+        router.push(`/guarantor/1`)
     }
     const addGuarantor = () => {
         popupAction.value = "Add Guarantor"
@@ -238,7 +242,7 @@
         selectedItem.value = []
     }    
     const handlePageChange = (page) => {
-        selected.page.value = page
+        selected.value.page = page
     }
 </script>
 

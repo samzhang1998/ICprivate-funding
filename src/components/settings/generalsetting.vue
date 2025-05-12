@@ -5,7 +5,7 @@
                 <h1>Locale</h1>
                 <p>Preferred language setting</p>
             </div>
-            <el-select v-model="general.selectedLanguage" style="width: 100px">
+            <el-select v-model="general.selectedLanguage" @change="handleLanguageChange" style="width: 100px">
                 <el-option
                     v-for="item in languages"
                     :key="item.value"
@@ -164,14 +164,17 @@
 
 <script setup>
     import { ref } from 'vue';
+    import { useLocale } from '@/hooks/useLocale';
+
+    const { handleLanguageChange } = useLocale()
 
     const props = defineProps({
         general: Object
     })
 
     const languages = ref([
-        {label: "English", value: "English"},
-        {label: "简体中文", value: "Chinese"}
+        {label: "English", value: "en"},
+        {label: "简体中文", value: "zh"}
     ])
     const timezone = ref([
         {label: "Sydney UTC+8", value: "Sydney UTC+8"}

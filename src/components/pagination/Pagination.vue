@@ -14,7 +14,7 @@ const selected = ref({
 })
 
 const emits = defineEmits(['change'])
-const handleChange = (current, pageSize) => {
+const handleChange = (current) => {
     emits('change', current, pageSize)
 }
 </script>
@@ -29,6 +29,23 @@ const handleChange = (current, pageSize) => {
 <style lang="scss" scoped>
 .pagination {
     margin-top: 20px;
+}
+
+:deep(.el-pagination) {
+    --el-pagination-button-bg-color: #FFF;
+    --el-pagination-button-disabled-bg-color: #FFF;
+}
+
+:deep(.el-pager li) {
+    background: #FFF;
+    color: rgba(0, 0, 0, 0.20);
+    border-radius: 4px;
+    border: 1.5px solid rgba(64, 64, 64, 0.16);
+    font-weight: 500;
+}
+
+:deep(.el-pager li):hover {
+    border: 1.5px solid #2984DE;
 }
 
 :deep(.el-pagination button) {

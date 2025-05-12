@@ -36,7 +36,7 @@
         <div class="container">
             <el-table
                 ref="userListTable"
-                :data="users"
+                :data="paginatedData"
                 style="width: 100%"
                 :default-sort="{ prop: 'id', order: 'ascending' }"
                 :cell-style="{ padding: '10px 0' }"
@@ -115,7 +115,7 @@
 </template>
 
 <script setup>
-    import { ref, onActivated } from 'vue';
+    import { ref, onActivated, computed } from 'vue';
     import { useRouter } from 'vue-router';
     import { api } from '@/api';
     import AddUser from '@/components/popup/adduser.vue';
@@ -182,6 +182,11 @@
 
     onActivated(() => {
         getUsers()
+    })
+
+    const paginatedData = computed(() => {
+        const start = (selected.value.page - 1) * pageSize
+        return users.value.slice(start, start + pageSize)
     })
 
     const getUsers = async () => {

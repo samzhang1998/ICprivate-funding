@@ -83,8 +83,9 @@
 </template>
 
 <script setup>
-    import { ref, computed } from 'vue';
+    import { ref, computed, onActivated } from 'vue';
     import { useRoute } from 'vue-router';
+    import { api } from '@/api';
     import Company from '@/components/application/company.vue';
     import CompanyAsset from '@/components/application/companyasset.vue';
     import Enquiries from '@/components/application/enquiries.vue';
@@ -137,6 +138,19 @@
     const hasPrev = computed(() => currentIndex.value > 0)
     const hasNext = computed(() => currentIndex.value < stages.value.length - 1)
 
+    onActivated(() => {
+        getApplication()
+    })
+
+    const getApplication = async () => {
+        const [err, res] = await api.application(applicationId)
+        if (!err) {
+            console.log(res);
+            // borrowers.value = res.results
+        } else {
+            console.log(err)
+        }
+    }
     const showCalculator = () => {
         calculator.value = true
     }

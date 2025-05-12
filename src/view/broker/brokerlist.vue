@@ -24,7 +24,7 @@
             <Create :action="action" @click="addBroker"></Create>
         </div>
         <div class="container">
-            <el-table ref="brokerListTable" :data="brokers" style="width: 100%"
+            <el-table ref="brokerListTable" :data="paginatedData" style="width: 100%"
                 :default-sort="{ prop: 'createDate', order: 'ascending' }" :cell-style="{ padding: '10px 0' }"
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" align="center" width="50" />
@@ -86,7 +86,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, onActivated } from 'vue';
+import { onMounted, ref, onActivated, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { api } from '@/api'
 import AddBroker from '@/components/popup/addbroker.vue';
@@ -158,6 +158,11 @@ onActivated(() => {
     getBrokers()
 })
 
+const paginatedData = computed(() => {
+    const start = (selected.value.page - 1) * pageSize
+    return brokers.value.slice(start, start + pageSize)
+})
+
 const getBrokers = async () => {
     const [err, res] = await api.brokers(selected.value)
     if (!err) {
@@ -168,7 +173,7 @@ const getBrokers = async () => {
     }
 }
 const toBroker = () => {
-    router.push(`/broker/16786541`)
+    router.push(`/broker/1`)
 }
 const addBroker = () => {
     popupAction.value = "Add Broker"

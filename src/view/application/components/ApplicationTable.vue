@@ -1,17 +1,22 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { CircleCheck, View, Upload } from '@element-plus/icons-vue'
-import { api } from '@/api'
+    import { ref, onMounted, computed } from 'vue'
+    import { CircleCheck, View, Upload } from '@element-plus/icons-vue'
+    import { api } from '@/api'
 
-onMounted(() => {
-})
+    const { selected, paginationInfo } = defineProps({
+        selected: Object,
+        paginationInfo: Object
+    })
 
-const tableData = ref([])
+    onMounted(() => {
+    })
 
-tableData.value = new Array(70)
+    const tableData = ref([])
+
+    tableData.value = new Array(70)
     .fill(null)
     .map((_, index) => ({
-        caseId: '12314',
+        caseId: 1+index,
         name: `name`,
         status: 'Formal Approval',
         bdm: 'Tomas L',
@@ -24,10 +29,15 @@ tableData.value = new Array(70)
         modifiedDate: '03/01/2025',
         createDate: '17/06/2024',
     }));
+
+    const paginatedData = computed(() => {
+        const start = (selected.page - 1) * 10
+        return tableData.value.slice(start, start + 10)
+    })
 </script>
 
 <template>
-    <el-table :data="tableData" class="table" :header-cell-style="{ background: '#f8f8f8', color: '#272727' }">
+    <el-table :data="paginatedData" class="table" :header-cell-style="{ background: '#f8f8f8', color: '#272727' }">
         <el-table-column type="selection" width="50" align="center" fixed />
         <el-table-column prop="caseId" label="Case Id" />
         <el-table-column prop="name" label="Name" />

@@ -81,7 +81,7 @@
     })
 
     const getBranch = async () => {
-        const [err, res] = await api.branches(branchId)
+        const [err, res] = await api.branch(branchId)
         if (!err) {
             console.log(res);
             // borrowers.value = res.results

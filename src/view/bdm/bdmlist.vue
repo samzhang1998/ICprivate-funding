@@ -18,7 +18,7 @@
             <Create :action="action" @click="addBdm"></Create>
         </div>
         <div class="container">
-            <el-table ref="bdmListTable" :data="bdms" style="width: 100%"
+            <el-table ref="bdmListTable" :data="paginatedData" style="width: 100%"
                 :default-sort="{ prop: 'id', order: 'ascending' }" :cell-style="{ padding: '10px 0' }"
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" align="center" width="50" />
@@ -80,7 +80,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, onActivated } from 'vue';
+import { onMounted, ref, onActivated, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { api } from '@/api';
 import AddBdm from '@/components/popup/addbdm.vue';
@@ -99,7 +99,7 @@ const branches = ref([
     { value: "Melbourne", label: "Melbourne" }
 ])
 const selected = ref({
-    branch: 0,
+    branch: "",
     search: "",
     page: 1
 })
@@ -149,6 +149,11 @@ onActivated(() => {
     getBdms()
 })
 
+const paginatedData = computed(() => {
+    const start = (selected.value.page - 1) * pageSize
+    return bdms.value.slice(start, start + pageSize)
+})
+
 const getBdms = async () => {
     const [err, res] = await api.bdms(selected.value)
     if (!err) {
@@ -159,7 +164,7 @@ const getBdms = async () => {
     }
 }
 const toBdm = () => {
-    router.push(`/bdm/16786541`)
+    router.push(`/bdm/1`)
 }
 const addBdm = () => {
     popupAction.value = "Add BDM"

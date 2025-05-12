@@ -12,7 +12,7 @@
             <Create :action="action" @click="addBranch"></Create>
         </div>
         <div class="container">
-            <el-table ref="branchListTable" :data="branches" style="width: 100%"
+            <el-table ref="branchListTable" :data="paginatedData" style="width: 100%"
                 :default-sort="{ prop: 'id', order: 'ascending' }" :cell-style="{ padding: '10px 0' }"
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" align="center" width="50" />
@@ -74,7 +74,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, onActivated } from 'vue';
+import { onMounted, ref, onActivated, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { api } from '@/api';
 import AddBranch from '@/components/popup/addbranch.vue';
@@ -137,6 +137,11 @@ onActivated(() => {
     getBranches()
 })
 
+const paginatedData = computed(() => {
+    const start = (selected.value.page - 1) * pageSize
+    return branches.value.slice(start, start + pageSize)
+})
+
 const getBranches = async () => {
     const [err, res] = await api.branches(selected.value)
     if (!err) {
@@ -147,7 +152,7 @@ const getBranches = async () => {
     }
 }
 const toBranch = () => {
-    router.push(`/branch/16786541`)
+    router.push(`/branch/1`)
 }
 const addBranch = () => {
     popupAction.value = "Add Branch"

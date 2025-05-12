@@ -36,7 +36,7 @@
         <div class="container">
             <el-table
                 ref="docListTable"
-                :data="docs"
+                :data="paginatedData"
                 style="width: 100%"
                 :default-sort="{ prop: 'id', order: 'ascending' }"
                 :cell-style="{ padding: '10px 0' }"
@@ -96,7 +96,7 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { ref, computed } from 'vue';
     import { useRouter } from 'vue-router';
     import Search from '@/components/buttons/search.vue';
     import Clear from '@/components/buttons/clear.vue';
@@ -152,6 +152,11 @@
     const selectedItem = ref([])
     const selectAll = ref(false)
     const isSelected = ref(false)
+
+    const paginatedData = computed(() => {
+        const start = (currentPage.value - 1) * pageSize
+        return docs.value.slice(start, start + pageSize)
+    })
 
     const handleSelectionChange = (row) => {
         selectedItem.value = row

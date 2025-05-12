@@ -25,7 +25,7 @@
             <Create :action="action" @click="addBroker"></Create>
         </div>
         <div class="container">
-            <el-table ref="borrowerListTable" :data="borrowers" style="width: 100%"
+            <el-table ref="borrowerListTable" :data="paginatedData" style="width: 100%"
                 :default-sort="{ prop: 'id', order: 'ascending' }" :cell-style="{ padding: '10px 0' }"
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" align="center" width="50" />
@@ -87,7 +87,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, onActivated } from 'vue';
+import { onMounted, ref, onActivated, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { api } from '@/api';
 import AddBorrower from '@/components/popup/addborrower.vue';
@@ -160,6 +160,11 @@ onActivated(() => {
     getBorrowers()
 })
 
+const paginatedData = computed(() => {
+    const start = (selected.value.page - 1) * pageSize
+    return borrowers.value.slice(start, start + pageSize)
+})
+
 const getBorrowers = async () => {
     const [err, res] = await api.borrowers(selected.value)
     if (!err) {
@@ -170,7 +175,7 @@ const getBorrowers = async () => {
     }
 }
 const toBorrower = () => {
-    router.push(`/borrower/16786541`)
+    router.push(`/borrower/1`)
 }
 const addBroker = () => {
     popupAction.value = "Add Borrower"

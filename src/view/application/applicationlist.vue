@@ -4,7 +4,7 @@
             <div class="left">
                 <div class="filter">
                     <h1>Search</h1>
-                    <el-input v-model="searchedApplication" style="width: 180px" placeholder="Search..." />
+                    <el-input v-model="selected.search" style="width: 180px" placeholder="Search..." />
                 </div>
                 <div class="filter">
                     <h1>Location</h1>
@@ -37,7 +37,7 @@
                 </div>
             </div>
             <div class="list">
-                <ApplicationTable></ApplicationTable>
+                <ApplicationTable :selected="selected" :paginationInfo="paginationInfo"></ApplicationTable>
                 <div class="flex">
                     <div class="select">
                         <el-checkbox v-model="selectAll" :indeterminate="isSelected" @change="handleCheckAllChange" />
@@ -56,8 +56,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onActivated } from 'vue';
 import { useRouter } from 'vue-router';
+import { api } from '@/api';
 import AddApplication from '@/components/popup/addapplication/index.vue';
 import Calendar from '@/components/icons/calendar.vue';
 import Search from '@/components/buttons/search.vue';
@@ -98,7 +99,10 @@ const tabs = [
     { name: 'withdrawal', label: 'Withdrawal', width: '82px' },
 ]
 const activeTab = ref('all')
-const searchedApplication = ref("")
+const selected = ref({
+    search: "",
+    page: 1
+})
 const selectedLocation = ref("")
 const selectedincome = ref("")
 const dateRange = ref("")
@@ -106,13 +110,17 @@ const action = ref("Create Application")
 const popupAction = ref("")
 
 const paginationInfo = ref({
-    total: 10,
+    total: 70,
 })
 const selectAll = ref(false)
 const isSelected = ref(false)
 
+onActivated(() => {
+    getApplications()
+})
+
 const toApplication = () => {
-    router.push(`/application/15654231`)
+    router.push(`/application/1`)
 }
 const addApplication = () => {
     popupAction.value = "Add Application"
@@ -125,8 +133,19 @@ const minimize = () => {
 
 }
 
+const getApplications = async () => {
+    const [err, res] = await api.applications(selected.page)
+    if (!err) {
+        console.log(res);
+        // borrowers.value = res.results
+    } else {
+        console.log(err)
+    }
+}
+
 const handleChange = (currantPage) => {
-    console.log(currantPage);
+    selected.value.page = currantPage
+    console.log(selected.value.page);
 }
 
 const handleCheckAllChange = (row) => {
@@ -203,6 +222,7 @@ h1 {
 }
 
 .container {
+    padding: 20px;
     flex: 1;
     border-radius: 3px;
     background: #FFF;
