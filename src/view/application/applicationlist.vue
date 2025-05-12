@@ -30,11 +30,15 @@
             <Create :action="action" @click="addApplication"></Create>
         </div>
         <div class="container">
-            <div class="tab-bar">
-                <div v-for="tab in tabs" :key="tab.name" :class="['tab-item', { active: activeTab === tab.name }]"
-                    :style="{ minWidth: tab.width }" @click="activeTab = tab.name">
-                    {{ tab.label }}
-                </div>
+            <div class="tabs-scroll">
+                <el-scrollbar>
+                    <div class="tab-bar">
+                        <div v-for="item in tabs" :key="item.name"
+                            :class="['tab-item', { active: activeTab === item.name }]" @click="activeTab = item.name">
+                            {{ item.label }}
+                        </div>
+                    </div>
+                </el-scrollbar>
             </div>
             <div class="list">
                 <ApplicationTable :selected="selected" :paginationInfo="paginationInfo"></ApplicationTable>
@@ -82,21 +86,25 @@ const incomes = ref([
 ])
 const tabs = [
     { name: 'all', label: 'All', width: '32px' },
-    { name: 'ic', label: 'Submit to IC', width: '58px' },
-    { name: 'pre', label: 'Pre-assessment', width: '86px' },
-    { name: 'full', label: 'Full Assessment', width: '88px' },
-    { name: 'aip', label: 'AIP', width: '37px' },
-    { name: 'finalReview', label: 'Submit to Final Review', width: '89px' },
-    { name: 'funder', label: 'Submit to Funder', width: '73px' },
-    { name: 'conditional', label: 'Conditional Approval', width: '80px' },
-    { name: 'formal', label: 'Formal Approval', width: '69px' },
-    { name: 'solicitor', label: 'Instruct to Solicitor', width: '77px' },
-    { name: 'issued', label: 'Loan Doc Issued', width: '72px' },
-    { name: 'returned', label: 'Loan Doc Returned', width: '72px' },
-    { name: 'booked', label: 'Settlement Date Booked', width: '90px' },
-    { name: 'settled', label: 'Settled', width: '59px' },
-    { name: 'decline', label: 'Decline', width: '61px' },
-    { name: 'withdrawal', label: 'Withdrawal', width: '82px' },
+    { name: 'Inquiry', label: 'Inquiry', width: '58px' },
+    { name: 'Sent to Lender', label: 'Sent to Lender', width: '86px' },
+    { name: 'Funding Table lssued', label: 'Funding Table lssued', width: '88px' },
+    { name: 'ILOO lssued', label: 'ILOO lssued', width: '37px' },
+    { name: 'ILO0 Signed', label: 'ILO0 Signed', width: '89px' },
+    { name: 'Commitment Fee Paid', label: 'Commitment Fee Paid', width: '73px' },
+    { name: 'App Submitted', label: 'App Submitted', width: '80px' },
+    { name: 'Valuation Ordered', label: 'Valuation Ordered', width: '69px' },
+    { name: 'Valuation Received', label: 'Valuation Received', width: '77px' },
+    { name: 'More Info Required', label: 'More Info Required', width: '72px' },
+    { name: 'Formal Approval', label: 'Formal Approval', width: '72px' },
+    { name: 'Loan Docs instructed', label: 'Loan Docs instructed', width: '90px' },
+    { name: 'Loan Docs lssued', label: 'Loan Docs lssued', width: '59px' },
+    { name: 'Loan Docs Signed', label: 'Loan Docs Signed', width: '61px' },
+    { name: 'Settlement Conditions', label: 'Settlement Conditions', width: '82px' },
+    { name: 'Settled', label: 'Settled', width: '82px' },
+    { name: 'Closed', label: 'Closed', width: '82px' },
+    { name: 'Declined', label: 'Declined', width: '82px' },
+    { name: 'Withdrawn', label: 'Withdrawn', width: '82px' },
 ]
 const activeTab = ref('all')
 const selected = ref({
@@ -262,25 +270,28 @@ h1 {
         gap: 20px;
     }
 
+    .tabs-scroll {
+        width: 100%;
+        height: 48px;
+        border-bottom: 1px solid #ccc;
+    }
+
     .tab-bar {
         display: flex;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-        border-bottom: 1px solid #ccc;
+        width: fit-content;
         height: 44px;
-        overflow: hidden;
     }
 
     .tab-item {
+        flex-shrink: 0;
         display: flex;
+        align-items: center;
+        justify-content: center;
         color: #949494;
         padding: 5px 9px;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
         cursor: pointer;
         border-radius: 4px 4px 0 0;
-        font-size: 0.6rem;
+        font-size: 12px;
         font-style: normal;
         font-weight: 400;
         transition: background 0.2s;
@@ -293,7 +304,7 @@ h1 {
     .tab-item.active {
         background: #2984DE;
         color: white;
-        padding: 5px 9px;
+        font-weight: 600;
     }
 }
 

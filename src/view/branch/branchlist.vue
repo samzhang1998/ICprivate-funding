@@ -90,7 +90,8 @@ const popup = ref(false)
 
 const selected = ref({
     search: "",
-    page: 1
+    page: 1,
+    page_size: 10
 })
 const action = ref("Create Branch")
 const popupAction = ref("")

@@ -75,7 +75,7 @@
                         <Inactive></Inactive>
                     </div>
                 </div>
-                <el-pagination layout="prev, pager, next" background :total="brokers.length" :page-size="pageSize"
+                <el-pagination layout="prev, pager, next" background :total="total" :page-size="pageSize"
                     :current-page="selected.page" @current-change="handlePageChange" />
             </div>
         </div>
@@ -116,35 +116,36 @@ const selectedincome = ref("")
 const action = ref("Create Broker")
 const popupAction = ref("")
 const brokers = ref([
-    {
-        id: 11111,
-        name: "Broker Name",
-        company: "company name",
-        phone: "0000 000 0000",
-        application_count: 5,
-        email: "rileysmith@example.com",
-        branch_name: "Sydney Center",
-    },
-    {
-        id: 22222,
-        name: "Broker Name",
-        company: "company name",
-        phone: "0000 000 0000",
-        application_count: 1,
-        email: "rileysmith@example.com",
-        branch_name: "Sydney Center",
-    },
-    {
-        id: 33333,
-        name: "Broker Name",
-        company: "company name",
-        phone: "0000 000 0000",
-        application_count: 8,
-        email: "rileysmith@example.com",
-        branch_name: "Sydney Center",
-    }
+    // {
+    //     id: 11111,
+    //     name: "Broker Name",
+    //     company: "company name",
+    //     phone: "0000 000 0000",
+    //     application_count: 5,
+    //     email: "rileysmith@example.com",
+    //     branch_name: "Sydney Center",
+    // },
+    // {
+    //     id: 22222,
+    //     name: "Broker Name",
+    //     company: "company name",
+    //     phone: "0000 000 0000",
+    //     application_count: 1,
+    //     email: "rileysmith@example.com",
+    //     branch_name: "Sydney Center",
+    // },
+    // {
+    //     id: 33333,
+    //     name: "Broker Name",
+    //     company: "company name",
+    //     phone: "0000 000 0000",
+    //     application_count: 8,
+    //     email: "rileysmith@example.com",
+    //     branch_name: "Sydney Center",
+    // }
 ])
 const pageSize = 10
+const total = ref(0)
 const brokerListTable = ref()
 const selectedItem = ref([])
 const selectAll = ref(false)
@@ -167,7 +168,8 @@ const getBrokers = async () => {
     const [err, res] = await api.brokers(selected.value)
     if (!err) {
         console.log(res);
-        // brokers.value = res.results
+        total.value = res?.count || 0
+        brokers.value = res.results
     } else {
         console.log(err)
     }
