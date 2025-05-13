@@ -1,7 +1,7 @@
 import { ref, onMounted } from 'vue'
 import { api } from '@/api'
 
-const branches = ref([])
+const branchesList = ref([])
 
 //breach字典hook
 export default function useBranch() {
@@ -9,26 +9,25 @@ export default function useBranch() {
     getBranches()
   })
 
-  function getBranches() {
+  async function getBranches() {
     //如果有数据就不请求
-    if (branches.value.length > 0) {
+    if (branchesList.value.length > 0) {
       return
     }
     let params = {
       page: 1,
       page_size: 100,
     }
-    if (search) {
-      params.search = search
-    }
-    const { err, data } = api.branches(params)
+    const [err, res] = await api.branches(params)
     if (!err) {
-      branches.value = data
+      console.log('获取分支字典成功', res)
+
+      branchesList.value = res?.results || []
     }
   }
 
   return {
-    branches,
+    branchesList,
   }
 }
 

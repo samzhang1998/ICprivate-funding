@@ -4,10 +4,10 @@
             <div class="left">
                 <div class="filter">
                     <h1>Search</h1>
-                    <el-input v-model="selected.search" style="width: 240px" placeholder="Search..." />
+                    <el-input v-model="selected.search" style="width: 240px" placeholder="Search..." clearable />
                 </div>
                 <Search @click="toBranch"></Search>
-                <Clear></Clear>
+                <Clear @click="handleClear"></Clear>
             </div>
             <Create :action="action" @click="addBranch"></Create>
         </div>
@@ -15,14 +15,14 @@
             <el-table ref="branchListTable" :data="paginatedData" style="width: 100%"
                 :default-sort="{ prop: 'id', order: 'ascending' }" :cell-style="{ padding: '10px 0' }"
                 @selection-change="handleSelectionChange">
-                <el-table-column type="selection" align="center" width="50" />
+                <el-table-column type="selection" align="center" width="50" fixed />
                 <el-table-column prop="id" label="Branch ID" sortable="" width="120" />
                 <el-table-column prop="name" label="Branch Name" width="139" />
                 <el-table-column prop="address" label="Branch Address" min-width="150" />
                 <el-table-column prop="phone" label="Phone" width="120" />
                 <el-table-column prop="manager" label="Branch Manager" width="130" />
                 <el-table-column prop="email" label="Email Address" min-width="130" />
-                <el-table-column prop="create" label="Create At" width="100" />
+                <el-table-column label="Create At" width="100" />
                 <el-table-column label="Action" align="center" width="60">
                     <template #default="{ row }">
                         <el-popover placement="bottom" trigger="click" width="160" popper-class="user-popover">
@@ -85,50 +85,30 @@ import DeleteButton from '@/components/buttons/delete.vue';
 import Active from '@/components/buttons/active.vue';
 import Inactive from '@/components/buttons/inactive.vue';
 
+// breach字典使用示例
+// import useBranches from '@/hooks/useBranches'
+
+// const { branchesList } = useBranches()
+// console.log(branchesList.value);
+
 const router = useRouter()
 const popup = ref(false)
 
 const selected = ref({
     search: "",
     page: 1,
-    page_size: 10
+    page_size: 1
 })
 const action = ref("Create Branch")
 const popupAction = ref("")
 const branches = ref([
-    {
-        id: 11111,
-        name: "Broker Name",
-        address: "address",
-        phone: "0000 000 0000",
-        manager: "Riley Smith",
-        email: "rileysmith@example.com",
-        create: "Xx x",
-    },
-    {
-        id: 22222,
-        name: "Broker Name",
-        address: "address",
-        phone: "0000 000 0000",
-        manager: "Riley Smith",
-        email: "rileysmith@example.com",
-        create: "Xx x",
-    },
-    {
-        id: 33333,
-        name: "Broker Name",
-        address: "address",
-        phone: "0000 000 0000",
-        manager: "Riley Smith",
-        email: "rileysmith@example.com",
-        create: "Xx x",
-    }
 ])
 const pageSize = 10
 const branchListTable = ref()
 const selectedItem = ref([])
 const selectAll = ref(false)
 const isSelected = ref(false)
+const total = ref(0)
 
 onMounted(() => {
     // getBranches()
@@ -147,20 +127,29 @@ const getBranches = async () => {
     const [err, res] = await api.branches(selected.value)
     if (!err) {
         console.log(res);
-        // borrowers.value = res.results
+        branches.value = res?.results || []
+        total.value = res?.count || 0
     } else {
         console.log(err)
     }
 }
 const toBranch = () => {
-    router.push(`/branch/1`)
+    // router.push(`/branch/1`)
+    getBranches()
 }
+
+const handleClear = () => {
+    selected.value.search = ""
+    getBranches()
+}
+
 const addBranch = () => {
     popupAction.value = "Add Branch"
     popup.value = true
 }
 const close = () => {
     popup.value = false
+    getBranches()
 }
 const minimize = () => {
 
@@ -205,6 +194,7 @@ const handlePageChange = (page) => {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    height: 100%;
 }
 
 .filters {
@@ -243,6 +233,7 @@ h1 {
 }
 
 .container {
+    flex: 1;
     padding: 20px;
     border-radius: 3px;
     background: #FFF;
