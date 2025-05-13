@@ -96,7 +96,7 @@ import { ref, computed } from 'vue';
 import { api } from '@/api';
 import Cancel from '../buttons/cancel.vue';
 import Save from '../buttons/save.vue';
-import useSystem from '@/hooks/useSystem'
+import useSystem from '@/hooks/useSystem';
 
 const { userInfo } = useSystem()
 

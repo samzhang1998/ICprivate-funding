@@ -21,10 +21,10 @@
                             <p>BDM Name</p>
                             <el-input v-model="overview.name" />
                         </div>
-                        <div class="item">
+                        <!-- <div class="item">
                             <p>Address</p>
                             <el-input v-model="overview.address" />
-                        </div>
+                        </div> -->
                         <div class="item">
                             <p>Phone Number</p>
                             <el-input v-model="overview.phone" />
@@ -72,6 +72,9 @@
     ])
     const overview = ref({
         branch_id: "",
+        branch_name: "",
+        branch_email: "",
+        branch_phone: "",
         name: "",
         address: "",
         phone: "",

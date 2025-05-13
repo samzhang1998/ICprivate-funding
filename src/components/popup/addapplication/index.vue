@@ -17,7 +17,7 @@
                                 <p :style="{color: isCompanyValid ? '#2984DE' : '#272727'}">Company Borrower Details</p>
                             </div>
                         </template>
-                        <Company :company="company"></Company>
+                        <Company :company="application.company_borrowers" @add="addDirector" @remove="removeDirector"></Company>
                     </el-collapse-item>
                     <el-collapse-item name="2">
                         <template #title>
@@ -26,7 +26,13 @@
                                 <p :style="{color: isCompanyAssetValid ? '#2984DE' : '#272727'}">Company Assets & Liabilities</p>
                             </div>
                         </template>
-                        <CompanyAssets :asset="companyAsset"></CompanyAssets>
+                        <CompanyAssets 
+                            :company="application.company_borrowers"
+                            @addAsset="addAsset"
+                            @removeAsset="removeAsset"
+                            @addLiability="addLiability"
+                            @removeLiability="removeLiability"
+                        ></CompanyAssets>
                     </el-collapse-item>
                     <el-collapse-item name="3">
                         <template #title>
@@ -35,7 +41,7 @@
                                 <p :style="{color: isEnquiryValid ? '#2984DE' : '#272727'}">General Solvency Enquires</p>
                             </div>
                         </template>
-                        <Enquiries :enquiry="enquiry"></Enquiries>
+                        <Enquiries :enquiry="application"></Enquiries>
                     </el-collapse-item>
                     <el-collapse-item name="4">
                         <template #title>
@@ -86,6 +92,15 @@
                         <template #title>
                             <div class="title">
                                 <el-icon style="font-size: 20px" :color="isExitValid ? '#2984DE' : '#E1E1E1'"><SuccessFilled /></el-icon>
+                                <p :style="{color: isExitValid ? '#2984DE' : '#272727'}">Funding Calculation Input</p>
+                            </div>
+                        </template>
+                        <Calculation :detail="application.funding_calculation_input"></Calculation>
+                    </el-collapse-item>
+                    <el-collapse-item name="10">
+                        <template #title>
+                            <div class="title">
+                                <el-icon style="font-size: 20px" :color="isExitValid ? '#2984DE' : '#E1E1E1'"><SuccessFilled /></el-icon>
                                 <p :style="{color: isExitValid ? '#2984DE' : '#272727'}">Proposed Exit Strategy</p>
                             </div>
                         </template>
@@ -111,6 +126,7 @@
     import Security from './security.vue';
     import LoanDetail from './loandetail.vue';
     import LoanRequirement from './loanrequirement.vue';
+    import Calculation from './calculation.vue';
     import Exit from './exit.vue';
     import Cancel from '@/components/buttons/cancel.vue';
     import Save from '@/components/buttons/save.vue';
@@ -120,86 +136,171 @@
     })
 
     const activeNames = ref("1")
-    const company = ref({
-        companyName: "",
-        abn: "",
-        industryType: "",
-        contact: "",
-        annualIncome: "",
-        trustee: null,
-        smsf: null,
-        trusteeName: "",
-        positionName1: "",
-        positionRole1: "",
-        directorId1: "",
-        positionName2: "",
-        positionRole2: "",
-        directorId2: "",
-        address: ""
+    const createDirector = () => {
+        return {
+            name: "",
+            roles: "",
+            director_id: ""
+        }
+    }
+    const createCompanyAsset = () => {
+        return {
+            asset_type: "",
+            description: "",
+            value: "",
+            amount_owing: "",
+            to_be_refinanced: "",
+            bg_type: "",
+            address: ""
+        }
+    }
+    const createCompanyLiability = () => {
+        return {
+            liability_type: "",
+            description: "",
+            amount: "",
+            lender: "",
+            monthly_payment: "",
+            to_be_refinanced: "",
+            bg_type: ""
+        }
+    }    
+    const createCompany = () => {
+        return {
+            company_name: "",
+            company_abn: "",
+            industry_type: "",
+            contact_number: "",
+            annual_company_income: "",
+            is_trustee: null,
+            is_smsf_trustee: null,
+            trustee_name: "",
+            directors: [createDirector()],
+            registered_address_unit: "",
+            registered_address_street_no: "",
+            registered_address_street_name: "",
+            registered_address_suburb: "",
+            registered_address_state: "",
+            registered_address_postcode: "",
+            financial_info: {
+                annual_revenue: "",
+                net_profit: "",
+                assets: totalAsset,
+                liabilities: totalLiability
+            },
+            assets: [createCompanyAsset()],
+            liabilities: [createCompanyLiability()]
+        }
+    }
+    const totalAsset = computed(() => {
+        return application.value.company_borrowers[0].assets
+            .map(a => parseFloat(a.value) || 0)
+            .reduce((sum, v) => sum + v, 0)
     })
-    const companyAsset = ref({
-        address1: "",
-        address1Value: "",
-        address1Owing: "",
-        address1Refinance: false,
-        address2: "",
-        address2Value: "",
-        address2Owing: "",
-        address2Refinance: false,
-        address3: "",
-        address3Value: "",
-        address3Owing: "",
-        address3Refinance: false,
-        address4: "",
-        address4Value: "",
-        address4Owing: "",
-        address4Refinance: false,
-        vehicleValue: "",
-        vehicleOwing: "",
-        vehicleRefinance: false,
-        savingValue: "",
-        savingOwing: "",
-        savingRefinance: false,
-        shareValue: "",
-        shareOwing: "",
-        shareRefinance: false,
-        cardValue: "",
-        cardOwing: "",
-        cardRefinance: false,
-        creditorValue: "",
-        creditorOwing: "",
-        creditorRefinance: false,
-        otherValue: "",
-        otherOwing: "",
-        otherRefinance: false,
-        totalValue: "",
-        totalOwing: ""
-    })    
-    const enquiry = ref({
-        litigation: null,
-        judgements: null,
-        bankrupt: null,
-        refuse: null,
-        debt: null,
-        tax: null,
-        payment: null
+    const totalLiability = computed(() => {
+        return application.value.company_borrowers[0].liabilities
+            .map(a => parseFloat(a.amount) || 0)
+            .reduce((sum, v) => sum + v, 0)
     })
     const createBorrower = () => {
         return {
+            guarantor_type: "",
             title: "",
-            firstName: "",
-            lastName: "",
-            birth: "",
-            license: "",
-            phone: "",
+            first_name: "",
+            last_name: "",
+            date_of_birth: "",
+            drivers_licence_no: "",
+            home_phone: "",
             mobile: "",
             email: "",
-            address: "",
+            address_unit: "",
+            address_street_no: "",
+            address_street_name: "",
+            address_suburb: "",
+            address_state: "",
+            address_postcode: "",
             occupation: "",
-            employer: "",
-            type: ""
+            employer_name: "",
+            employment_type: ""
         }
     }
+    const createGuarantor = () => {
+
+    }
+    const createSecurity = () => {
+        return {
+            address: "",
+            type: [],
+            typeOther: "",
+            bedroom: "",
+            bathroom: "",
+            carSpace: "",
+            buildingSize: "",
+            landSize: "",
+            description: [],
+            mortgage1: "",
+            mortgage2: "",
+            debt1: "",
+            debt2: "",
+            valuation: [],
+            est: "",
+            purchase: ""
+        }
+    }
+    const createRequirement = () => {
+
+    }
+    const application = ref({
+        reference_number: "",
+        loan_amount: "",
+        loan_term: "",
+        interest_rate: "",
+        purpose: "",
+        repayment_frequency: "",
+        application_type: "",
+        product_id: "",
+        estimated_settlement_date: "",
+        stage: "inquiry",
+        borrowers: [createBorrower()],
+        guarantors: [createGuarantor()],
+        company_borrowers: [createCompany()],
+        security_properties: [createSecurity()],
+        loan_requirements: [createRequirement()],
+        loan_purpose: "",
+        additional_comments: "",
+        prior_application: true,
+        prior_application_details: "",
+        exit_strategy: "",
+        exit_strategy_details: "",
+        valuer_company_name: "",
+        valuer_contact_name: "",
+        valuer_phone: "",
+        valuer_email: "",
+        qs_company_name: "",
+        qs_contact_name: "",
+        qs_phone: "",
+        qs_email: "",
+        funding_calculation_input: {
+            establishment_fee_rate: "",
+            capped_interest_months: "",
+            monthly_line_fee_rate: "",
+            brokerage_fee_rate: "",
+            application_fee: "",
+            due_diligence_fee: "",
+            legal_fee_before_gst: "",
+            valuation_fee: "",
+            monthly_account_fee: "",
+            working_fee: ""
+        },
+        has_pending_litigation: null,
+        has_unsatisfied_judgements: null,
+        has_been_bankrupt: null,
+        has_been_refused_credit: null,
+        has_outstanding_ato_debt: null,
+        has_outstanding_tax_returns: null,
+        has_payment_arrangements: null,
+        solvency_enquiries_details: ""
+    })    
     const borrowers = ref([ createBorrower() ])
     const guarantorAsset = ref({
         address1: "",
@@ -249,26 +350,7 @@
         totalValue: "",
         totalOwing: ""
     })
-    const createSecurity = () => {
-        return {
-            address: "",
-            type: [],
-            typeOther: "",
-            bedroom: "",
-            bathroom: "",
-            carSpace: "",
-            buildingSize: "",
-            landSize: "",
-            description: [],
-            mortgage1: "",
-            mortgage2: "",
-            debt1: "",
-            debt2: "",
-            valuation: [],
-            est: "",
-            purchase: ""
-        }
-    }
+    
     const security = ref([ createSecurity() ])
     const loanDetail = ref({
         loan: "",
@@ -299,67 +381,6 @@
         methodOther: "",
         detail: ""
     })
-
-    watch(
-        () => [
-            companyAsset.value.address1Value,
-            companyAsset.value.address2Value,
-            companyAsset.value.address3Value,
-            companyAsset.value.address4Value,
-            companyAsset.value.vehicleValue,
-            companyAsset.value.savingValue,
-            companyAsset.value.shareValue,
-            companyAsset.value.cardValue,
-            companyAsset.value.creditorValue,
-            companyAsset.value.otherValue,
-            companyAsset.value.address1Owing,
-            companyAsset.value.address2Owing,
-            companyAsset.value.address3Owing,
-            companyAsset.value.address4Owing,
-            companyAsset.value.vehicleOwing,
-            companyAsset.value.savingOwing,
-            companyAsset.value.shareOwing,
-            companyAsset.value.cardOwing,
-            companyAsset.value.creditorOwing,
-            companyAsset.value.otherOwing
-        ],
-        (newArr) => {
-            const [ av1, av2, av3, av4, sav, sv, cv, rv, ov, ao1, ao2, ao3, ao4, sao, so, co, ro, oo ] = newArr.map(v => parseFloat(v) || 0)
-            companyAsset.value.totalValue = av1 + av2 + av3 + av4 + sav + sv + cv + rv + ov
-            companyAsset.value.totalOwing = ao1 + ao2 + ao3 + ao4 + sao + so + co + ro + oo
-        },
-        { immediate: true }
-    )
-    watch(
-        () => [
-            guarantorAsset.value.address1Value,
-            guarantorAsset.value.address2Value,
-            guarantorAsset.value.address3Value,
-            guarantorAsset.value.address4Value,
-            guarantorAsset.value.vehicleValue,
-            guarantorAsset.value.savingValue,
-            guarantorAsset.value.shareValue,
-            guarantorAsset.value.cardValue,
-            guarantorAsset.value.creditorValue,
-            guarantorAsset.value.otherValue,
-            guarantorAsset.value.address1Owing,
-            guarantorAsset.value.address2Owing,
-            guarantorAsset.value.address3Owing,
-            guarantorAsset.value.address4Owing,
-            guarantorAsset.value.vehicleOwing,
-            guarantorAsset.value.savingOwing,
-            guarantorAsset.value.shareOwing,
-            guarantorAsset.value.cardOwing,
-            guarantorAsset.value.creditorOwing,
-            guarantorAsset.value.otherOwing
-        ],
-        (newArr) => {
-            const [ av1, av2, av3, av4, sav, sv, cv, rv, ov, ao1, ao2, ao3, ao4, sao, so, co, ro, oo ] = newArr.map(v => parseFloat(v) || 0)
-            guarantorAsset.value.totalValue = av1 + av2 + av3 + av4 + sav + sv + cv + rv + ov
-            guarantorAsset.value.totalOwing = ao1 + ao2 + ao3 + ao4 + sao + so + co + ro + oo
-        },
-        { immediate: true }
-    )
     watch(
         () => [
             loanRequirement.value.amount1,
@@ -384,6 +405,33 @@
     const handleMinimize = () => {
         emit('minimize')
     }
+    const addDirector = () => {
+        if (application.value.company_borrowers[0].directors.length < 2) {
+            application.value.company_borrowers[0].directors.push(createDirector())
+        }
+    }
+    const removeDirector = (idx) => {
+        if (application.value.company_borrowers[0].directors.length > 1) {
+            application.value.company_borrowers[0].directors.splice(idx, 1)
+        }
+    }
+    const addAsset = () => {
+        application.value.company_borrowers[0].assets.push(createCompanyAsset())
+    }
+    const removeAsset = () => {
+        if (application.value.company_borrowers[0].assets.length > 1) {
+            application.value.company_borrowers[0].assets.pop()
+        }
+    }
+    const addLiability = () => {
+        application.value.company_borrowers[0].liabilities.push(createCompanyLiability())
+
+    }
+    const removeLiability = () => {
+        if (application.value.company_borrowers[0].liabilities.length > 1) {
+            application.value.company_borrowers[0].liabilities.pop()
+        }
+    }
     const addBorrower = () => {
         if (borrowers.value.length < 2) {
             borrowers.value.push(createBorrower())
@@ -405,13 +453,13 @@
         }
     }
     const isCompanyValid = computed(() => {
-        return Object.values(company.value).every(value => value !== '')
+        return Object.values(application.value).every(value => value !== '')
     })
     const isCompanyAssetValid = computed(() => {
-        return Object.values(companyAsset.value).every(value => value !== '')
+        return Object.values(application.value).every(value => value !== '')
     })
     const isEnquiryValid = computed(() => {
-        return Object.values(enquiry.value).every(value => value !== null)
+        return Object.values(application.value).every(value => value !== null)
     })
     const isIndividualValid = computed(() => {
         return borrowers.value.every(borrower =>
@@ -436,15 +484,7 @@
         return Object.values(exit.value).every(value => value !== '')
     })
     const handleSave = () => {
-        console.log(company.value)
-        console.log(companyAsset.value)
-        console.log(enquiry.value)
-        console.log(borrowers.value)
-        console.log(guarantorAsset.value)
-        console.log(security.value)
-        console.log(loanDetail.value)
-        console.log(loanRequirement.value)
-        console.log(exit.value)
+        console.log(application.value)
     }
 </script>
 

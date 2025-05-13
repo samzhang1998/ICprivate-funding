@@ -116,7 +116,7 @@ async function getRepaymentCompliance() {
 
 <style lang="scss" scoped>
 .dashboard {
-  font-family: Inter;
+  // font-family: Inter;
   display: flex;
   flex-direction: column;
   gap: 20px;

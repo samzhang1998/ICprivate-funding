@@ -5,53 +5,57 @@
             <p style="color: #000">No</p>
         </div>
         <div class="line">
-            <p>Does the Borrower(s) and the Guarantor(s) have any pending or past litigation matters (within the last 2 years)?</p>
-            <el-radio-group v-model="enquiry.litigation">
+            <p>Do/es the Borrower(s) and the Guarantor(s) have any pending or past litigation matters (within the last 2 years)?</p>
+            <el-radio-group v-model="enquiry.has_pending_litigation">
                 <el-radio :value="true" />
                 <el-radio :value="false" />
             </el-radio-group>
         </div>
         <div class="line">
             <p>Are there any unsatisfied judgements against the Borrower(s) and the Guarantor(s)?</p>
-            <el-radio-group v-model="enquiry.judgements">
+            <el-radio-group v-model="enquiry.has_unsatisfied_judgements">
                 <el-radio :value="true" />
                 <el-radio :value="false" />
             </el-radio-group>
         </div>
         <div class="line">
             <p>Have the Borrower(s) and the Guarantor(s) been bankrupt or insolvent in the past 5 years?</p>
-            <el-radio-group v-model="enquiry.bankrupt">
+            <el-radio-group v-model="enquiry.has_been_bankrupt">
                 <el-radio :value="true" />
                 <el-radio :value="false" />
             </el-radio-group>
         </div>
         <div class="line">
             <p>Has the Borrower(s) and the Guarantor(s) been refused credit by a credit provider in the last 1 year?</p>
-            <el-radio-group v-model="enquiry.refuse">
+            <el-radio-group v-model="enquiry.has_been_refused_credit">
                 <el-radio :value="true" />
                 <el-radio :value="false" />
             </el-radio-group>
         </div>
         <div class="line">
             <p>Are there any outstanding debts current or otherwise due to the ATO by the Borrower(s) and the Guarantor(s)?</p>
-            <el-radio-group v-model="enquiry.debt">
+            <el-radio-group v-model="enquiry.has_outstanding_ato_debt">
                 <el-radio :value="true" />
                 <el-radio :value="false" />
             </el-radio-group>
         </div>
         <div class="line">
             <p>Does the Borrower(s) and the Guarantor(s) have outstanding Tax or BAS returns due to be lodged with the ATO?</p>
-            <el-radio-group v-model="enquiry.tax">
+            <el-radio-group v-model="enquiry.has_outstanding_tax_returns">
                 <el-radio :value="true" />
                 <el-radio :value="false" />
             </el-radio-group>
         </div>
         <div class="line">
             <p>Has the Borrower(s) and the Guarantor(s) made payment arrangements with a creditor to payout debt that is still current?</p>
-            <el-radio-group v-model="enquiry.payment">
+            <el-radio-group v-model="enquiry.has_payment_arrangements">
                 <el-radio :value="true" />
                 <el-radio :value="false" />
             </el-radio-group>
+        </div>
+        <div class="long_item">
+            <p>Solvency Enquiries Details</p>
+            <el-input v-model="enquiry.solvency_enquiries_details" />
         </div>
     </div>
 </template>
@@ -104,5 +108,12 @@
         font-style: normal;
         font-weight: 500;
         line-height: 12px;
+    }
+    .long_item {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        gap: 10px;
     }
 </style>

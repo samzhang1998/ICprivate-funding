@@ -20,7 +20,7 @@ sendRequest.interceptors.request.use(
     let userInfo = localStorage.getItem("userInfo");
     if (userInfo) {
       userInfo = JSON.parse(userInfo);
-      config.headers["authorization"] = `Bearer ${userInfo.access}`;
+      config.headers["Authorization"] = `Bearer ${userInfo.access}`;
     }
     return config;
   },

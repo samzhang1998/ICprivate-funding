@@ -57,7 +57,7 @@ export function bdm(params) {
 }
 export function addBdms(params) {
   return sendRequest({
-    url: "/api/brokers/bdms/",
+    url: "/api/brokers/bdms/create_with_branch/",
     method: "post",
     data: params,
   });

@@ -12,14 +12,14 @@
                         <el-option v-for="item in branches" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
                 </div>
-                <div class="filter">
+                <!-- <div class="filter">
                     <h1>Income Type</h1>
                     <el-select v-model="selectedincome" placeholder="Select Income Type" style="width: 200px">
                         <el-option v-for="item in incomes" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
-                </div>
-                <Search @click="toBroker"></Search>
-                <Clear></Clear>
+                </div> -->
+                <Search @click="getBrokers"></Search>
+                <Clear @click="handleClear"></Clear>
             </div>
             <Create :action="action" @click="addBroker"></Create>
         </div>
@@ -110,6 +110,7 @@ const incomes = ref([
 ])
 const selected = ref({
     branch: "",
+    search: "",
     page: 1,
 })
 const selectedincome = ref("")
@@ -122,24 +123,6 @@ const brokers = ref([
     //     company: "company name",
     //     phone: "0000 000 0000",
     //     application_count: 5,
-    //     email: "rileysmith@example.com",
-    //     branch_name: "Sydney Center",
-    // },
-    // {
-    //     id: 22222,
-    //     name: "Broker Name",
-    //     company: "company name",
-    //     phone: "0000 000 0000",
-    //     application_count: 1,
-    //     email: "rileysmith@example.com",
-    //     branch_name: "Sydney Center",
-    // },
-    // {
-    //     id: 33333,
-    //     name: "Broker Name",
-    //     company: "company name",
-    //     phone: "0000 000 0000",
-    //     application_count: 8,
     //     email: "rileysmith@example.com",
     //     branch_name: "Sydney Center",
     // }
@@ -174,8 +157,10 @@ const getBrokers = async () => {
         console.log(err)
     }
 }
-const toBroker = () => {
-    router.push(`/broker/1`)
+const handleClear = () => {
+    selected.value.search = ''
+    selected.value.branch = ''
+    getBrokers()
 }
 const addBroker = () => {
     popupAction.value = "Add Broker"
