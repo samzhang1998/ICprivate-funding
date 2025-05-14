@@ -90,7 +90,7 @@ const tabs = [
     { name: 'Sent to Lender', label: 'Sent to Lender', width: '86px' },
     { name: 'Funding Table lssued', label: 'Funding Table lssued', width: '88px' },
     { name: 'ILOO lssued', label: 'ILOO lssued', width: '37px' },
-    { name: 'ILO0 Signed', label: 'ILO0 Signed', width: '89px' },
+    { name: 'ILOO Signed', label: 'ILOO Signed', width: '89px' },
     { name: 'Commitment Fee Paid', label: 'Commitment Fee Paid', width: '73px' },
     { name: 'App Submitted', label: 'App Submitted', width: '80px' },
     { name: 'Valuation Ordered', label: 'Valuation Ordered', width: '69px' },
