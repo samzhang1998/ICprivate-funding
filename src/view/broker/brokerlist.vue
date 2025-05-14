@@ -9,7 +9,7 @@
                 <div class="filter">
                     <h1>Branch</h1>
                     <el-select v-model="selected.branch" placeholder="Select Branch" style="width: 200px">
-                        <el-option v-for="item in branches" :key="item.value" :label="item.label" :value="item.value" />
+                        <el-option v-for="item in branchesList" :key="item.id" :label="item.name" :value="item.id" />
                     </el-select>
                 </div>
                 <!-- <div class="filter">
@@ -96,6 +96,11 @@ import Create from '@/components/buttons/create.vue';
 import DeleteButton from '@/components/buttons/delete.vue';
 import Active from '@/components/buttons/active.vue';
 import Inactive from '@/components/buttons/inactive.vue';
+
+import useBranches from '@/hooks/useBranches'
+
+const { branchesList } = useBranches()
+console.log(branchesList.value);
 
 const router = useRouter()
 const popup = ref(false)

@@ -12,7 +12,7 @@
             <Create :action="action" @click="addBranch"></Create>
         </div>
         <div class="container">
-            <el-table ref="branchListTable" :data="paginatedData" style="width: 100%"
+            <el-table ref="branchListTable" :data="branches" style="width: 100%"
                 :default-sort="{ prop: 'id', order: 'ascending' }" :cell-style="{ padding: '10px 0' }"
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" align="center" width="50" fixed />
@@ -23,9 +23,9 @@
                 <el-table-column prop="manager" label="Branch Manager" width="130" />
                 <el-table-column prop="email" label="Email Address" min-width="130" />
                 <el-table-column label="Create At" width="100" />
-                <el-table-column label="Action" align="center" width="60">
+                <el-table-column label="Action" align="center" width="60" fixed="right">
                     <template #default="{ row }">
-                        <el-popover placement="bottom" trigger="click" width="160" popper-class="user-popover">
+                        <el-popover placement="bottom" trigger="hover" width="160" popper-class="user-popover">
                             <div class="actions">
                                 <div class="action_user">Action</div>
                                 <div class="action" @click="handleView(row)">
@@ -63,12 +63,13 @@
                         <Inactive></Inactive>
                     </div>
                 </div>
-                <el-pagination layout="prev, pager, next" background :total="branches.length" :page-size="pageSize"
+                <el-pagination layout="prev, pager, next" background :total="total" :page-size="pageSize"
                     :current-page="selected.page" @current-change="handlePageChange" />
             </div>
         </div>
         <transition name="slide-right-popup">
-            <AddBranch v-if="popup" :action="popupAction" @close="close" @minimize="minimize"></AddBranch>
+            <AddBranch v-if="popup" :action="popupAction" :data="popData" @close="close" @minimize="minimize">
+            </AddBranch>
         </transition>
     </div>
 </template>
@@ -93,11 +94,11 @@ import Inactive from '@/components/buttons/inactive.vue';
 
 const router = useRouter()
 const popup = ref(false)
-
+const popData = ref(null)
 const selected = ref({
     search: "",
     page: 1,
-    page_size: 1
+    page_size: 10
 })
 const action = ref("Create Branch")
 const popupAction = ref("")
@@ -146,6 +147,7 @@ const handleClear = () => {
 const addBranch = () => {
     popupAction.value = "Add Branch"
     popup.value = true
+    popData.value = {}
 }
 const close = () => {
     popup.value = false
@@ -173,9 +175,24 @@ const handleView = (row) => {
 const handleEdit = (row) => {
     popupAction.value = `Edit ${row.name}`
     popup.value = true
+    popData.value = {
+        id: row.id,
+        name: row.name,
+        address: row.address,
+        phone: row.phone,
+        email: row.email,
+        // manager: row.manager
+    }
+    console.log(popData.value);
 }
-const handleDelete = (row) => {
-    branches.value = branches.value.filter(item => item !== row)
+const handleDelete = async (row) => {
+    // branches.value = branches.value.filter(item => item !== row)
+    const [err, res] = await api.deleteBranch(row.id)
+    if (!err) {
+        getBranches()
+    } else {
+        console.log(err)
+    }
 }
 const deleteSelect = () => {
     console.log("selected", selectedItem)
@@ -185,7 +202,8 @@ const deleteSelect = () => {
     selectedItem.value = []
 }
 const handlePageChange = (page) => {
-    selected.page.value = page
+    selected.value.page = page
+    getBranches()
 }
 </script>
 

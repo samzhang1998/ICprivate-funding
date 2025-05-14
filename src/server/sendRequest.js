@@ -43,7 +43,7 @@ sendRequest.interceptors.response.use(
       ElMessage.error(response.data.detail || response.data.error)
       logOut()
     }
-    return [response.data, null]
+    return [response?.data, null]
   },
 )
 
