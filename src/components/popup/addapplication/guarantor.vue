@@ -1,47 +1,65 @@
 <template>
-    <div v-for="(b, index) in borrowers" :key="index" class="form">
+    <div v-for="(b, index) in guarantors" :key="index" class="form">
         <div class="line">
-            <h1>Borrower {{ index + 1 }}</h1>
+            <h1>Guarantor {{ index + 1 }}</h1>
             <el-icon
                 :size="20"
                 style="cursor: pointer; color: #2984DE;" 
-                v-if="borrowers.length < 2" 
+                v-if="guarantors.length < 2" 
                 @click="add"
             ><CirclePlusFilled /></el-icon>
             <el-icon 
                 :size="20" 
                 style="cursor: pointer; color: #2984DE;" 
-                v-if="borrowers.length > 1" 
+                v-if="guarantors.length > 1" 
                 @click="remove(index)"
             ><RemoveFilled /></el-icon>
         </div>
-        <div class="item">
-            <p>Given Names</p>
-            <el-input v-model="b.first_name" />
-        </div>
-        <div class="item">
-            <p>Surname</p>
-            <el-input v-model="b.last_name" />
-        </div>       
-        <div class="item">
-            <p>Phone Number</p>
-            <el-input v-model="b.phone" />
-        </div>
-        <div class="item">
-            <p>Email Address</p>
-            <el-input v-model="b.email" />
+        <div class="name">
+            <div class="item">
+                <p>Title</p>
+                <el-input v-model="b.title" />
+            </div>
+            <div class="item">
+                <p>Given Names</p>
+                <el-input v-model="b.firstName" />
+            </div>
+            <div class="item">
+                <p>Surname</p>
+                <el-input v-model="b.lastName" />
+            </div>
         </div>
         <div class="item">
             <p>Date of Birth</p>
-            <el-input v-model="b.date_of_birth" />
+            <el-input v-model="b.birth" />
         </div>
         <div class="item">
-            <p>tax Id</p>
-            <el-input v-model="b.tax_id" />
+            <p>Drivers License No.</p>
+            <el-input v-model="b.license" />
         </div>
         <div class="item">
-            <p>Marital Status</p>
-            <el-input v-model="b.marital_status" />
+            <p>Phone number - Home</p>
+            <el-input v-model="b.phone" />
+        </div>
+        <div class="item">
+            <p>Mobile Number</p>
+            <el-input v-model="b.mobile" />
+        </div>
+        <div class="long_item">
+            <p>Email Address</p>
+            <el-input v-model="b.email" />
+        </div>
+        <div class="long_item">
+            <p>Full Address</p>
+            <el-input v-model="b.address" />
+        </div>
+        <div class="item">
+            <p>Occupation</p>
+            <el-input v-model="b.occupation" />
+        </div>
+        <div class="item">
+            <p>Employer Name (if self-employed, your Trading Name)</p>
+            <el-input v-model="b.employer" />
         </div>
         <div class="long_item">
             <p>Current Employment Type</p>
@@ -57,7 +75,7 @@
 
 <script setup>
     const props = defineProps({
-        borrowers: Array
+        guarantors: Array
     })
 
     const emit = defineEmits(['add', 'remove'])

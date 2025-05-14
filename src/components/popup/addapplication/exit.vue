@@ -1,24 +1,34 @@
 <template>
     <div class="form">
         <h1>Finance Takeout Method</h1>
-        <el-checkbox-group v-model="exit.methods" class="group">
-            <el-checkbox value="Refinance"><h1>Refinance</h1></el-checkbox>
-            <el-checkbox value="Sale of Security"><h1>Sale of Security</h1></el-checkbox>
-            <el-checkbox value="Cash-flow"><h1>Cash-flow</h1></el-checkbox>
-            <el-checkbox value="Other"><h1>Other (Please Specify Below)</h1></el-checkbox>
-        </el-checkbox-group>
-        <el-input v-model="exit.methodOther" />
+        <el-radio-group v-model="strategies" class="group">
+            <el-radio value="Refinance"><h1>Refinance</h1></el-radio>
+            <el-radio value="Sale of Security"><h1>Sale of Security</h1></el-radio>
+            <el-radio value="Cash-flow"><h1>Cash-flow</h1></el-radio>
+            <el-radio value="Other"><h1>Other (Please Specify Below)</h1></el-radio>
+        </el-radio-group>
+        <el-input v-model="exit.exit_strategy" :disabled="strategies !== 'Other'" />
         <h1>Details (If Other)</h1>
         <div class="item">
             <p>Attach copies of supporting documents for your Finance Takeout Method</p>
-            <el-input :rows="2" type="textarea" v-model="exit.detail" />
+            <el-input :rows="2" type="textarea" v-model="exit.exit_strategy_details" />
         </div>
     </div>
 </template>
 
 <script setup>
+    import { ref, watch } from 'vue';
+
     const props = defineProps({
         exit: Object
+    })
+
+    const strategies = ref("")
+
+    watch(strategies, (newVal) => {
+        if (newVal !== 'Other') {
+            strategies.value = exit.exit_strategy.value
+        }
     })
 </script>
 
@@ -58,7 +68,7 @@
         align-items: start;
         gap: 10px;
     }
-    :deep(.el-checkbox) {
+    /* :deep(.el-checkbox) {
         --el-checkbox-input-border: 1.5px solid var(--Line, #E1E1E1);
-    }
+    } */
 </style>

@@ -4,41 +4,43 @@
             <h1>Description of Funds Required</h1>
             <p>Amount</p>
         </div>
-        <div class="line">
-            <el-input v-model="requirement.require1" />
-            <el-input v-model="requirement.amount1" />
+        <div class="line" v-for="(r, index) in requirement" :key="index">
+            <el-input v-model="r.description" />
+            <el-input v-model="r.amount" />
         </div>
-        <div class="line">
-            <el-input v-model="requirement.require2" />
-            <el-input v-model="requirement.amount2" />
-        </div>
-        <div class="line">
-            <el-input v-model="requirement.require3" />
-            <el-input v-model="requirement.amount3" />
-        </div>
-        <div class="line">
-            <el-input v-model="requirement.require4" />
-            <el-input v-model="requirement.amount4" />
-        </div>
-        <div class="line">
-            <el-input v-model="requirement.require5" />
-            <el-input v-model="requirement.amount5" />
-        </div>
-        <div class="line">
-            <el-input v-model="requirement.require6" />
-            <el-input v-model="requirement.amount6" />
+        <div class="buttons">
+            <el-icon
+                :size="20"
+                style="cursor: pointer; color: #2984DE;" 
+                @click="add"
+            ><CirclePlusFilled /></el-icon>
+            <el-icon 
+                :size="20" 
+                style="cursor: pointer; color: #2984DE;" 
+                v-if="requirement.length > 1" 
+                @click="remove"
+            ><RemoveFilled /></el-icon>
         </div>
         <div class="line">
             <h1 style="font-weight: 700;">Total</h1>
-            <el-input v-model="requirement.totalAmount" disabled />
+            <el-input disabled />
         </div>
     </div>
 </template>
 
 <script setup>
     const props = defineProps({
-        requirement: Object
+        requirement: Array
     })
+
+    const emit = defineEmits(['add', 'remove'])
+
+    const add = () => {
+        emit('add')
+    }
+    const remove = () => {
+        emit('remove')
+    }
 </script>
 
 <style scoped>
@@ -68,5 +70,11 @@
         font-weight: 500;
         line-height: 12px;
         margin: 0;
+    }
+    .buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: end;
+        gap: 15px;
     }
 </style>

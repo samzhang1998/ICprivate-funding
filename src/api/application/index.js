@@ -2,7 +2,7 @@ import sendRequest from "@/server/sendRequest";
 
 export function applications(params) {
     return sendRequest({
-        url: "/api/applications/applications/",
+        url: "/api/applications/applications/enhanced_list/",
         method: "get",
         params: params,
     });

@@ -37,22 +37,31 @@
                     <el-collapse-item name="3">
                         <template #title>
                             <div class="title">
+                                <el-icon style="font-size: 20px" :color="isIndividualValid ? '#2984DE' : '#E1E1E1'"><SuccessFilled /></el-icon>
+                                <p :style="{color: isIndividualValid ? '#2984DE' : '#272727'}">Individual Borrower Details</p>
+                            </div>
+                        </template>
+                        <Inividual :borrowers="application.borrowers" @add="addBorrower" @remove="removeBorrower"></Inividual>
+                    </el-collapse-item>
+                    <el-collapse-item name="4">                        
+                        <template #title>
+                            <div class="title">
                                 <el-icon style="font-size: 20px" :color="isEnquiryValid ? '#2984DE' : '#E1E1E1'"><SuccessFilled /></el-icon>
                                 <p :style="{color: isEnquiryValid ? '#2984DE' : '#272727'}">General Solvency Enquires</p>
                             </div>
                         </template>
                         <Enquiries :enquiry="application"></Enquiries>
                     </el-collapse-item>
-                    <el-collapse-item name="4">
+                    <el-collapse-item name="5">
                         <template #title>
                             <div class="title">
                                 <el-icon style="font-size: 20px" :color="isIndividualValid ? '#2984DE' : '#E1E1E1'"><SuccessFilled /></el-icon>
-                                <p :style="{color: isIndividualValid ? '#2984DE' : '#272727'}">Individual Details</p>
+                                <p :style="{color: isIndividualValid ? '#2984DE' : '#272727'}">Guarantor Details</p>
                             </div>
                         </template>
-                        <Inividual :borrowers="borrowers" @add="addBorrower" @remove="removeBorrower"></Inividual>
+                        <Guarantor :guarantors="application.guarantors" @add="addGuarantor" @remove="removeGuarantor"></Guarantor>
                     </el-collapse-item>
-                    <el-collapse-item name="5">
+                    <el-collapse-item name="6">
                         <template #title>
                             <div class="title">
                                 <el-icon style="font-size: 20px" :color="isGuarantorAssetValid ? '#2984DE' : '#E1E1E1'"><SuccessFilled /></el-icon>
@@ -61,34 +70,38 @@
                         </template>
                         <GuarantorAsset :asset="guarantorAsset"></GuarantorAsset>
                     </el-collapse-item>
-                    <el-collapse-item name="6">
+                    <el-collapse-item name="7">
                         <template #title>
                             <div class="title">
                                 <el-icon style="font-size: 20px" :color="isSecurityValid ? '#2984DE' : '#E1E1E1'"><SuccessFilled /></el-icon>
                                 <p :style="{color: isSecurityValid ? '#2984DE' : '#272727'}">Proposed Security Details</p>
                             </div>
                         </template>
-                        <Security :security="security" @add="addSecurity" @remove="removeSecurity"></Security>
+                        <Security :security="application.security_properties" @add="addSecurity" @remove="removeSecurity"></Security>
                     </el-collapse-item>
-                    <el-collapse-item name="7">
+                    <el-collapse-item name="8">
                         <template #title>
                             <div class="title">
                                 <el-icon style="font-size: 20px" :color="isLoanDetailValid ? '#2984DE' : '#E1E1E1'"><SuccessFilled /></el-icon>
                                 <p :style="{color: isLoanDetailValid ? '#2984DE' : '#272727'}">Loan Details & Purpose</p>
                             </div>
                         </template>
-                        <LoanDetail :detail="loanDetail"></LoanDetail>
+                        <LoanDetail :detail="application"></LoanDetail>
                     </el-collapse-item>
-                    <el-collapse-item name="8">
+                    <el-collapse-item name="9">
                         <template #title>
                             <div class="title">
                                 <el-icon style="font-size: 20px" :color="isRequirementValid ? '#2984DE' : '#E1E1E1'"><SuccessFilled /></el-icon>
                                 <p :style="{color: isRequirementValid ? '#2984DE' : '#272727'}">Loan Requirements</p>
                             </div>
                         </template>
-                        <LoanRequirement :requirement="loanRequirement"></LoanRequirement>
+                        <LoanRequirement 
+                            :requirement="application.loan_requirements"
+                            @add="addRequirement"
+                            @remove="removeRequirement"
+                        ></LoanRequirement>
                     </el-collapse-item>
-                    <el-collapse-item name="9">
+                    <el-collapse-item name="10">
                         <template #title>
                             <div class="title">
                                 <el-icon style="font-size: 20px" :color="isExitValid ? '#2984DE' : '#E1E1E1'"><SuccessFilled /></el-icon>
@@ -97,14 +110,14 @@
                         </template>
                         <Calculation :detail="application.funding_calculation_input"></Calculation>
                     </el-collapse-item>
-                    <el-collapse-item name="10">
+                    <el-collapse-item name="11">
                         <template #title>
                             <div class="title">
                                 <el-icon style="font-size: 20px" :color="isExitValid ? '#2984DE' : '#E1E1E1'"><SuccessFilled /></el-icon>
                                 <p :style="{color: isExitValid ? '#2984DE' : '#272727'}">Proposed Exit Strategy</p>
                             </div>
                         </template>
-                        <Exit :exit="exit"></Exit>
+                        <Exit :exit="application"></Exit>
                     </el-collapse-item>
                 </el-collapse>
             </div>
@@ -122,6 +135,7 @@
     import CompanyAssets from './companyasset.vue';
     import Enquiries from './enquiries.vue';
     import Inividual from './inividual.vue';
+    import Guarantor from './guarantor.vue';
     import GuarantorAsset from './guarantorasset.vue';
     import Security from './security.vue';
     import LoanDetail from './loandetail.vue';
@@ -150,7 +164,6 @@
             value: "",
             amount_owing: "",
             to_be_refinanced: "",
-            bg_type: "",
             address: ""
         }
     }
@@ -162,7 +175,7 @@
             lender: "",
             monthly_payment: "",
             to_be_refinanced: "",
-            bg_type: ""
+            bg_type: "bg1"
         }
     }    
     const createCompany = () => {
@@ -204,6 +217,20 @@
     })
     const createBorrower = () => {
         return {
+            first_name: "",
+            last_name: "",
+            email: "",
+            phone: "",
+            date_of_birth: "",
+            tax_id: "",
+            marital_status: "",
+            residency_status: "",
+            referral_source: "",
+            tags: ""
+        }
+    }
+    const createGuarantor = () => {
+        return {
             guarantor_type: "",
             title: "",
             first_name: "",
@@ -224,31 +251,38 @@
             employment_type: ""
         }
     }
-    const createGuarantor = () => {
-
-    }
     const createSecurity = () => {
         return {
-            address: "",
-            type: [],
-            typeOther: "",
-            bedroom: "",
-            bathroom: "",
-            carSpace: "",
-            buildingSize: "",
-            landSize: "",
-            description: [],
-            mortgage1: "",
-            mortgage2: "",
-            debt1: "",
-            debt2: "",
-            valuation: [],
-            est: "",
-            purchase: ""
+            address_unit: "",
+            address_street_no: "",
+            address_street_name: "",
+            address_suburb: "",
+            address_state: "",
+            address_postcode: "",
+            property_type: "",
+            bedrooms: "",
+            bathrooms: "",
+            car_spaces: "",
+            building_size: "",
+            land_size: "",
+            has_garage: null,
+            has_carport: null,
+            is_single_story: null,
+            has_off_street_parking: null,
+            current_mortgagee: "",
+            first_mortgage: "",
+            second_mortgage: "",
+            current_debt_position: "",
+            occupancy: "",
+            estimated_value: "",
+            purchase_price: ""
         }
     }
     const createRequirement = () => {
-
+        return {
+            description: "",
+            amount: ""
+        }
     }
     const application = ref({
         reference_number: "",
@@ -301,7 +335,6 @@
         has_payment_arrangements: null,
         solvency_enquiries_details: ""
     })    
-    const borrowers = ref([ createBorrower() ])
     const guarantorAsset = ref({
         address1: "",
         address1Value: "",
@@ -350,52 +383,6 @@
         totalValue: "",
         totalOwing: ""
     })
-    
-    const security = ref([ createSecurity() ])
-    const loanDetail = ref({
-        loan: "",
-        term: "",
-        date: "",
-        rate: "",
-        purpose: [],
-        purposeOther: "",
-        comments: ""
-    })
-    const loanRequirement = ref({
-        require1: "",
-        amount1: "",
-        require2: "",
-        amount2: "",
-        require3: "",
-        amount3: "",
-        require4: "",
-        amount4: "",
-        require5: "",
-        amount5: "",
-        require6: "",
-        amount6: "",
-        totalAmount: ""
-    })
-    const exit = ref({
-        methods: [],
-        methodOther: "",
-        detail: ""
-    })
-    watch(
-        () => [
-            loanRequirement.value.amount1,
-            loanRequirement.value.amount2,
-            loanRequirement.value.amount3,
-            loanRequirement.value.amount4,
-            loanRequirement.value.amount5,
-            loanRequirement.value.amount6,
-        ],
-        (newArr) => {
-            const [ a1, a2, a3, a4, a5, a6 ] = newArr.map(v => parseFloat(v) || 0)
-            loanRequirement.value.totalAmount = a1 + a2 + a3 + a4 + a6 + a6
-        },
-        { immediate: true }
-    )
 
     const emit = defineEmits(['close', 'minimize'])
 
@@ -406,51 +393,46 @@
         emit('minimize')
     }
     const addDirector = () => {
-        if (application.value.company_borrowers[0].directors.length < 2) {
-            application.value.company_borrowers[0].directors.push(createDirector())
-        }
+        application.value.company_borrowers[0].directors.push(createDirector())
     }
     const removeDirector = (idx) => {
-        if (application.value.company_borrowers[0].directors.length > 1) {
-            application.value.company_borrowers[0].directors.splice(idx, 1)
-        }
+        application.value.company_borrowers[0].directors.splice(idx, 1)
     }
     const addAsset = () => {
         application.value.company_borrowers[0].assets.push(createCompanyAsset())
     }
     const removeAsset = () => {
-        if (application.value.company_borrowers[0].assets.length > 1) {
-            application.value.company_borrowers[0].assets.pop()
-        }
+        application.value.company_borrowers[0].assets.pop()
     }
     const addLiability = () => {
         application.value.company_borrowers[0].liabilities.push(createCompanyLiability())
-
     }
     const removeLiability = () => {
-        if (application.value.company_borrowers[0].liabilities.length > 1) {
-            application.value.company_borrowers[0].liabilities.pop()
-        }
+        application.value.company_borrowers[0].liabilities.pop()
     }
     const addBorrower = () => {
-        if (borrowers.value.length < 2) {
-            borrowers.value.push(createBorrower())
-        }
+        application.value.borrowers.push(createBorrower())
     }
     const removeBorrower = (idx) => {
-        if (borrowers.value.length > 1) {
-            borrowers.value.splice(idx, 1)
-        }
+        application.value.borrowers.splice(idx, 1)
+    }
+    const addGuarantor = () => {
+        application.value.guarantors.push(createGuarantor())
+    }
+    const removeGuarantor = (idx) => {
+        application.value.guarantors.splice(idx, 1)
     }
     const addSecurity = () => {
-        if (security.value.length < 3) {
-            security.value.push(createSecurity())
-        }
+        application.value.security_properties.push(createSecurity())
     }
     const removeSecurity = (idx) => {
-        if (security.value.length > 1) {
-            security.value.splice(idx, 1)
-        }
+        application.value.security_properties.splice(idx, 1)
+    }
+    const addRequirement = () => {
+        application.value.loan_requirements.push(createRequirement())
+    }
+    const removeRequirement = () => {
+        application.value.loan_requirements.pop()
     }
     const isCompanyValid = computed(() => {
         return Object.values(application.value).every(value => value !== '')
@@ -462,26 +444,22 @@
         return Object.values(application.value).every(value => value !== null)
     })
     const isIndividualValid = computed(() => {
-        return borrowers.value.every(borrower =>
-            Object.values(borrower).every(value => value !== '')
-        )
+        return Object.values(application.value).every(value => value !== null)
     })
     const isGuarantorAssetValid = computed(() => {
-        return Object.values(guarantorAsset.value).every(value => value !== '')
+        return Object.values(application.value).every(value => value !== '')
     })
     const isSecurityValid = computed(() => {
-        return security.value.every(security =>
-            Object.values(security).every(value => value !== '')
-        )
+        return Object.values(application.value).every(value => value !== null)
     })
     const isLoanDetailValid = computed(() => {
-        return Object.values(loanDetail.value).every(value => value !== '')
+        return Object.values(application.value).every(value => value !== '')
     })
     const isRequirementValid = computed(() => {
-        return Object.values(loanRequirement.value).every(value => value !== '')
+        return Object.values(application.value).every(value => value !== '')
     })
     const isExitValid = computed(() => {
-        return Object.values(exit.value).every(value => value !== '')
+        return Object.values(application.value).every(value => value !== '')
     })
     const handleSave = () => {
         console.log(application.value)
