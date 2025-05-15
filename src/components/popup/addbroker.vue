@@ -43,9 +43,9 @@
                         </div>
                         <div class="item">
                             <p>Branch</p>
-                            <el-select v-model="overview.branch_id" placeholder="Please Select...">
-                                <el-option v-for="item in branches" :key="item.value" :label="item.label"
-                                    :value="item.value" />
+                            <el-select v-model="overview.branch" placeholder="Please Select...">
+                                <el-option v-for="item in branchesList" :key="item.id" :label="item.name"
+                                    :value="item.id" />
                             </el-select>
                         </div>
                         <!-- <div class="item">
@@ -86,22 +86,27 @@
         </div>
         <div class="buttons">
             <Cancel @click="handleClose"></Cancel>
-            <Save @click="addBroker"></Save>
+            <Save @click="handleAddOrEdit"></Save>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { api } from '@/api';
 import Cancel from '../buttons/cancel.vue';
 import Save from '../buttons/save.vue';
 import useSystem from '@/hooks/useSystem';
+import useBranches from '@/hooks/useBranches'
+import { ElMessage } from 'element-plus'
+
+const { branchesList } = useBranches()
 
 const { userInfo } = useSystem()
 
 const props = defineProps({
-    action: String
+    action: String,
+    editId: [String, Number]
 })
 
 const activeNames = ref("1")
@@ -112,10 +117,10 @@ const overview = ref({
     address: "",
     phone: "",
     email: "",
-    branch_id: "",
+    branch: "",
     // license: "",
     user: userInfo.value?.user_id || "",
-    bdms: []
+    // bdms: []
 })
 //todo something
 const commission = ref({
@@ -124,10 +129,13 @@ const commission = ref({
     commission_account_number: "",
     commission_bsb: ""
 })
-const branches = ref([
-    { value: "111111", label: "Sydney Center" },
-    { value: "222222", label: "Melbourne Center" }
-])
+
+watch(() => props.editId, (newVal) => {
+    if (newVal) {
+        console.log("watch", newVal);
+        getBroker()
+    }
+}, { deep: true, immediate: true })
 
 const emit = defineEmits(['close', 'minimize'])
 
@@ -143,6 +151,29 @@ const isOverviewValid = computed(() => {
 const isCommissionValid = computed(() => {
     return Object.values(commission.value).every(value => value !== '')
 })
+
+async function getBroker() {
+    const [err, res] = await api.broker(props.editId)
+    if (!err) {
+        console.log(res);
+        // brokers.value = res
+        overview.value.address = res.address
+        overview.value.company = res.company
+        overview.value.email = res.email
+        overview.value.name = res.name
+        overview.value.phone = res.phone
+        overview.value.branch = res.branch
+        //编辑时传入user会报错，先置为空
+        overview.value.user = ""
+        // overview.value.bdms = res.bdms
+        commission.value.commission_account_name = res.commission_account_name
+        commission.value.commission_account_number = res.commission_account_number
+        commission.value.commission_bank_name = res.commission_bank_name
+        commission.value.commission_bsb = res.commission_bsb
+    } else {
+        console.log(err)
+    }
+}
 const addBroker = async () => {
     const data = {
         //todo something
@@ -155,7 +186,29 @@ const addBroker = async () => {
         console.log(res);
         emit('close')
     } else {
+        console.log(JSON.stringify(err))
+    }
+}
+
+const editBroker = async () => {
+    const data = {
+        ...overview.value,
+        ...commission.value
+    }
+    const [err, res] = await api.putBrokers(props.editId, data)
+    if (!err) {
+        emit('close')
+    } else {
         console.log(err)
+        ElMessage.error(JSON.stringify(err))
+    }
+}
+
+const handleAddOrEdit = async () => {
+    if (props.editId) {
+        editBroker()
+    } else {
+        addBroker()
     }
 }
 </script>
@@ -175,7 +228,7 @@ const addBroker = async () => {
     width: 40%;
     height: 100vh;
     overflow: hidden;
-    z-index: 1000;
+    z-index: 9999;
 }
 
 .popup_title {

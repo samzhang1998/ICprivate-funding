@@ -4,12 +4,12 @@
             <div class="left">
                 <div class="filter">
                     <h1>Search</h1>
-                    <el-input v-model="selected.search" style="width: 240px" placeholder="Search..." />
+                    <el-input v-model="selected.search" style="width: 240px" placeholder="Search..." clearable />
                 </div>
                 <div class="filter">
                     <h1>Filter Branch</h1>
-                    <el-select v-model="selectedBranch" placeholder="Select Branch" style="width: 240px">
-                        <el-option v-for="item in branches" :key="item.value" :label="item.label" :value="item.value" />
+                    <el-select v-model="selectedBranch" placeholder="Select Branch" clearable style="width: 240px">
+                        <el-option v-for="item in branchesList" :key="item.id" :label="item.name" :value="item.id" />
                     </el-select>
                 </div>
                 <Search @click="toBdm"></Search>
@@ -18,20 +18,24 @@
             <Create :action="action" @click="addBdm"></Create>
         </div>
         <div class="container">
-            <el-table ref="bdmListTable" :data="paginatedData" style="width: 100%"
+            <el-table ref="bdmListTable" :data="bdms" style="width: 100%"
                 :default-sort="{ prop: 'id', order: 'ascending' }" :cell-style="{ padding: '10px 0' }"
                 @selection-change="handleSelectionChange">
-                <el-table-column type="selection" align="center" width="50" />
+                <el-table-column type="selection" align="center" width="50" fixed />
                 <el-table-column prop="id" label="BDM ID" sortable="" width="120" />
                 <el-table-column prop="name" label="BDM Name" width="139" />
                 <el-table-column prop="address" label="Address" min-width="150" />
                 <el-table-column prop="phone" label="Phone" width="120" />
-                <el-table-column prop="branch" label="Branch" width="130" />
+                <el-table-column prop="branch" label="Branch" width="130">
+                    <template #default="scope">
+                        <span>{{ scope.row.branch.name }}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="email" label="Email Address" min-width="130" />
                 <el-table-column prop="create" label="Create At" width="100" />
-                <el-table-column label="Action" align="center" width="60">
+                <el-table-column label="Action" align="center" width="60" fixed="right">
                     <template #default="{ row }">
-                        <el-popover placement="bottom" trigger="click" width="160" popper-class="user-popover">
+                        <el-popover placement="bottom" trigger="hover" width="160" popper-class="user-popover">
                             <div class="actions">
                                 <div class="action_user">Action</div>
                                 <div class="action" @click="handleView(row)">
@@ -62,19 +66,19 @@
             </el-table>
             <div class="multiple">
                 <div class="select">
-                    <el-checkbox v-model="selectAll" :indeterminate="isSelected" @change="handleCheckAllChange" />
+                    <!-- <el-checkbox v-model="selectAll" :indeterminate="isSelected" @change="handleCheckAllChange" />
                     <div class="table_buttons">
                         <DeleteButton @click="deleteSelect"></DeleteButton>
                         <Active></Active>
                         <Inactive></Inactive>
-                    </div>
+                    </div> -->
                 </div>
-                <el-pagination layout="prev, pager, next" background :total="bdms.length" :page-size="pageSize"
+                <el-pagination layout="prev, pager, next" background :total="total" :page-size="pageSize"
                     :current-page="selected.page" @current-change="handlePageChange" />
             </div>
         </div>
         <transition name="slide-right-popup">
-            <AddBdm v-if="popup" :action="popupAction" @close="close" @minimize="minimize"></AddBdm>
+            <AddBdm v-if="popup" :action="popupAction" :editId="editId" @close="close" @minimize="minimize"></AddBdm>
         </transition>
     </div>
 </template>
@@ -91,13 +95,15 @@ import DeleteButton from '@/components/buttons/delete.vue';
 import Active from '@/components/buttons/active.vue';
 import Inactive from '@/components/buttons/inactive.vue';
 
+import { ElMessageBox } from 'element-plus'
+
+import useBranches from '@/hooks/useBranches'
+
+const { branchesList } = useBranches()
+
 const router = useRouter()
 const popup = ref(false)
 
-const branches = ref([
-    { value: "Sydney", label: "Sydney" },
-    { value: "Melbourne", label: "Melbourne" }
-])
 const selected = ref({
     branch: "",
     search: "",
@@ -106,40 +112,16 @@ const selected = ref({
 const selectedBranch = ref("")
 const action = ref("Create BDM")
 const popupAction = ref("")
-const bdms = ref([
-    {
-        id: 11111,
-        name: "Broker Name",
-        address: "address",
-        phone: "0000 000 0000",
-        branch: "Sydney Center",
-        email: "rileysmith@example.com",
-        create: "Xx x",
-    },
-    {
-        id: 22222,
-        name: "Broker Name",
-        address: "address",
-        phone: "0000 000 0000",
-        branch: "Sydney Center",
-        email: "rileysmith@example.com",
-        create: "Xx x",
-    },
-    {
-        id: 33333,
-        name: "Broker Name",
-        address: "address",
-        phone: "0000 000 0000",
-        branch: "Sydney Center",
-        email: "rileysmith@example.com",
-        create: "Xx x",
-    }
-])
+const bdms = ref([])
 const pageSize = 10
+const total = ref(0)
+
 const bdmListTable = ref()
 const selectedItem = ref([])
 const selectAll = ref(false)
 const isSelected = ref(false)
+
+const editId = ref("")
 
 onMounted(() => {
 
@@ -149,16 +131,17 @@ onActivated(() => {
     getBdms()
 })
 
-const paginatedData = computed(() => {
-    const start = (selected.value.page - 1) * pageSize
-    return bdms.value.slice(start, start + pageSize)
-})
+// const paginatedData = computed(() => {
+//     const start = (selected.value.page - 1) * pageSize
+//     return bdms.value.slice(start, start + pageSize)
+// })
 
 const getBdms = async () => {
     const [err, res] = await api.bdms(selected.value)
     if (!err) {
         console.log(res);
-        // borrowers.value = res.results
+        bdms.value = res?.results || []
+        total.value = res?.count || 1
     } else {
         console.log(err)
     }
@@ -169,9 +152,11 @@ const toBdm = () => {
 const addBdm = () => {
     popupAction.value = "Add BDM"
     popup.value = true
+    editId.value = ""
 }
 const close = () => {
     popup.value = false
+    getBdms()
 }
 const minimize = () => {
 
@@ -195,6 +180,7 @@ const handleView = (row) => {
 const handleEdit = (row) => {
     popupAction.value = `Edit ${row.name}`
     popup.value = true
+    editId.value = row.id
 }
 const handleDelete = (row) => {
     bdms.value = bdms.value.filter(item => item !== row)
@@ -208,6 +194,7 @@ const deleteSelect = () => {
 }
 const handlePageChange = (page) => {
     selected.value.page = page
+    getBdms()
 }
 </script>
 
@@ -216,6 +203,7 @@ const handlePageChange = (page) => {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    height: 100%;
 }
 
 .filters {
@@ -254,6 +242,7 @@ h1 {
 }
 
 .container {
+    flex: 1;
     padding: 20px;
     border-radius: 3px;
     background: #FFF;

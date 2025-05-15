@@ -20,8 +20,7 @@ export default function useBranch() {
     }
     const [err, res] = await api.branches(params)
     if (!err) {
-      console.log('获取分支字典成功', res)
-
+      // console.log('获取分支字典成功', res)
       branchesList.value = res?.results || []
     }
   }

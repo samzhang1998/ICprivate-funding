@@ -21,6 +21,21 @@ export function addBrokers(params) {
   })
 }
 
+export function deleteBrokers(params) {
+  return sendRequest({
+    url: `/api/brokers/${params}`,
+    method: 'delete',
+  })
+}
+
+export function putBrokers(id, data) {
+  return sendRequest({
+    url: `/api/brokers/${id}`,
+    method: 'put',
+    data,
+  })
+}
+
 export function branches(params) {
   return sendRequest({
     url: '/api/brokers/branches/',
@@ -83,6 +98,8 @@ export const brokerApi = {
   brokers,
   broker,
   addBrokers,
+  deleteBrokers,
+  putBrokers,
   branches,
   branch,
   addBranches,

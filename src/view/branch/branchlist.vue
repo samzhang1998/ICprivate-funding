@@ -56,12 +56,12 @@
             </el-table>
             <div class="multiple">
                 <div class="select">
-                    <el-checkbox v-model="selectAll" :indeterminate="isSelected" @change="handleCheckAllChange" />
+                    <!-- <el-checkbox v-model="selectAll" :indeterminate="isSelected" @change="handleCheckAllChange" />
                     <div class="table_buttons">
                         <DeleteButton @click="deleteSelect"></DeleteButton>
                         <Active></Active>
                         <Inactive></Inactive>
-                    </div>
+                    </div> -->
                 </div>
                 <el-pagination layout="prev, pager, next" background :total="total" :page-size="pageSize"
                     :current-page="selected.page" @current-change="handlePageChange" />
@@ -85,6 +85,7 @@ import Create from '@/components/buttons/create.vue';
 import DeleteButton from '@/components/buttons/delete.vue';
 import Active from '@/components/buttons/active.vue';
 import Inactive from '@/components/buttons/inactive.vue';
+import { ElMessageBox } from 'element-plus'
 
 // breach字典使用示例
 // import useBranches from '@/hooks/useBranches'
@@ -187,12 +188,18 @@ const handleEdit = (row) => {
 }
 const handleDelete = async (row) => {
     // branches.value = branches.value.filter(item => item !== row)
-    const [err, res] = await api.deleteBranch(row.id)
-    if (!err) {
-        getBranches()
-    } else {
-        console.log(err)
-    }
+    ElMessageBox.confirm('Confirm to delete data?')
+        .then(async () => {
+            const [err, res] = await api.deleteBranch(row.id)
+            if (!err) {
+                getBranches()
+            } else {
+                console.log(err)
+            }
+        })
+        .catch(() => {
+            // catch error
+        })
 }
 const deleteSelect = () => {
     console.log("selected", selectedItem)

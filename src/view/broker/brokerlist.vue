@@ -4,11 +4,12 @@
             <div class="left">
                 <div class="filter">
                     <h1>Search</h1>
-                    <el-input v-model="selected.search" style="width: 200px" placeholder="Search..." />
+                    <el-input v-model="selected.search" style="width: 200px" placeholder="Search..." clearable />
                 </div>
                 <div class="filter">
                     <h1>Branch</h1>
-                    <el-select v-model="selected.branch" placeholder="Select Branch" style="width: 200px">
+                    <el-select v-model="selected.branch" placeholder="Select Branch" clearable style="width: 200px"
+                        @change="handleSelect">
                         <el-option v-for="item in branchesList" :key="item.id" :label="item.name" :value="item.id" />
                     </el-select>
                 </div>
@@ -24,10 +25,10 @@
             <Create :action="action" @click="addBroker"></Create>
         </div>
         <div class="container">
-            <el-table ref="brokerListTable" :data="paginatedData" style="width: 100%"
+            <el-table ref="brokerListTable" :data="brokers" style="width: 100%"
                 :default-sort="{ prop: 'createDate', order: 'ascending' }" :cell-style="{ padding: '10px 0' }"
                 @selection-change="handleSelectionChange">
-                <el-table-column type="selection" align="center" width="50" />
+                <el-table-column type="selection" align="center" width="50" fixed />
                 <el-table-column prop="id" label="Broker ID" sortable width="120" />
                 <el-table-column prop="name" label="Name" min-width="139" />
                 <el-table-column prop="company" label="Company" width="130" />
@@ -35,9 +36,9 @@
                 <el-table-column prop="application_count" label="Applications" min-width="120" />
                 <el-table-column prop="email" label="Email Address" min-width="225" />
                 <el-table-column prop="branch_name" label="Branch" width="160" />
-                <el-table-column label="Action" align="center" width="60">
+                <el-table-column label="Action" align="center" width="60" fixed="right">
                     <template #default="{ row }">
-                        <el-popover placement="bottom" trigger="click" width="160" popper-class="user-popover">
+                        <el-popover placement="bottom" trigger="hover" width="160" popper-class="user-popover">
                             <div class="actions">
                                 <div class="action_user">Action</div>
                                 <div class="action" @click="handleView(row)">
@@ -68,19 +69,20 @@
             </el-table>
             <div class="multiple">
                 <div class="select">
-                    <el-checkbox v-model="selectAll" :indeterminate="isSelected" @change="handleCheckAllChange" />
+                    <!-- <el-checkbox v-model="selectAll" :indeterminate="isSelected" @change="handleCheckAllChange" />
                     <div class="table_buttons">
                         <DeleteButton @click="deleteSelect"></DeleteButton>
                         <Active></Active>
                         <Inactive></Inactive>
-                    </div>
+                    </div> -->
                 </div>
                 <el-pagination layout="prev, pager, next" background :total="total" :page-size="pageSize"
                     :current-page="selected.page" @current-change="handlePageChange" />
             </div>
         </div>
         <transition name="slide-right-popup">
-            <AddBroker v-if="popup" :action="popupAction" @close="close" @minimize="minimize"></AddBroker>
+            <AddBroker v-if="popup" :action="popupAction" :editId="editId" @close="close" @minimize="minimize">
+            </AddBroker>
         </transition>
     </div>
 </template>
@@ -96,19 +98,15 @@ import Create from '@/components/buttons/create.vue';
 import DeleteButton from '@/components/buttons/delete.vue';
 import Active from '@/components/buttons/active.vue';
 import Inactive from '@/components/buttons/inactive.vue';
+import { ElMessageBox } from 'element-plus'
 
 import useBranches from '@/hooks/useBranches'
 
 const { branchesList } = useBranches()
-console.log(branchesList.value);
 
 const router = useRouter()
 const popup = ref(false)
 
-const branches = ref([
-    { value: "1", label: "1" },
-    { value: "2", label: "2" }
-])
 const incomes = ref([
     { value: "1", label: "1" },
     { value: "2", label: "2" }
@@ -121,23 +119,14 @@ const selected = ref({
 const selectedincome = ref("")
 const action = ref("Create Broker")
 const popupAction = ref("")
-const brokers = ref([
-    // {
-    //     id: 11111,
-    //     name: "Broker Name",
-    //     company: "company name",
-    //     phone: "0000 000 0000",
-    //     application_count: 5,
-    //     email: "rileysmith@example.com",
-    //     branch_name: "Sydney Center",
-    // }
-])
+const brokers = ref([])
 const pageSize = 10
 const total = ref(0)
 const brokerListTable = ref()
 const selectedItem = ref([])
 const selectAll = ref(false)
 const isSelected = ref(false)
+const editId = ref("")
 
 onMounted(() => {
     // getBrokers()
@@ -147,10 +136,10 @@ onActivated(() => {
     getBrokers()
 })
 
-const paginatedData = computed(() => {
-    const start = (selected.value.page - 1) * pageSize
-    return brokers.value.slice(start, start + pageSize)
-})
+// const paginatedData = computed(() => {
+//     const start = (selected.value.page - 1) * pageSize
+//     return brokers.value.slice(start, start + pageSize)
+// })
 
 const getBrokers = async () => {
     const [err, res] = await api.brokers(selected.value)
@@ -167,12 +156,19 @@ const handleClear = () => {
     selected.value.branch = ''
     getBrokers()
 }
+
+const handleSelect = () => {
+    getBrokers()
+}
+
 const addBroker = () => {
     popupAction.value = "Add Broker"
     popup.value = true
+    editId.value = ""
 }
 const close = () => {
     popup.value = false
+    getBrokers()
 }
 const minimize = () => {
 
@@ -197,9 +193,23 @@ const handleEdit = (row) => {
     const id = row.name
     popupAction.value = `Edit ${id}`
     popup.value = true
+    editId.value = row.id
 }
-const handleDelete = (row) => {
-    brokers.value = brokers.value.filter(item => item !== row)
+const handleDelete = async (row) => {
+    ElMessageBox.confirm('Confirm to delete data?')
+        .then(async () => {
+            const [err, res] = await api.deleteBrokers(row.id)
+            if (!err) {
+                getBrokers()
+            } else {
+                console.log(err)
+            }
+        })
+        .catch(() => {
+            // catch error
+        })
+    // brokers.value = brokers.value.filter(item => item !== row)
+
 }
 const deleteSelect = () => {
     console.log("selected", selectedItem)
@@ -210,6 +220,7 @@ const deleteSelect = () => {
 }
 const handlePageChange = (page) => {
     selected.value.page = page
+    getBrokers
 }
 </script>
 
@@ -218,6 +229,7 @@ const handlePageChange = (page) => {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    height: 100%;
 }
 
 .filters {
@@ -256,6 +268,7 @@ h1 {
 }
 
 .container {
+    flex: 1;
     padding: 20px;
     border-radius: 3px;
     background: #FFF;
