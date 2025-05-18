@@ -68,7 +68,12 @@
                                 <p :style="{color: isGuarantorAssetValid ? '#2984DE' : '#272727'}">Guarantor Assets & Liability</p>
                             </div>
                         </template>
-                        <GuarantorAsset :asset="guarantorAsset"></GuarantorAsset>
+                        <GuarantorAsset :detail="application.guarantors"
+                            @addAsset="addGuarantorAsset"
+                            @removeAsset="removeGuarantorAsset"
+                            @addLiability="addGuarantorLiability"
+                            @removeLiability="removeGuarantorLiability"
+                        ></GuarantorAsset>
                     </el-collapse-item>
                     <el-collapse-item name="7">
                         <template #title>
@@ -130,7 +135,8 @@
 </template>
 
 <script setup>
-    import { ref, computed, watch } from 'vue';
+    import { ref, computed } from 'vue';
+    import { api } from '@/api';
     import Company from './company.vue';
     import CompanyAssets from './companyasset.vue';
     import Enquiries from './enquiries.vue';
@@ -229,6 +235,25 @@
             tags: ""
         }
     }
+    const createGuarantorAsset = () => {
+        return {
+            asset_type: "",
+            description: "",
+            value: "",
+            amount_owing: "",
+            address: "",
+            bg_type: ""
+        }
+    }
+    const createGuarantorLiability = () => {
+        return {
+            liability_type: "",
+            description: "",
+            amount: "",
+            monthly_payment: "",
+            bg_type: ""
+        }
+    }
     const createGuarantor = () => {
         return {
             guarantor_type: "",
@@ -248,7 +273,15 @@
             address_postcode: "",
             occupation: "",
             employer_name: "",
-            employment_type: ""
+            employment_type: "",
+            annual_income: "",
+            company_name: "",
+            company_abn: "",
+            company_acn: "",
+            borrower: null,
+            application: null,
+            assets: [createGuarantorAsset()],
+            liabilities: [createGuarantorLiability()]
         }
     }
     const createSecurity = () => {
@@ -265,10 +298,10 @@
             car_spaces: "",
             building_size: "",
             land_size: "",
-            has_garage: null,
-            has_carport: null,
-            is_single_story: null,
-            has_off_street_parking: null,
+            has_garage: false,
+            has_carport: false,
+            is_single_story: false,
+            has_off_street_parking: false,
             current_mortgagee: "",
             first_mortgage: "",
             second_mortgage: "",
@@ -302,7 +335,7 @@
         loan_requirements: [createRequirement()],
         loan_purpose: "",
         additional_comments: "",
-        prior_application: true,
+        prior_application: null,
         prior_application_details: "",
         exit_strategy: "",
         exit_strategy_details: "",
@@ -334,54 +367,6 @@
         has_outstanding_tax_returns: null,
         has_payment_arrangements: null,
         solvency_enquiries_details: ""
-    })    
-    const guarantorAsset = ref({
-        address1: "",
-        address1Value: "",
-        address1Owing: "",
-        address1G1: false,
-        address1G2: false,
-        address2: "",
-        address2Value: "",
-        address2Owing: "",
-        address2G1: false,
-        address2G2: false,
-        address3: "",
-        address3Value: "",
-        address3Owing: "",
-        address3G1: false,
-        address3G2: false,
-        address4: "",
-        address4Value: "",
-        address4Owing: "",
-        address4G1: false,
-        address4G2: false,
-        vehicleValue: "",
-        vehicleOwing: "",
-        vehicleG1: false,
-        vehicleG2: false,
-        savingValue: "",
-        savingOwing: "",
-        savingG1: false,
-        savingG2: false,
-        shareValue: "",
-        shareOwing: "",
-        shareG1: false,
-        shareG2: false,
-        cardValue: "",
-        cardOwing: "",
-        cardG1: false,
-        cardG2: false,
-        creditorValue: "",
-        creditorOwing: "",
-        creditorG1: false,
-        creditorG2: false,
-        otherValue: "",
-        otherOwing: "",
-        otherG1: false,
-        otherG2: false,
-        totalValue: "",
-        totalOwing: ""
     })
 
     const emit = defineEmits(['close', 'minimize'])
@@ -422,6 +407,18 @@
     const removeGuarantor = (idx) => {
         application.value.guarantors.splice(idx, 1)
     }
+    const addGuarantorAsset = (idx) => {
+        application.value.guarantors[idx].assets.push(createGuarantorAsset())
+    }
+    const removeGuarantorAsset = (idx) => {
+        application.value.guarantors[idx].assets.pop()
+    }
+    const addGuarantorLiability = (idx) => {
+        application.value.guarantors[idx].liabilities.push(createGuarantorLiability())
+    }
+    const removeGuarantorLiability = (idx) => {
+        application.value.guarantors[idx].liabilities.pop()
+    }
     const addSecurity = () => {
         application.value.security_properties.push(createSecurity())
     }
@@ -461,8 +458,15 @@
     const isExitValid = computed(() => {
         return Object.values(application.value).every(value => value !== '')
     })
-    const handleSave = () => {
+    const handleSave = async () => {
         console.log(application.value)
+        const [err, res] = await api.addApplications(application.value)
+        if (!err) {
+            console.log(res);
+            emit('close')
+        } else {
+            console.log(err)
+        }
     }
 </script>
 

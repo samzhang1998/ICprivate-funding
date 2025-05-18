@@ -15,6 +15,13 @@
                 @click="remove(index)"
             ><RemoveFilled /></el-icon>
         </div>
+        <div class="item">
+            <p>Guarantor Type</p>
+                <el-select v-model="b.guarantor_type" placeholder="Please Select...">
+                    <el-option v-for="item in types" :key="item.value" :label="item.label"
+                        :value="item.value" />
+                </el-select>
+        </div>
         <div class="name">
             <div class="item">
                 <p>Title</p>
@@ -31,52 +38,99 @@
         </div>
         <div class="item">
             <p>Date of Birth</p>
-            <el-input v-model="b.birth" />
+            <el-input v-model="b.date_of_birth" />
         </div>
         <div class="item">
             <p>Drivers License No.</p>
-            <el-input v-model="b.license" />
+            <el-input v-model="b.drivers_licence_no" />
         </div>
         <div class="item">
             <p>Phone number - Home</p>
-            <el-input v-model="b.phone" />
+            <el-input v-model="b.home_phone" />
         </div>
         <div class="item">
             <p>Mobile Number</p>
             <el-input v-model="b.mobile" />
         </div>
-        <div class="long_item">
+        <div class="item">
             <p>Email Address</p>
             <el-input v-model="b.email" />
         </div>
-        <div class="long_item">
-            <p>Full Address</p>
-            <el-input v-model="b.address" />
+        <div class="address">
+            <div class="item">
+                <p>Unit</p>
+                <el-input v-model="b.address_unit" />
+            </div>
+            <div class="item">
+                <p>No.</p>
+                <el-input v-model="b.address_street_no" />
+            </div>
+            <div class="address_long_item">
+                <p>Street Name</p>
+                <el-input v-model="b.address_street_name" />
+            </div>
+        </div>
+        <div class="address1">
+            <div class="item">
+                <p>Suburb</p>
+                <el-input v-model="b.address_suburb" />
+            </div>
+            <div class="item">
+                <p>State</p>
+                <el-input v-model="b.address_state" />
+            </div>
+            <div class="item">
+                <p>Postcode</p>
+                <el-input v-model="b.address_postcode" />
+            </div>
         </div>
         <div class="item">
             <p>Occupation</p>
             <el-input v-model="b.occupation" />
         </div>
         <div class="item">
+            <p>Annual Income</p>
+            <el-input v-model="b.annual_income" />
+        </div>
+        <div class="item">
             <p>Employer Name (if self-employed, your Trading Name)</p>
-            <el-input v-model="b.employer" />
+            <el-input v-model="b.employer_name" />
         </div>
         <div class="long_item">
             <p>Current Employment Type</p>
-            <el-radio-group v-model="b.type" class="group">
+            <el-radio-group v-model="b.employment_type" class="group">
                 <el-radio value="Full Time"><h1>Full Time</h1></el-radio>
                 <el-radio value="Part Time"><h1>Part Time</h1></el-radio>
                 <el-radio value="Casual/Temp"><h1>Casual/Temp</h1></el-radio>
                 <el-radio value="Contract"><h1>Contract</h1></el-radio>
             </el-radio-group>
         </div>
+        <div class="item" v-if="b.guarantor_type === 'company'">
+            <p>Company Name</p>
+            <el-input v-model="b.company_name" />
+        </div>
+        <div class="item" v-if="b.guarantor_type === 'company'">
+            <p>Company ABN</p>
+            <el-input v-model="b.company_abn" />
+        </div>
+        <div class="item" v-if="b.guarantor_type === 'company'">
+            <p>Company ACN</p>
+            <el-input v-model="b.company_acn" />
+        </div>
     </div>
 </template>
 
 <script setup>
+    import { ref } from 'vue'
+
     const props = defineProps({
         guarantors: Array
     })
+
+    const types = ref([
+        {value: "individual", label: "Individual"},
+        {value: "company", label: "Company"}
+    ])
 
     const emit = defineEmits(['add', 'remove'])
 
@@ -143,5 +197,24 @@
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
+    }
+    .address {
+        grid-column: 1 / 3;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 15px 20px;
+    }
+    .address_long_item {
+        grid-column: 3 / 6;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        gap: 10px;
+    }
+    .address1 {
+        grid-column: 1 / 3;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px 20px;
     }
 </style>

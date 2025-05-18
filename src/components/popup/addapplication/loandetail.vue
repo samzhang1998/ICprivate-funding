@@ -9,7 +9,12 @@
         </div>
         <div class="item">
             <p>Estimated Settlement Date</p>
-            <el-date-picker v-model="detail.estimated_settlement_date" type="date" placeholder="Pick a day" />
+            <el-date-picker 
+                v-model="detail.estimated_settlement_date" 
+                type="date" 
+                placeholder="Pick a day" 
+                value-format="YYYY-MM-DD"
+            />
         </div>
         <div class="item">
             <p>Net Loan Required ($)</p>
@@ -18,10 +23,6 @@
         <div class="item">
             <p>Term Required (month)</p>
             <el-input v-model="detail.loan_term" />
-        </div>
-        <div class="item">
-            <p>Proposed Settlement Date</p>
-            <el-input v-model="detail.estimated_settlement_date" />
         </div>
         <div class="item">
             <p>Expected Repayment Frequency</p>

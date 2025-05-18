@@ -23,14 +23,22 @@
         </div>
         <div class="line">
             <h1 style="font-weight: 700;">Total</h1>
-            <el-input disabled />
+            <el-input v-model="total" disabled />
         </div>
     </div>
 </template>
 
 <script setup>
-    const props = defineProps({
+    import { computed } from 'vue'
+
+    const { requirement } = defineProps({
         requirement: Array
+    })
+
+    const total = computed(() => {
+        return requirement
+            .map(a => parseFloat(a.amount) || 0)
+            .reduce((sum, v) => sum + v, 0)
     })
 
     const emit = defineEmits(['add', 'remove'])

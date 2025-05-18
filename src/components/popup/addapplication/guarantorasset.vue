@@ -1,119 +1,116 @@
 <template>
-    <div class="form">
-        <h1 style="width: 100%;">Property(s)</h1>
+    <div class="form" v-for="(d, index) in detail" :key="index">
+        <h1 style="width: 100%;">Guarantor{{ index + 1 }} Assets</h1>
         <div class="item">
-            <p>Address</p>
+            <p>Type</p>
+            <p>Address/Descriptions</p>
             <p>Values ($)</p>
-            <p>Amount Owing ($)</p>
             <div class="check">
                 <p style="text-align: center;">B/G1</p>
                 <p style="text-align: center;">B/G2</p>
             </div>
         </div>
-        <div class="item">
-            <el-input v-model="asset.address1" />
-            <el-input v-model="asset.address1Value" />
-            <el-input v-model="asset.address1Owing" />
-            <div class="check">
-                <el-checkbox v-model="asset.address1G1" />
-                <el-checkbox v-model="asset.address1G2" />
-            </div>
+        <div class="item" v-for="(a, idx) in d.assets" :key="idx">
+            <el-select v-model="a.asset_type" placeholder="Select">
+                <el-option
+                    v-for="item in types"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                />
+            </el-select>
+            <el-input v-model="a.address" v-if="a.asset_type === 'property'" />
+            <el-input v-model="a.description" v-else />
+            <el-input v-model="a.value" />
+            <el-radio-group v-model="a.bg_type" class="check">
+                <el-radio value="B/G1"></el-radio>
+                <el-radio value="B/G2"></el-radio>
+            </el-radio-group>
         </div>
         <div class="item">
-            <el-input v-model="asset.address2" />
-            <el-input v-model="asset.address2Value" />
-            <el-input v-model="asset.address2Owing" />
-            <div class="check">
-                <el-checkbox v-model="asset.address2G1" />
-                <el-checkbox v-model="asset.address2G2" />
+            <!-- <p style="font-weight: 700;">Total</p>
+            <el-input v-model="company.financial_info.assets" disabled style="grid-column: 3 / 4;" /> -->
+            <div class="actions">
+                <el-icon
+                    :size="20"
+                    style="cursor: pointer; color: #2984DE;" 
+                    @click="addAsset(index)"
+                ><CirclePlusFilled /></el-icon>
+                <el-icon 
+                    :size="20" 
+                    style="cursor: pointer; color: #2984DE;" 
+                    v-if="d.assets.length > 1" 
+                    @click="removeAsset(index)"
+                ><RemoveFilled /></el-icon>
             </div>
         </div>
-        <div class="item">
-            <el-input v-model="asset.address3" />
-            <el-input v-model="asset.address3Value" />
-            <el-input v-model="asset.address3Owing" />            
+        <h1 style="width: 100%;">Guarantor{{ index + 1 }} Liabilities</h1>
+        <div class="item1">
+            <p>Type</p>
+            <p>Descriptions</p>
+            <p>Amount Owing ($)</p>
+            <p>Monthly Payment</p>
             <div class="check">
-                <el-checkbox v-model="asset.address3G1" />
-                <el-checkbox v-model="asset.address3G2" />
+                <p style="text-align: center;">B/G1</p>
+                <p style="text-align: center;">B/G2</p>
             </div>
         </div>
-        <div class="item">
-            <el-input v-model="asset.address4" />
-            <el-input v-model="asset.address4Value" />
-            <el-input v-model="asset.address4Owing" />
-            <div class="check">
-                <el-checkbox v-model="asset.address4G1" />
-                <el-checkbox v-model="asset.address4G2" />
-            </div>
+        <div class="item1" v-for="(l, idxl) in d.liabilities" :key="idxl">
+            <el-input v-model="l.liability_type" />
+            <el-input v-model="l.description" />
+            <el-input v-model="l.amount" />
+            <el-input v-model="l.monthly_payment" />
+            <el-radio-group v-model="l.bg_type" class="check">
+                <el-radio value="B/G1"></el-radio>
+                <el-radio value="B/G2"></el-radio>
+            </el-radio-group>
         </div>
-        <div class="item">
-            <h1>Vehicle(s)</h1>
-            <el-input v-model="asset.vehicleValue" />
-            <el-input v-model="asset.vehicleOwing" />
-            <div class="check">
-                <el-checkbox v-model="asset.vehicleG1" />
-                <el-checkbox v-model="asset.vehicleG2" />
+        <div class="item1">
+            <!-- <p style="font-weight: 700;">Total</p>
+            <el-input v-model="company.financial_info.liabilities" disabled style="grid-column: 3 / 4;" /> -->
+            <div class="actions1">
+                <el-icon
+                    :size="20"
+                    style="cursor: pointer; color: #2984DE;" 
+                    @click="addLiability(index)"
+                ><CirclePlusFilled /></el-icon>
+                <el-icon 
+                    :size="20" 
+                    style="cursor: pointer; color: #2984DE;" 
+                    v-if="d.liabilities.length > 1" 
+                    @click="removeLiability(index)"
+                ><RemoveFilled /></el-icon>
             </div>
-        </div>
-        <div class="item">
-            <h1>Savings</h1>
-            <el-input v-model="asset.savingValue" />
-            <el-input v-model="asset.savingOwing" />
-            <div class="check">
-                <el-checkbox v-model="asset.savingG1" />
-                <el-checkbox v-model="asset.savingG2" />
-            </div>
-        </div>
-        <div class="item">
-            <h1>Investment Shares</h1>
-            <el-input v-model="asset.shareValue" />
-            <el-input v-model="asset.shareOwing" />
-            <div class="check">
-                <el-checkbox v-model="asset.shareG1" />
-                <el-checkbox v-model="asset.shareG2" />
-            </div>
-        </div>
-        <div class="item">
-            <h1>Credit Card(s)</h1>
-            <el-input v-model="asset.cardValue" />
-            <el-input v-model="asset.cardOwing" />
-            <div class="check">
-                <el-checkbox v-model="asset.cardG1" />
-                <el-checkbox v-model="asset.cardG2" />
-            </div>
-        </div>
-        <div class="item">
-            <h1>Other Creditor(s)</h1>
-            <el-input v-model="asset.creditorValue" />
-            <el-input v-model="asset.creditorOwing" />
-            <div class="check">
-                <el-checkbox v-model="asset.creditorG1" />
-                <el-checkbox v-model="asset.creditorG2" />
-            </div>
-        </div>
-        <div class="item">
-            <h1>Other</h1>
-            <el-input v-model="asset.otherValue" />
-            <el-input v-model="asset.otherOwing" />
-            <div class="check">
-                <el-checkbox v-model="asset.otherG1" />
-                <el-checkbox v-model="asset.otherG2" />
-            </div>
-        </div>
-        <div class="item">
-            <h1 style="font-weight: 700;">Total</h1>
-            <el-input v-model="asset.totalValue" disabled />
-            <el-input v-model="asset.totalOwing" disabled />
         </div>
     </div>
 </template>
 
 <script setup>
+    import { ref } from 'vue';
 
     const props = defineProps({
-        asset: Object
+        detail: Array
     })
     
+    const types = ref([
+        {value: "property", label: "Property"},
+        {value: "other", label: "Other"}
+    ])
+
+    const emit = defineEmits(['addAsset', 'removeAsset', 'addLiability', 'removeLiability'])
+
+    const addAsset = (idx) => {
+        emit('addAsset', idx)
+    }
+    const removeAsset = (idx) => {
+        emit('removeAsset', idx)
+    }
+    const addLiability = (idx) => {
+        emit('addLiability', idx)
+    }
+    const removeLiability = (idx) => {
+        emit('removeLiability', idx)
+    }
 </script>
 
 <style scoped>
@@ -126,7 +123,14 @@
     .item {
         width: 100%;        
         display: grid;
-        grid-template-columns: 3fr 1fr 1.5fr 1fr;
+        grid-template-columns: 1fr 3fr 1.5fr 1fr;
+        gap: 20px;
+        align-items: center;
+    }
+    .item1 {
+        width: 100%;        
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
         gap: 20px;
         align-items: center;
     }
@@ -155,8 +159,21 @@
         justify-items: center;
         align-items: center;
     }
-    :deep(.el-checkbox) {
+    .actions {
+        grid-column: 4 / 5;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+    }
+    .actions1 {
+        grid-column: 5 / 6;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+    }
+    :deep(.el-radio) {
         margin: 0;
-        --el-checkbox-input-border: 1.5px solid var(--Line, #E1E1E1);
     }
 </style>

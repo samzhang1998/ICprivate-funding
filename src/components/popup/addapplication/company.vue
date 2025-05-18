@@ -5,12 +5,19 @@
             <el-input v-model="company.company_name" />
         </div>
         <div class="item">
-            <p>ABN/ACN</p>
+            <p>ABN</p>
             <el-input v-model="company.company_abn" />
         </div>
         <div class="item">
             <p>Industry Type</p>
-            <el-input v-model="company.industry_type" />
+            <el-select v-model="company.industry_type" placeholder="Select...">
+                <el-option
+                    v-for="item in types"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                />
+            </el-select>
         </div>
         <div class="item">
             <p>Contact Number</p>
@@ -103,11 +110,30 @@
 </template>
 
 <script setup>
+    import { ref } from 'vue'
+
     const props = defineProps({
-        company: Object
+        company: Array
     })
 
     const emit = defineEmits(['add', 'remove'])
+
+    const types = ref([
+        {value: "agriculture", label: "Agriculture"},
+        {value: "mining", label: "Mining"},
+        {value: "manufacturing", label: "Manufacturing"},
+        {value: "construction", label: "Construction"},
+        {value: "retail", label: "Retail"},
+        {value: "transport", label: "Transport"},
+        {value: "hospitality", label: "Hospitality"},
+        {value: "real_estate", label: "Real Estate"},
+        {value: "professional_services", label: "Professional Services"},
+        {value: "education", label: "Education"},
+        {value: "healthcare", label: "Healthcare"},
+        {value: "finance", label: "Finance"},
+        {value: "arts_and_recreation", label: "Arts and Recreation"},
+        {value: "other", label: "Other"}
+    ])
 
     const add = () => {
         emit('add')

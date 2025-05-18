@@ -9,7 +9,7 @@ export function applications(params) {
 }
 export function addApplications(params) {
     return sendRequest({
-        url: "/api/applications/applications/",
+        url: "/api/applications/create-with-cascade/",
         method: "post",
         data: params,
     });

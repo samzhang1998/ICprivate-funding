@@ -69,7 +69,7 @@
                 </div>
                 <div class="item">
                     <p>Bathrooms</p>
-                    <el-input v-model="s.bedrooms" />
+                    <el-input v-model="s.bathrooms" />
                 </div>
                 <div class="item">
                     <p>Car Spaces</p>

@@ -2,12 +2,12 @@
     <div class="form">
         <h1>Finance Takeout Method</h1>
         <el-radio-group v-model="strategies" class="group">
-            <el-radio value="Refinance"><h1>Refinance</h1></el-radio>
-            <el-radio value="Sale of Security"><h1>Sale of Security</h1></el-radio>
-            <el-radio value="Cash-flow"><h1>Cash-flow</h1></el-radio>
-            <el-radio value="Other"><h1>Other (Please Specify Below)</h1></el-radio>
+            <el-radio value="refinance"><h1>Refinance</h1></el-radio>
+            <el-radio value="sale"><h1>Sale of Security</h1></el-radio>
+            <el-radio value="income"><h1>Cash-flow</h1></el-radio>
+            <el-radio value="other"><h1>Other (Please Specify Below)</h1></el-radio>
         </el-radio-group>
-        <el-input v-model="exit.exit_strategy" :disabled="strategies !== 'Other'" />
+        <el-input v-model="exit.exit_strategy" v-if="strategies === 'Other'" />
         <h1>Details (If Other)</h1>
         <div class="item">
             <p>Attach copies of supporting documents for your Finance Takeout Method</p>
@@ -19,15 +19,15 @@
 <script setup>
     import { ref, watch } from 'vue';
 
-    const props = defineProps({
+    const { exit } = defineProps({
         exit: Object
     })
 
     const strategies = ref("")
 
     watch(strategies, (newVal) => {
-        if (newVal !== 'Other') {
-            strategies.value = exit.exit_strategy.value
+        if (newVal !== 'other') {
+            exit.exit_strategy = strategies.value
         }
     })
 </script>
