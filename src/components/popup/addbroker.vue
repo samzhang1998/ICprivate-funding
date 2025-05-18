@@ -228,7 +228,7 @@ const handleAddOrEdit = async () => {
     width: 40%;
     height: 100vh;
     overflow: hidden;
-    z-index: 9999;
+    z-index: 1999;
 }
 
 .popup_title {

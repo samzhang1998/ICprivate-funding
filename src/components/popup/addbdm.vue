@@ -51,13 +51,13 @@
         </div>
         <div class="buttons">
             <Cancel @click="handleClose"></Cancel>
-            <Save @click="addBdm"></Save>
+            <Save @click="handleAddOrEdit"></Save>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { api } from '@/api';
 import Cancel from '../buttons/cancel.vue';
 import Save from '../buttons/save.vue';
@@ -68,14 +68,11 @@ import { ElMessage } from 'element-plus'
 const { branchesList } = useBranches()
 
 const props = defineProps({
-    action: String
+    action: String,
+    editId: [String, Number]
 })
 
 const activeNames = ref("1")
-const branches = ref([
-    { value: "111111", label: "Sydney Center" },
-    { value: "222222", label: "Melbourne Center" }
-])
 const overview = ref({
     branch_id: "",
     branch_name: "",
@@ -86,6 +83,13 @@ const overview = ref({
     phone: "",
     email: ""
 })
+
+watch(() => props.editId, (newVal) => {
+    if (newVal) {
+        console.log("watch", newVal);
+        getBmd()
+    }
+}, { deep: true, immediate: true })
 
 const emit = defineEmits(['close', 'minimize'])
 
@@ -101,26 +105,64 @@ const isOverviewValid = computed(() => {
 
 const handleSelect = (val) => {
     const branch = branchesList.value.find(item => item.id === val)
-    console.log(branch);
-
     if (!branch) return
     overview.value.branch_name = branch.name
     overview.value.branch_email = branch.email
     overview.value.branch_phone = branch.phone
-    console.log(overview.value);
+}
 
+async function getBmd() {
+    const [err, res] = await api.bdm(props.editId)
+    if (!err) {
+        console.log(res);
+        overview.value.address = res?.address || ""
+        overview.value.name = res?.name || ""
+        overview.value.phone = res?.phone || ""
+        overview.value.email = res?.email || ""
+        overview.value.branch_id = res?.branch.id || ""
+        overview.value.branch_name = res?.branch.name || ""
+        overview.value.branch_email = res?.branch.email || ""
+        overview.value.branch_phone = res?.branch.phone || ""
+        console.log(overview.value);
+    } else {
+        console.log(err)
+    }
 }
 const addBdm = async () => {
     const data = {
         ...overview.value
     }
-    console.log(data)
+    // console.log(data)
     const [err, res] = await api.addBdms(data)
+    if (!err) {
+        // console.log(res);
+        emit('close')
+    } else {
+        console.log(err)
+        ElMessage.error(JSON.stringify(err))
+    }
+}
+
+const editBdm = async () => {
+    const data = {
+        ...overview.value
+    }
+    console.log(data)
+    const [err, res] = await api.putBdms(props.editId, data)
     if (!err) {
         console.log(res);
         emit('close')
     } else {
         console.log(err)
+        ElMessage.error(JSON.stringify(err))
+    }
+}
+
+const handleAddOrEdit = async () => {
+    if (props.editId) {
+        editBdm()
+    } else {
+        addBdm()
     }
 }
 </script>
@@ -140,7 +182,7 @@ const addBdm = async () => {
     width: 40%;
     height: 100vh;
     overflow: hidden;
-    z-index: 9999;
+    z-index: 1999;
 }
 
 .popup_title {

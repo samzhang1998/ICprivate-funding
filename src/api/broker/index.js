@@ -94,6 +94,20 @@ export function addBdms(params) {
   })
 }
 
+export function deleteBdms(params) {
+  return sendRequest({
+    url: `/api/brokers/bdms/${params}`,
+    method: 'delete',
+  })
+}
+export function putBdms(id, data) {
+  return sendRequest({
+    url: `/api/brokers/bdms/${id}`,
+    method: 'put',
+    data,
+  })
+}
+
 export const brokerApi = {
   brokers,
   broker,
@@ -108,5 +122,7 @@ export const brokerApi = {
   bdms,
   bdm,
   addBdms,
+  deleteBdms,
+  putBdms,
 }
 

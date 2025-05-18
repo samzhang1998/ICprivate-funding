@@ -8,12 +8,12 @@
                 </div>
                 <div class="filter">
                     <h1>Filter Branch</h1>
-                    <el-select v-model="selectedBranch" placeholder="Select Branch" clearable style="width: 240px">
+                    <el-select v-model="selected.branch" placeholder="Select Branch" clearable style="width: 240px">
                         <el-option v-for="item in branchesList" :key="item.id" :label="item.name" :value="item.id" />
                     </el-select>
                 </div>
                 <Search @click="toBdm"></Search>
-                <Clear></Clear>
+                <Clear @click="handleClear"></Clear>
             </div>
             <Create :action="action" @click="addBdm"></Create>
         </div>
@@ -147,7 +147,14 @@ const getBdms = async () => {
     }
 }
 const toBdm = () => {
-    router.push(`/bdm/1`)
+    // router.push(`/bdm/1`)
+    getBdms()
+}
+
+const handleClear = () => {
+    selected.value.search = ""
+    selected.value.branch = ""
+    getBdms()
 }
 const addBdm = () => {
     popupAction.value = "Add BDM"
@@ -183,7 +190,19 @@ const handleEdit = (row) => {
     editId.value = row.id
 }
 const handleDelete = (row) => {
-    bdms.value = bdms.value.filter(item => item !== row)
+    ElMessageBox.confirm('Confirm to delete data?')
+        .then(async () => {
+            const [err, res] = await api.deleteBdms(row.id)
+            if (!err) {
+                getBdms()
+            } else {
+                console.log(err)
+            }
+        })
+        .catch(() => {
+            // catch error
+        })
+    // bdms.value = bdms.value.filter(item => item !== row)
 }
 const deleteSelect = () => {
     console.log("selected", selectedItem)
