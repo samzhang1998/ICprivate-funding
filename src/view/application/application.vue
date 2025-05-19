@@ -77,6 +77,7 @@
         <transition name="slide-right-popup">
             <Note
                 v-if="note"
+                :id="applicationId"
                 @close="closeNote"
                 @minimize="minimize"
             ></Note>

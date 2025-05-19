@@ -26,7 +26,14 @@
         </div>
         <div class="item">
             <p>Expected Repayment Frequency</p>
-            <el-input v-model="detail.repayment_frequency" />
+            <el-select v-model="detail.repayment_frequency" placeholder="Select...">
+                <el-option
+                    v-for="item in frequency"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                />
+            </el-select>
         </div>
         <div class="item">
             <p>Reference Number</p>
@@ -111,9 +118,19 @@
 </template>
 
 <script setup>
+    import { ref } from 'vue';
+
     const props = defineProps({
         detail: Object
     })
+
+    const frequency = ref([
+        {value: "weekly", label: "Weekly"},
+        {value: "fortnightly", label: "Fortnightly"},
+        {value: "monthly", label: "Monthly"},
+        {value: "quarterly", label: "Quarterly"},
+        {value: "annually", label: "Annually"}
+    ])
 </script>
 
 <style scoped>
