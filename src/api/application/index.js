@@ -16,7 +16,7 @@ export function addApplications(params) {
 }
 export function application(params) {
     return sendRequest({
-        url: `/api/applications/applications/${params}`,
+        url: `/api/applications/applications/${params}/`,
         method: "get",
     });
 }

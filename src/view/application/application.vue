@@ -34,16 +34,18 @@
                         <button class="move" @click="nextStage" :disabled="!hasNext">Move to Next Stage</button>
                     </div>
                 </div>
-                <div class="stage_line">
-                    <div v-for="(s,index) in stages" :key="index" class="stage">
-                        <div class="stage_info">
-                            <el-icon v-if="s.status === 'complete'" :size="16" color="#1F63A9"><SuccessFilled /></el-icon>
-                            <img src="@/assets/icons/application_processing.png" alt="process" v-if="s.status === 'processing'" />
-                            <p :class="s.status === 'complete' ? 'active' : 'inactive'">{{ s.name }}</p>
+                <el-scrollbar>
+                    <div class="stage_line">
+                        <div v-for="(s,index) in stages" :key="index" class="stage">
+                            <div class="stage_info">
+                                <el-icon v-if="s.status === 'complete'" :size="16" color="#1F63A9"><SuccessFilled /></el-icon>
+                                <img src="@/assets/icons/application_processing.png" alt="process" v-if="s.status === 'processing'" />
+                                <p :class="s.status === 'complete' ? 'active' : 'inactive'">{{ s.name }}</p>
+                            </div>
+                            <div class="bottom_line" :class="s.status === 'incomplete' ? 'active_line' : ''"></div>
                         </div>
-                        <div class="bottom_line" :class="s.status === 'incomplete' ? 'active_line' : ''"></div>
                     </div>
-                </div>
+                </el-scrollbar>
             </div>
         </div>
         <div class="tabs">
@@ -107,15 +109,24 @@
     const applicationId = route.params.applicationId
     const stages = ref([
         {name: "Enquiry", status: "complete"},
-        {name: "Indicative offer", status: "complete"},
-        {name: "Valuation", status: "complete"},
-        {name: "Dual", status: "complete"},
-        {name: "Formal approval", status: "processing"},
-        {name: "Loan documents issued", status: "incomplete"},
-        {name: "Loan documents return", status: "incomplete"},
-        {name: "Settlement", status: "incomplete"},
-        {name: "Reject", status: "incomplete"},
-        {name: "Withdraw", status: "incomplete"},
+        {name: "Send to Lender", status: "complete"},
+        {name: "Funding Table lssued", status: "complete"},
+        {name: "ILOO lssued", status: "complete"},
+        {name: "ILOO Signed", status: "processing"},
+        {name: "Commitment Fee Paid", status: "incomplete"},
+        {name: "App Submitted", status: "incomplete"},
+        {name: "Valuation Ordered", status: "incomplete"},
+        {name: "Valuation Received", status: "incomplete"},
+        {name: "More Info Required", status: "incomplete"},
+        {name: "Formal Approval", status: "incomplete"},
+        {name: "Loan Docs instructed", status: "incomplete"},
+        {name: "Loan Docs lssued", status: "incomplete"},
+        {name: "Loan Docs Signed", status: "incomplete"},
+        {name: "Settlement Conditions", status: "incomplete"},
+        {name: "Settled", status: "incomplete"},
+        {name: "Closed", status: "incomplete"},
+        {name: "Declined", status: "incomplete"},
+        {name: "Withdrawn", status: "incomplete"},
     ])
     const infos = ref([
         {name: "Company Borrower Details"},
@@ -278,6 +289,7 @@
     }
     .stages {
         padding: 20px;
+        padding-bottom: 0;
         display: flex;
         flex-direction: column;
         gap: 20px;
@@ -305,6 +317,9 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        align-items: end;
+        gap: 5px;
+        margin-bottom: 20px;
     }
     .stage {
         display: flex;
@@ -314,7 +329,6 @@
     }
     .stage_info {
         padding: 0 5px;
-        height: 20px;
         display: flex;
         flex-direction: row;
         align-items: center;
