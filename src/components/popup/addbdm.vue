@@ -25,10 +25,10 @@
                             <p>BDM Name</p>
                             <el-input v-model="overview.name" />
                         </div>
-                        <div class="item">
+                        <!-- <div class="item">
                             <p>Address</p>
                             <el-input v-model="overview.address" />
-                        </div>
+                        </div> -->
                         <div class="item">
                             <p>Phone Number</p>
                             <el-input v-model="overview.phone" />
@@ -109,13 +109,13 @@ const handleSelect = (val) => {
     overview.value.branch_name = branch.name
     overview.value.branch_email = branch.email
     overview.value.branch_phone = branch.phone
+    overview.value.address = branch.address
 }
 
 async function getBmd() {
     const [err, res] = await api.bdm(props.editId)
     if (!err) {
-        console.log(res);
-        overview.value.address = res?.address || ""
+        // console.log(res);
         overview.value.name = res?.name || ""
         overview.value.phone = res?.phone || ""
         overview.value.email = res?.email || ""
@@ -123,7 +123,8 @@ async function getBmd() {
         overview.value.branch_name = res?.branch.name || ""
         overview.value.branch_email = res?.branch.email || ""
         overview.value.branch_phone = res?.branch.phone || ""
-        console.log(overview.value);
+        overview.value.address = res?.branch.address || ""
+        // console.log(overview.value);
     } else {
         console.log(err)
     }
@@ -132,7 +133,6 @@ const addBdm = async () => {
     const data = {
         ...overview.value
     }
-    // console.log(data)
     const [err, res] = await api.addBdms(data)
     if (!err) {
         // console.log(res);

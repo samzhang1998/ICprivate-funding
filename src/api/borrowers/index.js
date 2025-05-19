@@ -1,8 +1,9 @@
 import sendRequest from '@/server/sendRequest'
 
+//http://3.25.83.191/api/borrowers/borrowers/
 export function borrowers(params) {
   return sendRequest({
-    url: '/api/borrowers/',
+    url: '/api/borrowers/borrowers/',
     method: 'get',
     params: params,
   })
@@ -10,16 +11,29 @@ export function borrowers(params) {
 
 export function addBorrowers(params) {
   return sendRequest({
-    url: '/api/borrowers/',
+    url: '/api/borrowers/borrowers/',
     method: 'post',
     data: params,
   })
 }
-
 export function borrower(params) {
   return sendRequest({
-    url: `/api/borrowers/${params}`,
+    url: `/api/borrowers/borrowers/${params}`,
     method: 'get',
+  })
+}
+//http://3.25.83.191/api/borrowers/borrowers/{id}/
+export function deleteBorrower(params) {
+  return sendRequest({
+    url: `/api/borrowers/borrowers/${params}`,
+    method: 'delete',
+  })
+}
+export function putBorrower(id, data) {
+  return sendRequest({
+    url: `/api/borrowers/borrowers/${id}`,
+    method: 'put',
+    data,
   })
 }
 
@@ -43,5 +57,7 @@ export const borrowerApi = {
   guarantors,
   guarantor,
   addBorrowers,
+  deleteBorrower,
+  putBorrower,
 }
 

@@ -25,35 +25,45 @@
             <Create :action="action" @click="addBroker"></Create>
         </div>
         <div class="container">
-            <el-table ref="borrowerListTable" :data="paginatedData" style="width: 100%"
+            <el-table ref="borrowerListTable" :data="borrowers" style="width: 100%"
                 :default-sort="{ prop: 'id', order: 'ascending' }" :cell-style="{ padding: '10px 0' }"
                 @selection-change="handleSelectionChange">
-                <el-table-column type="selection" align="center" width="50" />
+                <el-table-column type="selection" align="center" width="50" fixed="left" />
                 <el-table-column prop="id" label="Broker ID" sortable="" width="120" />
-                <el-table-column prop="name" label="Name" min-width="139" />
-                <el-table-column prop="address" label="Address" width="130" />
+                <el-table-column prop="first_name" label="Name" min-width="139">
+                    <template #default="scope">
+                        <span>{{ scope.row.first_name }} {{ scope.row.last_name }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="address" label="Address" width="130">
+                    <template #default="scope">
+                        <span>{{ scope.row.address.street_no }} {{ scope.row.address.street_name }} {{
+                            scope.row.address.state }} {{ scope.row.address.suburb }} {{ scope.row.address.unit
+                            }}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="phone" label="Phone" width="130" />
                 <el-table-column prop="broker" label="Broker" min-width="120" />
                 <el-table-column prop="email" label="Email Address" min-width="225" />
                 <el-table-column prop="state" label="State" width="160" />
-                <el-table-column label="Action" align="center" width="60">
-                    <template #default="{ row }">
-                        <el-popover placement="bottom" trigger="click" width="160" popper-class="user-popover">
+                <el-table-column label="Action" align="center" width="60" fixed="right">
+                    <template #default="scope">
+                        <el-popover placement="bottom" trigger="hover" width="160" popper-class="user-popover">
                             <div class="actions">
                                 <div class="action_user">Action</div>
-                                <div class="action" @click="handleView(row)">
+                                <div class="action" @click="handleView(scope.row)">
                                     <el-icon>
                                         <View />
                                     </el-icon>
                                     View
                                 </div>
-                                <div class="action" @click="handleEdit(row)">
+                                <div class="action" @click="handleEdit(scope.row)">
                                     <el-icon>
                                         <Edit />
                                     </el-icon>
                                     Edit
                                 </div>
-                                <div class="action" @click="handleDelete(row)">
+                                <div class="action" @click="handleDelete(scope.row)">
                                     <el-icon>
                                         <Delete />
                                     </el-icon>
@@ -71,17 +81,18 @@
                 <div class="select">
                     <el-checkbox v-model="selectAll" :indeterminate="isSelected" @change="handleCheckAllChange" />
                     <div class="table_buttons">
-                        <DeleteButton @click="deleteSelect"></DeleteButton>
+                        <!-- <DeleteButton @click="deleteSelect"></DeleteButton>
                         <Active></Active>
-                        <Inactive></Inactive>
+                        <Inactive></Inactive> -->
                     </div>
                 </div>
-                <el-pagination layout="prev, pager, next" background :total="borrowers.length" :page-size="pageSize"
+                <el-pagination layout="prev, pager, next" background :total="total" :page-size="pageSize"
                     :current-page="selected.page" @current-change="handlePageChange" />
             </div>
         </div>
         <transition name="slide-right-popup">
-            <AddBorrower v-if="popup" :action="popupAction" @close="close" @minimize="minimize"></AddBorrower>
+            <AddBorrower v-if="popup" :action="popupAction" :editId="editId" @close="close" @minimize="minimize">
+            </AddBorrower>
         </transition>
     </div>
 </template>
@@ -97,6 +108,7 @@ import Create from '@/components/buttons/create.vue';
 import DeleteButton from '@/components/buttons/delete.vue';
 import Active from '@/components/buttons/active.vue';
 import Inactive from '@/components/buttons/inactive.vue';
+import { ElMessageBox } from 'element-plus'
 
 const router = useRouter()
 const popup = ref(false)
@@ -117,40 +129,17 @@ const selectedLocation = ref("")
 const selectedincome = ref("")
 const action = ref("Create Borrower")
 const popupAction = ref("")
-const borrowers = ref([
-    {
-        id: 11111,
-        name: "Broker Name",
-        address: "address",
-        phone: "0000 000 0000",
-        broker: "Riley Smith",
-        email: "rileysmith@example.com",
-        state: "Xxx",
-    },
-    {
-        id: 22222,
-        name: "Broker Name",
-        address: "address",
-        phone: "0000 000 0000",
-        broker: "Riley Smith",
-        email: "rileysmith@example.com",
-        state: "Xxx",
-    },
-    {
-        id: 33333,
-        name: "Broker Name",
-        address: "address",
-        phone: "0000 000 0000",
-        broker: "Riley Smith",
-        email: "rileysmith@example.com",
-        state: "Xxx",
-    }
-])
+const borrowers = ref([])
+
 const pageSize = 10
+const total = ref(0)
+
 const borrowerListTable = ref()
 const selectedItem = ref([])
 const selectAll = ref(false)
 const isSelected = ref(false)
+
+const editId = ref("")
 
 onMounted(() => {
     // getBorrowers()
@@ -160,29 +149,28 @@ onActivated(() => {
     getBorrowers()
 })
 
-const paginatedData = computed(() => {
-    const start = (selected.value.page - 1) * pageSize
-    return borrowers.value.slice(start, start + pageSize)
-})
-
 const getBorrowers = async () => {
     const [err, res] = await api.borrowers(selected.value)
     if (!err) {
         console.log(res);
-        // borrowers.value = res.results
+        borrowers.value = res?.results || []
+        total.value = res?.count || 1
     } else {
         console.log(err)
     }
 }
 const toBorrower = () => {
-    router.push(`/borrower/1`)
+    // router.push(`/borrower/1`)
+    getBorrowers()
 }
 const addBroker = () => {
     popupAction.value = "Add Borrower"
     popup.value = true
+    editId.value = ""
 }
 const close = () => {
     popup.value = false
+    getBorrowers()
 }
 const minimize = () => {
 
@@ -207,9 +195,22 @@ const handleEdit = (row) => {
     const id = row.name
     popupAction.value = `Edit ${id}`
     popup.value = true
+    editId.value = row.id
 }
 const handleDelete = (row) => {
-    borrowers.value = borrowers.value.filter(item => item !== row)
+    ElMessageBox.confirm('Confirm to delete data?')
+        .then(async () => {
+            const [err, res] = await api.deleteBorrower(row.id)
+            if (!err) {
+                getBorrowers()
+            } else {
+                console.log(err)
+            }
+        })
+        .catch(() => {
+            // catch error
+        })
+    // borrowers.value = borrowers.value.filter(item => item !== row)
 }
 const deleteSelect = () => {
     console.log("selected", selectedItem)

@@ -22,31 +22,53 @@
                     </template>
                     <div class="form">
                         <div class="item">
-                            <p>Contact Name</p>
-                            <el-input v-model="overview.name" />
+                            <p>Given Names</p>
+                            <el-input v-model="overview.first_name" />
                         </div>
                         <div class="item">
-                            <p>Address</p>
-                            <el-input v-model="overview.address" />
+                            <p>Surname</p>
+                            <el-input v-model="overview.last_name" />
                         </div>
                         <div class="item">
-                            <p>Email</p>
-                            <el-input v-model="overview.email" />
-                        </div>
-                        <div class="item">
-                            <p>Phone</p>
+                            <p>Phone Number</p>
                             <el-input v-model="overview.phone" />
                         </div>
                         <div class="item">
-                            <p>Borrower Type</p>
-                            <el-select v-model="overview.type" placeholder="Please Select...">
-                                <el-option v-for="item in types" :key="item.value" :label="item.label"
-                                    :value="item.value" />
-                            </el-select>
+                            <p>Email Address</p>
+                            <el-input v-model="overview.email" />
+                        </div>
+                        <div class="item">
+                            <p>Date of Birth</p>
+                            <el-input v-model="overview.date_of_birth" />
+                        </div>
+                        <div class="item">
+                            <p>tax Id</p>
+                            <el-input v-model="overview.tax_id" />
+                        </div>
+                        <div class="item">
+                            <p>Marital Status</p>
+                            <el-input v-model="overview.marital_status" />
+                        </div>
+                        <div class="long_item">
+                            <p>Current Employment Type</p>
+                            <el-radio-group v-model="overview.employment_type" class="group">
+                                <el-radio value="full_time">
+                                    <h1>Full Time</h1>
+                                </el-radio>
+                                <el-radio value="part_ime">
+                                    <h1>Part Time</h1>
+                                </el-radio>
+                                <el-radio value="Casual/Temp">
+                                    <h1>Casual/Temp</h1>
+                                </el-radio>
+                                <el-radio value="contract">
+                                    <h1>Contract</h1>
+                                </el-radio>
+                            </el-radio-group>
                         </div>
                     </div>
                 </el-collapse-item>
-                <el-collapse-item name="2">
+                <!-- <el-collapse-item name="2">
                     <template #title>
                         <div class="title">
                             <el-icon style="font-size: 20px" :color="isSummaryValid ? '#2984DE' : '#E1E1E1'">
@@ -73,38 +95,46 @@
                             <el-input v-model="summary.outstanding" />
                         </div>
                     </div>
-                </el-collapse-item>
+                </el-collapse-item> -->
             </el-collapse>
         </div>
         <div class="buttons">
             <Cancel @click="handleClose"></Cancel>
-            <Save @click="addBorrower"></Save>
+            <Save @click="handleAddOrEdit"></Save>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import Cancel from '../buttons/cancel.vue';
 import Save from '../buttons/save.vue';
 import { api } from '@/api';
 import useSystem from '@/hooks/useSystem'
+import { ElMessage } from 'element-plus'
 
 const { userInfo } = useSystem()
 
 const props = defineProps({
-    action: String
+    action: String,
+    editId: [String, Number]
 })
 
 const activeNames = ref("1")
 //todo something
 const overview = ref({
-    name: "",
-    address: "",
-    phone: "",
+    first_name: "",
+    last_name: "",
     email: "",
-    type: "",
-    user: userInfo.value?.user_id || "",
+    phone: "",
+    date_of_birth: "",
+    tax_id: "",
+    marital_status: "",
+    residency_status: "",
+    referral_source: "",
+    tags: "",
+    employment_type: "",
+    // user: userInfo.value?.user_id || "",
 })
 //todo something
 const summary = ref({
@@ -113,10 +143,12 @@ const summary = ref({
     totalAmount: "",
     outstanding: ""
 })
-const types = ref([
-    { value: "1", label: "1" },
-    { value: "2", label: "2" }
-])
+watch(() => props.editId, (newVal) => {
+    if (newVal) {
+        console.log("watch", newVal);
+        getBorrower()
+    }
+}, { deep: true, immediate: true })
 
 const emit = defineEmits(['close', 'minimize'])
 
@@ -133,10 +165,30 @@ const isSummaryValid = computed(() => {
     return Object.values(summary.value).every(value => value !== '')
 })
 
+async function getBorrower() {
+    const [err, res] = await api.borrower(props.editId)
+    if (!err) {
+        console.log(res);
+        overview.value.first_name = res?.first_name || ""
+        overview.value.last_name = res?.last_name || ""
+        overview.value.email = res?.email || ""
+        overview.value.phone = res?.phone || ""
+        overview.value.date_of_birth = res?.date_of_birth || ""
+        overview.value.tax_id = res?.tax_id || ""
+        overview.value.marital_status = res?.marital_status || ""
+        overview.value.residency_status = res?.residency_status || ""
+        overview.value.referral_source = res?.referral_source || ""
+        overview.value.tags = res?.tags || ""
+        overview.value.employment_type = res?.employment_type || ""
+    } else {
+        console.log(err)
+    }
+}
+
 const addBorrower = async () => {
     const data = {
         //todo something
-        // ...overview.value,
+        ...overview.value,
         // ...commission.value
     }
     console.log(data)
@@ -145,7 +197,30 @@ const addBorrower = async () => {
         console.log(res);
         emit('close')
     } else {
+        ElMessage.error(JSON.stringify(err))
+    }
+}
+
+const editBorrower = async () => {
+    const data = {
+        ...overview.value
+    }
+    console.log(data)
+    const [err, res] = await api.putBorrower(props.editId, data)
+    if (!err) {
+        console.log(res);
+        emit('close')
+    } else {
         console.log(err)
+        ElMessage.error(JSON.stringify(err))
+    }
+}
+
+const handleAddOrEdit = async () => {
+    if (props.editId) {
+        editBorrower()
+    } else {
+        addBorrower()
     }
 }
 </script>
@@ -248,5 +323,30 @@ h1 {
     align-items: center;
     border-top: 1.5px solid #E1E1E1;
     gap: 10px;
+}
+
+.long_item {
+    grid-column: 1 / 3;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 10px;
+}
+
+.group {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    h1 {
+        color: #384144;
+        font-feature-settings: 'liga' off, 'clig' off;
+        font-size: 0.9rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 12px;
+    }
 }
 </style>

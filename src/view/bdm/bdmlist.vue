@@ -24,7 +24,11 @@
                 <el-table-column type="selection" align="center" width="50" fixed />
                 <el-table-column prop="id" label="BDM ID" sortable="" width="120" />
                 <el-table-column prop="name" label="BDM Name" width="139" />
-                <el-table-column prop="address" label="Address" min-width="150" />
+                <el-table-column prop="branch" label="Address" min-width="150">
+                    <template #default="scope">
+                        <span>{{ scope.row.branch.address }}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="phone" label="Phone" width="120" />
                 <el-table-column prop="branch" label="Branch" width="130">
                     <template #default="scope">
