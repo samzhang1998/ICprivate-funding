@@ -7,6 +7,9 @@
                 <el-icon :size="20" style="cursor: pointer; color: #7A858E;" @click="handleClose"><Close /></el-icon>                    
             </div>
         </div>
+        <div class="form">
+            
+        </div>
     </div>
 </template>
 
