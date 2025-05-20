@@ -28,6 +28,10 @@
             <p>Has the Borrower(s) and the Guarantor(s) made payment arrangements with a creditor to payout debt that is still current?</p>
             <p class="status">{{ status(detail.has_payment_arrangements) }}</p>
         </div>
+        <div class="line">
+            <p>Solvency Enquiries Details</p>
+            <p class="status">{{ detail.solvency_enquiries_details || '-' }}</p>
+        </div>
     </div>
 </template>
 

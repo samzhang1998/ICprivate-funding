@@ -3,27 +3,27 @@
         <div class="form">
             <div class="item">
                 <p class="title">Net Loan Required ($)</p>
-                <p>{{ loanDetail.loan || '-' }}</p>
+                <p>{{ detail.loan_amount || '-' }}</p>
             </div>
             <div class="item">
                 <p class="title">Term Required (Month)</p>
-                <p>{{ loanDetail.term || '-' }}</p>
+                <p>{{ detail.loan_term || '-' }}</p>
             </div>
             <div class="item">
                 <p class="title">Proposed Settlement Date</p>
-                <p>{{ loanDetail.date || '-' }}</p>
+                <p>{{ detail.estimated_settlement_date || '-' }}</p>
             </div>
             <div class="item">
                 <p class="title">Expected Rate (p.a) (%)</p>
-                <p>{{ loanDetail.rate || '-' }}</p>
+                <p>{{ detail.interest_rate || '-' }}</p>
             </div>
             <div class="item">
                 <p class="title">Loan Purpose</p>
-                <p>{{ loanDetail.purpose || '-' }}</p>
+                <p>{{ detail.loan_purpose || '-' }}</p>
             </div>
             <div class="item">
                 <p class="title">Additional Comments</p>
-                <p>{{ loanDetail.comments || '-' }}</p>
+                <p>{{ detail.additional_comments || '-' }}</p>
             </div>
         </div>
     </div>
@@ -32,14 +32,8 @@
 <script setup>
     import { ref } from 'vue';
 
-    const loanDetail = ref({
-        loan: "",
-        term: "",
-        date: "",
-        rate: "",
-        purpose: "",
-        purposeOther: "",
-        comments: ""
+    const { detail } = defineProps({
+        detail: Object
     })
 </script>
 

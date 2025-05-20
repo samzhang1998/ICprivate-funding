@@ -130,7 +130,7 @@
         {name: "Company Borrower Details"},
         {name: "Company Assets & Liabilities"},
         {name: "General Solvency Enquires"},
-        {name: "Individual Details"},
+        {name: "Guarantor Details"},
         {name: "Guarantor Assets & Liability"},
         {name: "Proposed Security Details"},
         {name: "Loan Details & Purpose"},
@@ -164,7 +164,6 @@
         })
     }
     const getApplication = async () => {
-        console.log(applicationId)
         const [err, res] = await api.application(applicationId)
         if (!err) {
             console.log(res);
