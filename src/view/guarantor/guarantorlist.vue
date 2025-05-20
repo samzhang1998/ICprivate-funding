@@ -117,6 +117,7 @@
 <script setup>
     import { onActivated, ref, computed } from 'vue';
     import { useRouter } from 'vue-router';
+    import { ElMessage, ElMessageBox } from 'element-plus';
     import { api } from '@/api';
     import AddGuarantor from '@/components/popup/addguarantor.vue';
     import Search from '@/components/buttons/search.vue';
@@ -128,6 +129,7 @@
 
     const router = useRouter()
     const popup = ref(false)
+    const editData = ref(null)
 
     const locations = ref([
         {value: "1", label: "1"},
@@ -189,12 +191,14 @@
         return guarantors.value.slice(start, start + pageSize)
     })
     const getGuarantors = async () => {
-        const [err, res] = await api.guarantors(selected.value)
+        const [err, res] = await api.getGuarantors(selected.value)
         if (!err) {
-            console.log(res);
-            // borrowers.value = res.results
+            guarantors.value = res.results || [];
         } else {
-            console.log(err)
+            ElMessage.error({
+                message: err.message || 'Failed to fetch guarantors',
+                type: 'error'
+            });
         }
     }
     const toGuarantor = () => {
@@ -227,19 +231,82 @@
         router.push(`/guarantor/${row.id}`)
     }
     const handleEdit = (row) => {
-        const id = row.name
-        popupAction.value = `Edit ${id}`
-        popup.value = true
+        popupAction.value = `Edit ${row.name}`;
+        editData.value = { ...row };
+        popup.value = true;
     }
-    const handleDelete = (row) => {
-        guarantors.value = guarantors.value.filter(item => item !== row)
+    const handleDelete = async (row) => {
+        try {
+            await ElMessageBox.confirm(
+                'Are you sure you want to delete this guarantor?',
+                'Warning',
+                {
+                    confirmButtonText: 'Delete',
+                    cancelButtonText: 'Cancel',
+                    type: 'warning',
+                }
+            );
+
+            const [error] = await api.deleteGuarantor(row.id);
+            if (error) {
+                throw error;
+            }
+
+            ElMessage.success({
+                message: 'Guarantor deleted successfully',
+                type: 'success'
+            });
+
+            // Remove from local state
+            guarantors.value = guarantors.value.filter(item => item.id !== row.id);
+        } catch (error) {
+            if (error !== 'cancel') {
+                ElMessage.error({
+                    message: error.message || 'Failed to delete guarantor',
+                    type: 'error'
+                });
+            }
+        }
     }
-    const deleteSelect = () => {
-        console.log("selected", selectedItem)
-        guarantors.value = guarantors.value.filter(
-            item => !selectedItem.value.includes(item)
-        )
-        selectedItem.value = []
+    const deleteSelect = async () => {
+        if (!selectedItem.value.length) return;
+
+        try {
+            await ElMessageBox.confirm(
+                'Are you sure you want to delete the selected guarantors?',
+                'Warning',
+                {
+                    confirmButtonText: 'Delete',
+                    cancelButtonText: 'Cancel',
+                    type: 'warning',
+                }
+            );
+
+            const deletePromises = selectedItem.value.map(item => api.deleteGuarantor(item.id));
+            const results = await Promise.all(deletePromises);
+            
+            const errors = results.filter(([error]) => error);
+            if (errors.length) {
+                throw new Error(`Failed to delete ${errors.length} guarantors`);
+            }
+
+            ElMessage.success({
+                message: 'Selected guarantors deleted successfully',
+                type: 'success'
+            });
+
+            // Remove deleted items from local state
+            const deletedIds = selectedItem.value.map(item => item.id);
+            guarantors.value = guarantors.value.filter(item => !deletedIds.includes(item.id));
+            selectedItem.value = [];
+        } catch (error) {
+            if (error !== 'cancel') {
+                ElMessage.error({
+                    message: error.message || 'Failed to delete guarantors',
+                    type: 'error'
+                });
+            }
+        }
     }    
     const handlePageChange = (page) => {
         selected.value.page = page

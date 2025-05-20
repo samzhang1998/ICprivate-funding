@@ -55,6 +55,7 @@
 
 <script setup>
     import { onMounted, ref } from 'vue';
+    import { ElMessage } from 'element-plus';
     import { api } from '@/api';
     import { useRoute } from 'vue-router';
 
@@ -83,12 +84,32 @@
     })
 
     const getGuarantor = async () => {
-        const [err, res] = await api.guarantor(guarantorId)
+        const [err, res] = await api.getGuarantor(guarantorId)
         if (!err) {
-            console.log(res);
-            // borrowers.value = res.results
+            guarantor.value = {
+                name: res.name,
+                date: new Date(res.created_at).toLocaleString()
+            };
+            overview.value = {
+                name: res.name,
+                address: `${res.address}, ${res.city}, ${res.state} ${res.postal_code}`,
+                phone: res.phone,
+                email: res.email,
+                relationship: res.relationship === 'other' ? res.relationship_other : res.relationship,
+                birth: new Date(res.date_of_birth).toLocaleDateString(),
+                status: res.employment_type,
+                income: new Intl.NumberFormat('en-US', { 
+                    style: 'currency', 
+                    currency: 'USD' 
+                }).format(res.annual_income),
+                employer: res.employer_name || 'N/A',
+                years_employed: res.years_with_employer ? `${res.years_with_employer} years` : 'N/A'
+            };
         } else {
-            console.log(err)
+            ElMessage.error({
+                message: err.message || 'Failed to fetch guarantor details',
+                type: 'error'
+            });
         }
     }
 </script>

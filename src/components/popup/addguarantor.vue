@@ -1,213 +1,330 @@
 <template>
-    <div class="popup">
-        <div class="popup_title">
-            <h1>{{ action }}</h1>
-            <div class="close">
-                <!-- <el-icon :size="20" style="cursor: pointer; color: #7A858E;" @click="handleMinimize"><Minus /></el-icon> -->
-                <el-icon :size="20" style="cursor: pointer; color: #7A858E;" @click="handleClose"><Close /></el-icon>                    
-            </div>
-        </div>
-        <div class="popup_content">
-            <el-collapse v-model="activeNames" accordion style="--el-collapse-border-color: none;">
-                <el-collapse-item name="1">
-                    <template #title>
-                        <div class="title">
-                            <el-icon style="font-size: 20px" :color="isOverviewValid ? '#2984DE' : '#E1E1E1'"><SuccessFilled /></el-icon>
-                            <p :style="{color: isOverviewValid ? '#2984DE' : '#272727'}">Overview</p>
-                        </div>
-                    </template>
-                    <div class="form">
-                        <div class="item">
-                            <p>Guarantor Name</p>
-                            <el-input v-model="overview.name" />
-                        </div>
-                        <div class="item">
-                            <p>Guarantor Address</p>
-                            <el-input v-model="overview.address" />
-                        </div>
-                        <div class="item">
-                            <p>Phone Number</p>
-                            <el-input v-model="overview.phone" />
-                        </div>
-                        <div class="item">
-                            <p>Email Address</p>
-                            <el-input v-model="overview.email" />
-                        </div>
-                        <div class="item">
-                            <p>Relationship to Borrower</p>
-                            <el-select v-model="overview.relationship" placeholder="Please Select...">
-                                <el-option
-                                    v-for="item in relationships"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value"
-                                />
-                            </el-select>
-                        </div>
-                        <div class="item">
-                            <p>Date of Birth</p>
-                            <el-input v-model="overview.birth" />
-                        </div>
-                        <div class="item">
-                            <p>Employment Status</p>
-                            <el-select v-model="overview.status" placeholder="Please Select...">
-                                <el-option
-                                    v-for="item in statuses"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value"
-                                />
-                            </el-select>
-                        </div>
-                        <div class="item">
-                            <p>Annual Income</p>
-                            <el-input v-model="overview.income" />
-                        </div>
-                        <div class="item">
-                            <p>Credit Score</p>
-                            <el-input v-model="overview.score" />
-                        </div>
-                    </div>
-                </el-collapse-item>
-            </el-collapse>
-        </div>
-        <div class="buttons">
-            <Cancel @click="handleClose"></Cancel>
-            <Save></Save>
-        </div>
+  <div class="popup">
+    <div class="header">
+      <h1>{{ action }}</h1>
+      <div class="buttons">
+        <el-button @click="$emit('minimize')">
+          <el-icon><Minus /></el-icon>
+        </el-button>
+        <el-button @click="$emit('close')">
+          <el-icon><Close /></el-icon>
+        </el-button>
+      </div>
     </div>
+    <div class="content">
+      <el-form
+        ref="formRef"
+        :model="form"
+        :rules="rules"
+        label-position="top"
+        @submit.prevent="handleSubmit"
+      >
+        <!-- Basic Information -->
+        <div class="section">
+          <h2>Basic Information</h2>
+          <div class="fields">
+            <el-form-item label="Full Name" prop="name" required>
+              <el-input v-model="form.name" placeholder="Enter full name" />
+            </el-form-item>
+            
+            <el-form-item label="Date of Birth" prop="date_of_birth" required>
+              <el-date-picker
+                v-model="form.date_of_birth"
+                type="date"
+                placeholder="Select date"
+                format="YYYY-MM-DD"
+              />
+            </el-form-item>
+
+            <el-form-item label="Email" prop="email" required>
+              <el-input v-model="form.email" placeholder="Enter email address" />
+            </el-form-item>
+
+            <el-form-item label="Phone Number" prop="phone" required>
+              <el-input v-model="form.phone" placeholder="Enter phone number" />
+            </el-form-item>
+          </div>
+        </div>
+
+        <!-- Address Information -->
+        <div class="section">
+          <h2>Address Information</h2>
+          <div class="fields">
+            <el-form-item label="Street Address" prop="address" required>
+              <el-input v-model="form.address" placeholder="Enter street address" />
+            </el-form-item>
+
+            <el-form-item label="City" prop="city" required>
+              <el-input v-model="form.city" placeholder="Enter city" />
+            </el-form-item>
+
+            <el-form-item label="State" prop="state" required>
+              <el-input v-model="form.state" placeholder="Enter state" />
+            </el-form-item>
+
+            <el-form-item label="Postal Code" prop="postal_code" required>
+              <el-input v-model="form.postal_code" placeholder="Enter postal code" />
+            </el-form-item>
+          </div>
+        </div>
+
+        <!-- Employment Information -->
+        <div class="section">
+          <h2>Employment Information</h2>
+          <div class="fields">
+            <el-form-item label="Employment Type" prop="employment_type" required>
+              <el-select v-model="form.employment_type" placeholder="Select employment type">
+                <el-option label="Full-time" value="full_time" />
+                <el-option label="Part-time" value="part_time" />
+                <el-option label="Self-employed" value="self_employed" />
+                <el-option label="Unemployed" value="unemployed" />
+                <el-option label="Retired" value="retired" />
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="Annual Income" prop="annual_income" required>
+              <el-input-number 
+                v-model="form.annual_income"
+                :min="0"
+                :precision="2"
+                :step="1000"
+                :controls="false"
+                placeholder="Enter annual income"
+              />
+            </el-form-item>
+
+            <el-form-item label="Employer Name" prop="employer_name">
+              <el-input v-model="form.employer_name" placeholder="Enter employer name" />
+            </el-form-item>
+
+            <el-form-item label="Years with Employer" prop="years_with_employer">
+              <el-input-number 
+                v-model="form.years_with_employer"
+                :min="0"
+                :precision="1"
+                :step="0.5"
+                :controls="false"
+                placeholder="Enter years with employer"
+              />
+            </el-form-item>
+          </div>
+        </div>
+
+        <!-- Relationship Information -->
+        <div class="section">
+          <h2>Relationship Information</h2>
+          <div class="fields">
+            <el-form-item label="Relationship to Borrower" prop="relationship" required>
+              <el-select v-model="form.relationship" placeholder="Select relationship">
+                <el-option label="Spouse" value="spouse" />
+                <el-option label="Parent" value="parent" />
+                <el-option label="Child" value="child" />
+                <el-option label="Sibling" value="sibling" />
+                <el-option label="Business Partner" value="business_partner" />
+                <el-option label="Other" value="other" />
+              </el-select>
+            </el-form-item>
+
+            <el-form-item 
+              v-if="form.relationship === 'other'" 
+              label="Specify Relationship" 
+              prop="relationship_other"
+              required
+            >
+              <el-input v-model="form.relationship_other" placeholder="Please specify relationship" />
+            </el-form-item>
+          </div>
+        </div>
+
+        <div class="actions">
+          <el-button type="primary" native-type="submit" :loading="loading">
+            {{ isEdit ? 'Update Guarantor' : 'Create Guarantor' }}
+          </el-button>
+          <el-button @click="$emit('close')">Cancel</el-button>
+        </div>
+      </el-form>
+    </div>
+  </div>
 </template>
 
 <script setup>
-    import { ref, computed } from 'vue';
-    import Cancel from '../buttons/cancel.vue';
-    import Save from '../buttons/save.vue';
+import { ref, computed } from 'vue';
+import { ElMessage } from 'element-plus';
+import { api } from '@/api';
 
-    const props = defineProps({
-        action: String
-    })
+const props = defineProps({
+  action: {
+    type: String,
+    required: true
+  },
+  guarantorData: {
+    type: Object,
+    default: () => ({})
+  }
+});
 
-    const activeNames = ref("1")
-    const overview = ref({
-        name: "",
-        address: "",
-        phone: "",
-        email: "",
-        relationship: "",
-        birth: "",
-        status: "",
-        income: "",
-        score: ""
-    })
-    const relationships = ref([
-        {value: "1", label: "1"},
-        {value: "2", label: "2"}
-    ])
-    const statuses = ref([
-        {value: "1", label: "1"},
-        {value: "2", label: "2"}
-    ])
+const emit = defineEmits(['close', 'minimize', 'refresh']);
 
-    const emit = defineEmits(['close', 'minimize'])
+const formRef = ref(null);
+const loading = ref(false);
 
-    const handleClose = () => {
-        emit('close')
+const isEdit = computed(() => props.action.startsWith('Edit'));
+
+const form = ref({
+  name: '',
+  date_of_birth: '',
+  email: '',
+  phone: '',
+  address: '',
+  city: '',
+  state: '',
+  postal_code: '',
+  employment_type: '',
+  annual_income: null,
+  employer_name: '',
+  years_with_employer: null,
+  relationship: '',
+  relationship_other: '',
+  ...props.guarantorData
+});
+
+const rules = {
+  name: [{ required: true, message: 'Please enter full name', trigger: 'blur' }],
+  date_of_birth: [{ required: true, message: 'Please select date of birth', trigger: 'change' }],
+  email: [
+    { required: true, message: 'Please enter email address', trigger: 'blur' },
+    { type: 'email', message: 'Please enter a valid email address', trigger: 'blur' }
+  ],
+  phone: [{ required: true, message: 'Please enter phone number', trigger: 'blur' }],
+  address: [{ required: true, message: 'Please enter street address', trigger: 'blur' }],
+  city: [{ required: true, message: 'Please enter city', trigger: 'blur' }],
+  state: [{ required: true, message: 'Please enter state', trigger: 'blur' }],
+  postal_code: [{ required: true, message: 'Please enter postal code', trigger: 'blur' }],
+  employment_type: [{ required: true, message: 'Please select employment type', trigger: 'change' }],
+  annual_income: [{ required: true, message: 'Please enter annual income', trigger: 'blur' }],
+  relationship: [{ required: true, message: 'Please select relationship', trigger: 'change' }],
+  relationship_other: [{
+    required: true,
+    message: 'Please specify relationship',
+    trigger: 'blur',
+    validator: (rule, value, callback) => {
+      if (form.value.relationship === 'other' && !value) {
+        callback(new Error('Please specify relationship'));
+      } else {
+        callback();
+      }
     }
-    const handleMinimize = () => {
-        emit('minimize')
+  }]
+};
+
+const handleSubmit = async () => {
+  if (!formRef.value) return;
+  
+  try {
+    await formRef.value.validate();
+    loading.value = true;
+
+    // Prepare form data
+    const formData = { ...form.value };
+    if (formData.relationship !== 'other') {
+      delete formData.relationship_other;
     }
-    const isOverviewValid = computed(() => {
-        return Object.values(overview.value).every(value => value !== '')
-    })
+
+    // Make API call
+    const [error, response] = isEdit.value
+      ? await api.updateGuarantor(props.guarantorData.id, formData)
+      : await api.createGuarantor(formData);
+
+    if (error) {
+      throw error;
+    }
+
+    ElMessage.success({
+      message: `Guarantor successfully ${isEdit.value ? 'updated' : 'created'}!`,
+      type: 'success'
+    });
+
+    emit('refresh');
+    emit('close');
+  } catch (error) {
+    ElMessage.error({
+      message: error.message || 'An error occurred. Please try again.',
+      type: 'error'
+    });
+  } finally {
+    loading.value = false;
+  }
+};
 </script>
 
 <style scoped>
-    .popup {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        padding: 10px;
-        display: flex;
-        flex-direction: column;
-        background: white;
-        border: none;
-        box-shadow: -8px -1px 9.3px 0px rgba(202, 202, 202, 0.16);
-        width: 40%;
-        height: 100vh;
-        overflow: hidden;
-        z-index: 1000;
-    }
-    .popup_title {
-        width: 100%;
-        padding: 10px;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1.5px solid var(--Line, #E1E1E1);
-    }
-    h1 {
-        color: #384144;
-        font-feature-settings: 'liga' off, 'clig' off;
-        font-size: 1.1rem;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 12px;
-    }
-    .close {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 20px;
-    }
-    .popup_content {
-        width: 100%;
-        padding: 10px;
-    }
-    .title {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 10px;
-        padding-left: 5px;
-    }
-    .title p {
-        font-feature-settings: 'liga' off, 'clig' off;
-        font-size: 0.9rem;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 12px;
-    }
-    .form {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px 20px;
-    }
-    .item {
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-        gap: 10px;
-    }
-    .item p {
-        color: #384144;
-        font-feature-settings: 'liga' off, 'clig' off;
-        font-size: 0.75rem;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 12px;
-        margin: 0;
-    }
-    .buttons {
-        width: 100%;
-        padding: 10px;
-        margin-top: auto;
-        display: flex;
-        flex-direction: row;
-        justify-content: end;
-        align-items: center;
-        border-top: 1.5px solid #E1E1E1;
-        gap: 10px;
-    }
+.popup {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 600px;
+  height: 100vh;
+  background: #FFF;
+  box-shadow: -4px 0px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+.header {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #EAEAEA;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.section {
+  margin-bottom: 30px;
+}
+
+.section h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.actions {
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+:deep(.el-form-item__label) {
+  font-weight: 500;
+}
+
+:deep(.el-input), :deep(.el-select), :deep(.el-date-picker) {
+  width: 100%;
+}
 </style>

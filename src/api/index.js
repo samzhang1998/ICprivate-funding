@@ -3,6 +3,8 @@ import { brokerApi } from "./broker";
 import { borrowerApi } from "./borrowers";
 import { dashboardApi } from "./dashboard";
 import { applicationApi } from "./application";
+import { guarantorApi } from "./guarantor";
+import { productsApi } from "./products";
 
 export const api = {
   ...userApi,
@@ -10,4 +12,6 @@ export const api = {
   ...borrowerApi,
   ...dashboardApi,
   ...applicationApi,
+  ...guarantorApi,
+  ...productsApi,
 };
