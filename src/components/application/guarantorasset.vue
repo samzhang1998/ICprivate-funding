@@ -12,10 +12,10 @@
             <p class="title">BG_type</p>
         </div>
         <div class="item" v-for="(a,idx) in g.assets" :key="idx">
-            <p class="title">{{ a.asset_type}}</p>
-            <p class="title">{{ a.description || a.address}}</p>
-            <p class="title">{{ a.value }}</p>
-            <p class="title">{{ a.bg_type }}</p>
+            <p>{{ a.asset_type}}</p>
+            <p>{{ a.description || a.address}}</p>
+            <p>{{ a.value }}</p>
+            <p>{{ a.bg_type }}</p>
         </div>
         <h2>Liabilities</h2>
         <div class="item1">
@@ -26,11 +26,11 @@
             <p class="title">BG_type</p>
         </div>
         <div class="item1" v-for="(l,idxl) in g.liabilities" :key="idxl">
-            <p class="title">{{ l.liability_type }}</p>
-            <p class="title">{{ l.description }}</p>
-            <p class="title">{{ l.amount }}</p>
-            <p class="title">{{ l.monthly_payment}}</p>
-            <p class="title">{{ l.bg_type }}</p>
+            <p>{{ l.liability_type }}</p>
+            <p>{{ l.description }}</p>
+            <p>{{ l.amount }}</p>
+            <p>{{ l.monthly_payment}}</p>
+            <p>{{ l.bg_type }}</p>
         </div>
     </div>
 </template>
@@ -60,5 +60,29 @@
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 20px;
+    }
+    .item1 {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 20px;
+    }
+    h1 {
+        color: #384144;
+        font-feature-settings: 'liga' off, 'clig' off;
+        font-size: 0.9rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+    }
+    h2 {
+        color: #7A858E;
+        font-feature-settings: 'liga' off, 'clig' off;
+        font-size: 0.9rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+    }
+    .title {
+        color: #7A858E;
     }
 </style>
