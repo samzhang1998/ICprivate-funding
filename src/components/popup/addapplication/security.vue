@@ -1,161 +1,256 @@
 <template>
     <div class="form">
-        <div v-for="(s, index) in security" :key="index" class="form">
-            <div class="title">
-                <h1>Property(s)</h1>
-                <div class="buttons">
-                    <el-icon
-                        :size="20"
-                        style="cursor: pointer; color: #2984DE;" 
-                        v-if="security.length < 3" 
-                        @click="add"
-                    ><CirclePlusFilled /></el-icon>
-                    <el-icon 
-                        :size="20" 
-                        style="cursor: pointer; color: #2984DE;" 
-                        v-if="security.length > 1" 
-                        @click="remove(index)"
-                    ><RemoveFilled /></el-icon>
-                </div>
-            </div>
+        <div class="long_item">
+            <h1>Security Property Details <span class="required">*</span></h1>
+            <span class="hint">Information about the property being used as security for the loan</span>
+        </div>
+        <div v-for="(item, index) in security" :key="index" class="security">
             <div class="address">
                 <div class="item">
-                    <p>Unit</p>
-                    <el-input v-model="s.address_unit" />
+                    <p>Unit/Suite</p>
+                    <el-input v-model="item.address_unit" placeholder="e.g. Unit 5" />
+                    <span class="hint">Unit or suite number if applicable</span>
                 </div>
                 <div class="item">
-                    <p>No.</p>
-                    <el-input v-model="s.address_street_no" />
+                    <p>Street No <span class="required">*</span></p>
+                    <el-input v-model="item.address_street_no" placeholder="e.g. 123" />
+                    <span class="hint">Street number</span>
                 </div>
-                <div class="address_long_item">
-                    <p>Street Name</p>
-                    <el-input v-model="s.address_street_name" />
+                <div class="item">
+                    <p>Street Name <span class="required">*</span></p>
+                    <el-input v-model="item.address_street_name" placeholder="e.g. Main Street" />
+                    <span class="hint">Street name</span>
+                </div>
+                <div class="item">
+                    <p>Suburb <span class="required">*</span></p>
+                    <el-input v-model="item.address_suburb" placeholder="e.g. Richmond" />
+                    <span class="hint">Suburb name</span>
+                </div>
+                <div class="item">
+                    <p>State <span class="required">*</span></p>
+                    <el-select v-model="item.address_state" placeholder="Select state">
+                        <el-option value="NSW" label="NSW" />
+                        <el-option value="VIC" label="VIC" />
+                        <el-option value="QLD" label="QLD" />
+                        <el-option value="SA" label="SA" />
+                        <el-option value="WA" label="WA" />
+                        <el-option value="TAS" label="TAS" />
+                        <el-option value="NT" label="NT" />
+                        <el-option value="ACT" label="ACT" />
+                    </el-select>
+                    <span class="hint">Australian state or territory</span>
+                </div>
+                <div class="item">
+                    <p>Postcode <span class="required">*</span></p>
+                    <el-input v-model="item.address_postcode" placeholder="e.g. 3000" maxlength="4" />
+                    <span class="hint">4-digit postcode</span>
                 </div>
             </div>
-            <div class="address1">
+            <div class="property">
                 <div class="item">
-                    <p>Suburb</p>
-                    <el-input v-model="s.address_suburb" />
+                    <p>Property Type <span class="required">*</span></p>
+                    <el-select v-model="item.property_type" placeholder="Select property type">
+                        <el-option value="residential" label="Residential" />
+                        <el-option value="commercial" label="Commercial" />
+                        <el-option value="industrial" label="Industrial" />
+                        <el-option value="retail" label="Retail" />
+                        <el-option value="land" label="Land" />
+                        <el-option value="rural" label="Rural" />
+                        <el-option value="other" label="Other" />
+                    </el-select>
+                    <span class="hint">Type of property</span>
                 </div>
-                <div class="item">
-                    <p>State</p>
-                    <el-input v-model="s.address_state" />
-                </div>
-                <div class="item">
-                    <p>Postcode</p>
-                    <el-input v-model="s.address_postcode" />
-                </div>
-            </div>
-            <div class="item">
-                <p>Property Type</p>
-                <el-radio-group v-model="s.property_type" class="group">
-                    <div class="line">
-                        <el-radio value="Residential"><h1>Residential</h1></el-radio>
-                        <el-radio value="Commercial"><h1>Commercial</h1></el-radio>
-                        <el-radio value="Rural"><h1>Rural</h1></el-radio>
-                    </div>
-                    <div class="line">
-                        <el-radio value="Industrial"><h1>Industrial</h1></el-radio>
-                        <el-radio value="Vacant Land"><h1>Vacant Land</h1></el-radio>
-                        <el-radio value="Other"><h1>Others(Please Specify Below)</h1></el-radio>
-                    </div>
-                </el-radio-group>
-                <el-input v-model="s.property_type" />
-            </div>
-            <div class="long">
                 <div class="item">
                     <p>Bedrooms</p>
-                    <el-input v-model="s.bedrooms" />
+                    <el-input-number v-model="bedroomsComputed[index]" :min="0" :max="20" placeholder="e.g. 3" />
+                    <span class="hint">Number of bedrooms</span>
                 </div>
                 <div class="item">
                     <p>Bathrooms</p>
-                    <el-input v-model="s.bathrooms" />
+                    <el-input-number v-model="bathroomsComputed[index]" :min="0" :max="20" placeholder="e.g. 2" />
+                    <span class="hint">Number of bathrooms</span>
                 </div>
                 <div class="item">
                     <p>Car Spaces</p>
-                    <el-input v-model="s.car_space" />
+                    <el-input-number v-model="carSpacesComputed[index]" :min="0" :max="20" placeholder="e.g. 1" />
+                    <span class="hint">Number of car spaces</span>
                 </div>
                 <div class="item">
                     <p>Building Size (sqm)</p>
-                    <el-input v-model="s.building_size" />
+                    <el-input v-model="item.building_size" type="number" placeholder="e.g. 150" />
+                    <span class="hint">Size in square meters</span>
                 </div>
                 <div class="item">
                     <p>Land Size (sqm)</p>
-                    <el-input v-model="s.land_size" />
+                    <el-input v-model="item.land_size" type="number" placeholder="e.g. 500" />
+                    <span class="hint">Size in square meters</span>
+                </div>
+                <div class="item">
+                    <p>Features <span class="required">*</span></p>
+                    <div class="features">
+                        <el-checkbox v-model="item.is_single_story">Single Story</el-checkbox>
+                        <el-checkbox v-model="item.has_garage">Garage</el-checkbox>
+                        <el-checkbox v-model="item.has_carport">Carport</el-checkbox>
+                        <el-checkbox v-model="item.has_off_street_parking">Off-street Parking</el-checkbox>
+                    </div>
+                    <span class="hint">Select all applicable features</span>
+                </div>
+                <div class="item">
+                    <p>Occupancy <span class="required">*</span></p>
+                    <el-select v-model="item.occupancy" placeholder="Select occupancy type">
+                        <el-option value="owner_occupied" label="Owner Occupied" />
+                        <el-option value="investment" label="Investment Property" />
+                    </el-select>
+                    <span class="hint">How the property is occupied</span>
                 </div>
             </div>
-            <div class="item">
-                <h1>Description (If Applicable)</h1>
-                <div class="line">
-                    <el-checkbox v-model="s.is_single_story"><h1>Single Story</h1></el-checkbox>
-                    <el-checkbox v-model="s.has_off_street_parking"><h1>Off-Street Parking</h1></el-checkbox>
-                    <el-checkbox v-model="s.has_garage"><h1>Garage</h1></el-checkbox>
-                    <el-checkbox v-model="s.has_carport"><h1>Carport</h1></el-checkbox>
+            <div class="finance">
+                <div class="item">
+                    <p>Current Mortgagee</p>
+                    <el-input v-model="item.current_mortgagee" placeholder="e.g. ABC Bank" />
+                    <span class="hint">Current mortgage holder</span>
+                </div>
+                <div class="item">
+                    <p>First Mortgage</p>
+                    <el-input v-model="item.first_mortgage" placeholder="e.g. XYZ Bank" />
+                    <span class="hint">First mortgage holder</span>
+                </div>
+                <div class="item">
+                    <p>Second Mortgage</p>
+                    <el-input v-model="item.second_mortgage" placeholder="e.g. DEF Bank" />
+                    <span class="hint">Second mortgage holder (if applicable)</span>
+                </div>
+                <div class="item">
+                    <p>Current Debt Position ($)</p>
+                    <el-input v-model="item.current_debt_position" type="number" placeholder="e.g. 250000" />
+                    <span class="hint">Current debt on the property</span>
+                </div>
+                <div class="item">
+                    <p>Estimated Value ($) <span class="required">*</span></p>
+                    <el-input v-model="item.estimated_value" type="number" placeholder="e.g. 500000" />
+                    <span class="hint">Estimated property value</span>
+                </div>
+                <div class="item">
+                    <p>Purchase Price ($)</p>
+                    <el-input v-model="item.purchase_price" type="number" placeholder="e.g. 450000" />
+                    <span class="hint">Original purchase price</span>
                 </div>
             </div>
-            <div class="item">
-                <p>Current Mortgagee Name</p>
-                <el-input v-model="s.current_mortgagee" />
+            <div class="buttons">
+                <el-button type="danger" @click="$emit('remove', index)" :disabled="security.length <= 1">Remove</el-button>
             </div>
-            <div class="item">
-                <p>Current Debt Position</p>
-                <el-input v-model="s.current_debt_position" />
-            </div>
-            <h1>Valuation</h1>
-            <div class="inputs">
-                <h1 style="color: #000; width: 30%;">Est Current Value</h1>
-                <el-input v-model="s.estimated_value" />
-            </div>
-            <div class="inputs">
-                <h1 style="color: #000; width: 30%;">Purchase Price</h1>
-                <el-input v-model="s.purchase_price" />
-            </div>
-    </div>
+        </div>
+        <div class="add">
+            <el-button type="primary" @click="$emit('add')">Add Security Property</el-button>
+        </div>
     </div>
 </template>
 
 <script setup>
+    import { ref, computed, onMounted, watch } from 'vue';
+
     const props = defineProps({
         security: Array
-    })
+    });
 
-    const emit = defineEmits(['add', 'remove'])
-    const known = ['Residential', 'Commercial', 'Rural', 'Industrial', 'Vacant Land']
+    defineEmits(['add', 'remove']);
 
-    const add = () => {
-        emit('add')
-    }
-    const remove = (idx) => {
-        emit('remove', idx)
-    }
+    // Create computed properties for numeric fields to handle type conversion
+    const bedroomsComputed = ref([]);
+    const bathroomsComputed = ref([]);
+    const carSpacesComputed = ref([]);
+
+    // Initialize default values and computed properties
+    onMounted(() => {
+        // Initialize arrays for computed properties
+        bedroomsComputed.value = props.security.map(item => Number(item.bedrooms) || 0);
+        bathroomsComputed.value = props.security.map(item => Number(item.bathrooms) || 0);
+        carSpacesComputed.value = props.security.map(item => Number(item.car_spaces) || 0);
+        
+        // Initialize default values for required boolean fields
+        props.security.forEach((property, index) => {
+            if (property.is_single_story === null) property.is_single_story = false;
+            if (property.has_garage === null) property.has_garage = false;
+            if (property.has_carport === null) property.has_carport = false;
+            if (property.has_off_street_parking === null) property.has_off_street_parking = false;
+        });
+    });
+
+    // Watch for changes in the computed properties and update the original data
+    watch(bedroomsComputed, (newVal) => {
+        props.security.forEach((item, index) => {
+            if (index < newVal.length) {
+                item.bedrooms = newVal[index];
+            }
+        });
+    });
+
+    watch(bathroomsComputed, (newVal) => {
+        props.security.forEach((item, index) => {
+            if (index < newVal.length) {
+                item.bathrooms = newVal[index];
+            }
+        });
+    });
+
+    watch(carSpacesComputed, (newVal) => {
+        props.security.forEach((item, index) => {
+            if (index < newVal.length) {
+                item.car_spaces = newVal[index];
+            }
+        });
+    });
+
+    // Watch for changes in the security array (e.g., when adding new items)
+    watch(() => props.security.length, (newLength, oldLength) => {
+        if (newLength > oldLength) {
+            // A new item was added, initialize its computed properties
+            for (let i = oldLength; i < newLength; i++) {
+                bedroomsComputed.value[i] = Number(props.security[i].bedrooms) || 0;
+                bathroomsComputed.value[i] = Number(props.security[i].bathrooms) || 0;
+                carSpacesComputed.value[i] = Number(props.security[i].car_spaces) || 0;
+                
+                // Initialize boolean fields
+                if (props.security[i].is_single_story === null) props.security[i].is_single_story = false;
+                if (props.security[i].has_garage === null) props.security[i].has_garage = false;
+                if (props.security[i].has_carport === null) props.security[i].has_carport = false;
+                if (props.security[i].has_off_street_parking === null) props.security[i].has_off_street_parking = false;
+            }
+        }
+    });
 </script>
 
 <style scoped>
     .form {
         display: flex;
         flex-direction: column;
-        gap: 15px;
-    }
-    .title {
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .buttons {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
         gap: 20px;
     }
-    h1 {
-        color: #384144;
-        font-feature-settings: 'liga' off, 'clig' off;
-        font-size: 0.9rem;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 12px;
+    .security {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+        border: 1px solid #e1e1e1;
+        border-radius: 5px;
+    }
+    .address, .property, .finance {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+    .item {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        gap: 10px;
+    }
+    .long_item {
+        grid-column: 1 / 4;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        gap: 10px;
     }
     p {
         color: #384144;
@@ -166,62 +261,42 @@
         line-height: 12px;
         margin: 0;
     }
-    .address {
-        grid-column: 1 / 3;
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 15px 20px;
+    h1 {
+        color: #384144;
+        font-feature-settings: 'liga' off, 'clig' off;
+        font-size: 0.9rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 12px;
     }
-    .address_long_item {
-        grid-column: 3 / 6;
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-        gap: 10px;
-    }
-    .address1 {
-        grid-column: 1 / 3;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 15px 20px;
-    }
-    .item {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-        gap: 10px;
-    }
-    .line {
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .group {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-    .long {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 20px;
-    }
-    .short {
+    .features {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-    }
-    .inputs {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
         gap: 10px;
     }
-    :deep(.el-checkbox) {
-        --el-checkbox-input-border: 1.5px solid var(--Line, #E1E1E1);
+    .buttons {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 10px;
+    }
+    .add {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+    }
+    :deep(.el-select) {
+        width: 100%;
+    }
+    :deep(.el-input-number) {
+        width: 100%;
+    }
+    .hint {
+        color: #8c8c8c;
+        font-size: 0.7rem;
+        font-style: italic;
+    }
+    .required {
+        color: #f56c6c;
+        margin-left: 2px;
     }
 </style>

@@ -1,56 +1,78 @@
 <template>
-    <div v-for="(b, index) in borrowers" :key="index" class="form">
-        <div class="line">
-            <h1>Borrower {{ index + 1 }}</h1>
-            <el-icon
-                :size="20"
-                style="cursor: pointer; color: #2984DE;" 
-                v-if="borrowers.length < 2" 
-                @click="add"
-            ><CirclePlusFilled /></el-icon>
-            <el-icon 
-                :size="20" 
-                style="cursor: pointer; color: #2984DE;" 
-                v-if="borrowers.length > 1" 
-                @click="remove(index)"
-            ><RemoveFilled /></el-icon>
+    <div class="form">
+        <div v-for="(item, index) in borrowers" :key="index" class="borrower">
+            <div class="item">
+                <p>First Name <span class="required">*</span></p>
+                <el-input v-model="item.first_name" placeholder="Enter first name" />
+                <span class="hint">Legal first name</span>
+            </div>
+            <div class="item">
+                <p>Last Name <span class="required">*</span></p>
+                <el-input v-model="item.last_name" placeholder="Enter last name" />
+                <span class="hint">Legal last name</span>
+            </div>
+            <div class="item">
+                <p>Email <span class="required">*</span></p>
+                <el-input v-model="item.email" type="email" placeholder="example@domain.com" />
+                <span class="hint">Valid email address</span>
+            </div>
+            <div class="item">
+                <p>Phone <span class="required">*</span></p>
+                <el-input v-model="item.phone" placeholder="e.g. +61 4XX XXX XXX" />
+                <span class="hint">Contact phone number</span>
+            </div>
+            <div class="item">
+                <p>Date of Birth <span class="required">*</span></p>
+                <el-date-picker 
+                    v-model="item.date_of_birth" 
+                    type="date" 
+                    placeholder="YYYY-MM-DD" 
+                    format="YYYY-MM-DD"
+                    value-format="YYYY-MM-DD" />
+                <span class="hint">Date must be in YYYY-MM-DD format</span>
+            </div>
+            <div class="item">
+                <p>Tax ID (TFN)</p>
+                <el-input v-model="item.tax_id" placeholder="e.g. 123 456 789" maxlength="11" />
+                <span class="hint">Tax File Number (optional)</span>
+            </div>
+            <div class="item">
+                <p>Marital Status</p>
+                <el-select v-model="item.marital_status" placeholder="Select status">
+                    <el-option value="single" label="Single" />
+                    <el-option value="married" label="Married" />
+                    <el-option value="de_facto" label="De Facto" />
+                    <el-option value="divorced" label="Divorced" />
+                    <el-option value="widowed" label="Widowed" />
+                </el-select>
+                <span class="hint">Current marital status</span>
+            </div>
+            <div class="item">
+                <p>Residency Status</p>
+                <el-select v-model="item.residency_status" placeholder="Select status">
+                    <el-option value="citizen" label="Citizen" />
+                    <el-option value="permanent_resident" label="Permanent Resident" />
+                    <el-option value="temporary_resident" label="Temporary Resident" />
+                    <el-option value="foreign_investor" label="Foreign Investor" />
+                </el-select>
+                <span class="hint">Current Australian residency status</span>
+            </div>
+            <div class="item">
+                <p>Referral Source</p>
+                <el-input v-model="item.referral_source" placeholder="How did you hear about us?" />
+                <span class="hint">How the borrower was referred</span>
+            </div>
+            <div class="item">
+                <p>Tags</p>
+                <el-input v-model="item.tags" placeholder="e.g. VIP, Repeat Customer" />
+                <span class="hint">Comma-separated tags for categorization</span>
+            </div>
+            <div class="buttons">
+                <el-button type="danger" @click="$emit('remove', index)" :disabled="borrowers.length <= 1">Remove</el-button>
+            </div>
         </div>
-        <div class="item">
-            <p>Given Names</p>
-            <el-input v-model="b.first_name" />
-        </div>
-        <div class="item">
-            <p>Surname</p>
-            <el-input v-model="b.last_name" />
-        </div>       
-        <div class="item">
-            <p>Phone Number</p>
-            <el-input v-model="b.phone" />
-        </div>
-        <div class="item">
-            <p>Email Address</p>
-            <el-input v-model="b.email" />
-        </div>
-        <div class="item">
-            <p>Date of Birth</p>
-            <el-input v-model="b.date_of_birth" />
-        </div>
-        <div class="item">
-            <p>tax Id</p>
-            <el-input v-model="b.tax_id" />
-        </div>
-        <div class="item">
-            <p>Marital Status</p>
-            <el-input v-model="b.marital_status" />
-        </div>
-        <div class="long_item">
-            <p>Current Employment Type</p>
-            <el-radio-group v-model="b.type" class="group">
-                <el-radio value="Full Time"><h1>Full Time</h1></el-radio>
-                <el-radio value="Part Time"><h1>Part Time</h1></el-radio>
-                <el-radio value="Casual/Temp"><h1>Casual/Temp</h1></el-radio>
-                <el-radio value="Contract"><h1>Contract</h1></el-radio>
-            </el-radio-group>
+        <div class="add">
+            <el-button type="primary" @click="$emit('add')">Add Borrower</el-button>
         </div>
     </div>
 </template>
@@ -58,51 +80,30 @@
 <script setup>
     const props = defineProps({
         borrowers: Array
-    })
+    });
 
-    const emit = defineEmits(['add', 'remove'])
-
-    const add = () => {
-        emit('add')
-    }
-    const remove = (idx) => {
-        emit('remove', idx)
-    }
+    defineEmits(['add', 'remove']);
 </script>
 
 <style scoped>
     .form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .borrower {
         display: grid;
-        grid-template-columns: repeat(2,1fr);
-        gap: 15px 20px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        padding: 15px;
+        border: 1px solid #e1e1e1;
+        border-radius: 5px;
     }
     .item {
         display: flex;
         flex-direction: column;
         align-items: start;
         gap: 10px;
-    }
-    .long_item {
-        grid-column: 1 / 3;
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-        gap: 10px;
-    }
-    .line {
-        grid-column: 1 / 3;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-    }
-    h1 {
-        color: #384144;
-        font-feature-settings: 'liga' off, 'clig' off;
-        font-size: 0.9rem;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 12px;
     }
     p {
         color: #384144;
@@ -113,17 +114,30 @@
         line-height: 12px;
         margin: 0;
     }
-    .name {
-        grid-column: 1 / 3;
-        display: grid;
-        grid-template-columns: 1fr 2fr 2fr;
-        gap: 20px;
-    }
-    .group {
-        width: 100%;
+    .buttons {
+        grid-column: 1 / 4;
         display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
+        justify-content: flex-end;
+        margin-top: 10px;
+    }
+    .add {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+    }
+    :deep(.el-date-editor) {
+        --el-date-editor-width: 100%;
+    }
+    :deep(.el-select) {
+        width: 100%;
+    }
+    .hint {
+        color: #8c8c8c;
+        font-size: 0.7rem;
+        font-style: italic;
+    }
+    .required {
+        color: #f56c6c;
+        margin-left: 2px;
     }
 </style>
