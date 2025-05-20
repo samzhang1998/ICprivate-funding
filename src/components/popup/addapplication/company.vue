@@ -1,165 +1,234 @@
 <template>
-    <div class="form" v-for="(company, index) in company" :key="index">
-        <div class="item">
-            <p>Company Name</p>
-            <el-input v-model="company.company_name" />
-        </div>
-        <div class="item">
-            <p>ABN</p>
-            <el-input v-model="company.company_abn" />
-        </div>
-        <div class="item">
-            <p>Industry Type</p>
-            <el-select v-model="company.industry_type" placeholder="Select...">
-                <el-option
-                    v-for="item in types"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                />
-            </el-select>
-        </div>
-        <div class="item">
-            <p>Contact Number</p>
-            <el-input v-model="company.contact_number" />
-        </div>
+    <div class="form">
         <div class="long_item">
-            <p>Annual Company Income</p>
-            <el-input v-model="company.annual_company_income" />
+            <h1>Company Details</h1>
         </div>
-        <div class="line">
-            <p>Is the company a Trustee?</p>
-            <el-radio-group v-model="company.is_trustee">
-                <el-radio :value="true"><h1>Yes</h1></el-radio>
-                <el-radio :value="false"><h1>No</h1></el-radio>
-            </el-radio-group>
-        </div>
-        <div class="line">
-            <p>Is the company a Trustee for an SMSF?</p>
-            <el-radio-group v-model="company.is_smsf_trustee">
-                <el-radio :value="true"><h1>Yes</h1></el-radio>
-                <el-radio :value="false"><h1>No</h1></el-radio>
-            </el-radio-group>
-        </div>
-        <div class="long_item">
-            <p>If yes, please provide the Trustee Name</p>
-            <el-input v-model="company.trustee_name" />
-        </div>
-        <div v-for="(d, index) in company.directors" :key="index" class="sub_form">
-            <div class="line">
-                <h1>Pisition Held {{ index + 1 }}</h1>
-                <el-icon
-                    :size="20"
-                    style="cursor: pointer; color: #2984DE;" 
-                    v-if="company.directors.length < 2" 
-                    @click="add"
-                ><CirclePlusFilled /></el-icon>
-                <el-icon 
-                    :size="20" 
-                    style="cursor: pointer; color: #2984DE;" 
-                    v-if="company.directors.length > 1" 
-                    @click="remove(index)"
-                ><RemoveFilled /></el-icon>
+        <div v-for="(item, index) in company" :key="index" class="company">
+            <div class="item">
+                <p>Company Name <span class="required">*</span></p>
+                <el-input v-model="item.company_name" placeholder="Enter company name" />
+                <span class="hint">Legal registered name of the company</span>
+            </div>
+            <div class="item">
+                <p>ABN <span class="required">*</span></p>
+                <el-input v-model="item.company_abn" placeholder="e.g. 12 345 678 901" maxlength="14" />
+                <span class="hint">Australian Business Number (11 digits)</span>
+            </div>
+            <div class="item">
+                <p>ACN</p>
+                <el-input v-model="item.company_acn" placeholder="e.g. 123 456 789" maxlength="9" />
+                <span class="hint">Australian Company Number (9 digits)</span>
+            </div>
+            <div class="item">
+                <p>Industry Type <span class="required">*</span></p>
+                <el-select v-model="item.industry_type" placeholder="Select industry">
+                    <el-option value="agriculture" label="Agriculture" />
+                    <el-option value="mining" label="Mining" />
+                    <el-option value="manufacturing" label="Manufacturing" />
+                    <el-option value="construction" label="Construction" />
+                    <el-option value="retail" label="Retail" />
+                    <el-option value="transport" label="Transport" />
+                    <el-option value="hospitality" label="Hospitality" />
+                    <el-option value="finance" label="Finance" />
+                    <el-option value="real_estate" label="Real Estate" />
+                    <el-option value="professional" label="Professional Services" />
+                    <el-option value="education" label="Education" />
+                    <el-option value="healthcare" label="Healthcare" />
+                    <el-option value="arts" label="Arts and Recreation" />
+                    <el-option value="other" label="Other" />
+                </el-select>
+                <span class="hint">Primary industry of the company</span>
+            </div>
+            <div class="item">
+                <p>Contact Number <span class="required">*</span></p>
+                <el-input v-model="item.contact_number" placeholder="e.g. +61 2 1234 5678" />
+                <span class="hint">Primary contact number for the company</span>
+            </div>
+            <div class="item">
+                <p>Annual Company Income ($) <span class="required">*</span></p>
+                <el-input v-model="item.annual_company_income" type="number" placeholder="e.g. 1000000" />
+                <span class="hint">Annual income in dollars (max 10 digits)</span>
+            </div>
+            <div class="item">
+                <p>Trust Structure</p>
+                <div class="trust">
+                    <el-checkbox v-model="item.is_trustee">Is Trustee</el-checkbox>
+                    <el-checkbox v-model="item.is_smsf_trustee">Is SMSF Trustee</el-checkbox>
+                </div>
+                <span class="hint">Check if company acts as a trustee</span>
+            </div>
+            <div class="item">
+                <p>Trustee Name</p>
+                <el-input v-model="item.trustee_name" placeholder="Enter trustee name" :disabled="!item.is_trustee && !item.is_smsf_trustee" />
+                <span class="hint">Required if company is a trustee</span>
             </div>
             <div class="long_item">
-                <p>Name</p>
-                <el-input v-model="d.name" />
+                <h1>Registered Address</h1>
             </div>
-            <el-radio-group v-model="d.roles" class="line">
-                <el-radio value="Director"><h1>Director</h1></el-radio>
-                <el-radio value="Secretary"><h1>Secretary</h1></el-radio>
-                <el-radio value="Public Officer/Shareholder"><h1>Public Officer/Shareholder</h1></el-radio>
-            </el-radio-group>
+            <div class="item">
+                <p>Unit/Suite</p>
+                <el-input v-model="item.registered_address_unit" placeholder="e.g. Unit 5" />
+                <span class="hint">Unit or suite number if applicable</span>
+            </div>
+            <div class="item">
+                <p>Street No <span class="required">*</span></p>
+                <el-input v-model="item.registered_address_street_no" placeholder="e.g. 123" />
+                <span class="hint">Street number</span>
+            </div>
+            <div class="item">
+                <p>Street Name <span class="required">*</span></p>
+                <el-input v-model="item.registered_address_street_name" placeholder="e.g. Main Street" />
+                <span class="hint">Street name</span>
+            </div>
+            <div class="item">
+                <p>Suburb <span class="required">*</span></p>
+                <el-input v-model="item.registered_address_suburb" placeholder="e.g. Richmond" />
+                <span class="hint">Suburb name</span>
+            </div>
+            <div class="item">
+                <p>State <span class="required">*</span></p>
+                <el-select v-model="item.registered_address_state" placeholder="Select state">
+                    <el-option value="NSW" label="NSW" />
+                    <el-option value="VIC" label="VIC" />
+                    <el-option value="QLD" label="QLD" />
+                    <el-option value="SA" label="SA" />
+                    <el-option value="WA" label="WA" />
+                    <el-option value="TAS" label="TAS" />
+                    <el-option value="NT" label="NT" />
+                    <el-option value="ACT" label="ACT" />
+                </el-select>
+                <span class="hint">Australian state or territory</span>
+            </div>
+            <div class="item">
+                <p>Postcode <span class="required">*</span></p>
+                <el-input v-model="item.registered_address_postcode" placeholder="e.g. 3000" maxlength="4" />
+                <span class="hint">4-digit postcode</span>
+            </div>
             <div class="long_item">
-                <p>Director ID</p>
-                <el-input v-model="d.director_id" />
+                <h1>Directors</h1>
             </div>
-        </div>
-        <div class="long_item">
-            <h1>Registered Address</h1>
-        </div>
-        <div class="address">
-            <div class="item">
-                <p>Unit</p>
-                <el-input v-model="company.registered_address_unit" />
+            <div v-for="(director, idx) in item.directors" :key="idx" class="director">
+                <div class="item">
+                    <p>Director Name <span class="required">*</span></p>
+                    <el-input v-model="director.name" placeholder="Enter director's full name" />
+                    <span class="hint">Full legal name of the director</span>
+                </div>
+                <div class="item">
+                    <p>Roles <span class="required">*</span></p>
+                    <el-select v-model="director.selectedRoles" multiple placeholder="Select roles" @change="updateRoles(director)">
+                        <el-option value="director" label="Director" />
+                        <el-option value="secretary" label="Secretary" />
+                        <el-option value="public_officer" label="Public Officer" />
+                        <el-option value="shareholder" label="Shareholder" />
+                    </el-select>
+                    <span class="hint">Select one or more roles</span>
+                </div>
+                <div class="item">
+                    <p>Director ID</p>
+                    <el-input v-model="director.director_id" placeholder="e.g. D12345678" />
+                    <span class="hint">Official director identification number</span>
+                </div>
+                <div class="buttons">
+                    <el-button type="danger" @click="$emit('remove', idx)" :disabled="item.directors.length <= 1">Remove</el-button>
+                </div>
             </div>
-            <div class="item">
-                <p>No.</p>
-                <el-input v-model="company.registered_address_street_no" />
-            </div>
-            <div class="address_long_item">
-                <p>Street Name</p>
-                <el-input v-model="company.registered_address_street_name" />
-            </div>
-        </div>
-        <div class="address1">
-            <div class="item">
-                <p>Suburb</p>
-                <el-input v-model="company.registered_address_suburb" />
-            </div>
-            <div class="item">
-                <p>State</p>
-                <el-input v-model="company.registered_address_state" />
-            </div>
-            <div class="item">
-                <p>Postcode</p>
-                <el-input v-model="company.registered_address_postcode" />
+            <div class="add">
+                <el-button type="primary" @click="$emit('add')">Add Director</el-button>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-    import { ref } from 'vue'
+    import { onMounted, watch } from 'vue';
 
     const props = defineProps({
         company: Array
-    })
+    });
 
-    const emit = defineEmits(['add', 'remove'])
+    defineEmits(['add', 'remove']);
 
-    const types = ref([
-        {value: "agriculture", label: "Agriculture"},
-        {value: "mining", label: "Mining"},
-        {value: "manufacturing", label: "Manufacturing"},
-        {value: "construction", label: "Construction"},
-        {value: "retail", label: "Retail"},
-        {value: "transport", label: "Transport"},
-        {value: "hospitality", label: "Hospitality"},
-        {value: "real_estate", label: "Real Estate"},
-        {value: "professional_services", label: "Professional Services"},
-        {value: "education", label: "Education"},
-        {value: "healthcare", label: "Healthcare"},
-        {value: "finance", label: "Finance"},
-        {value: "arts_and_recreation", label: "Arts and Recreation"},
-        {value: "other", label: "Other"}
-    ])
+    // Function to update the roles string from the selected roles array
+    const updateRoles = (director) => {
+        director.roles = director.selectedRoles.join(',');
+    };
 
-    const add = () => {
-        emit('add')
-    }
-    const remove = (idx) => {
-        emit('remove', idx)
-    }
+    // Initialize the selectedRoles array for each director based on the roles string
+    onMounted(() => {
+        props.company.forEach(company => {
+            if (company.directors) {
+                company.directors.forEach(director => {
+                    // Initialize selectedRoles array if it doesn't exist
+                    if (!director.selectedRoles) {
+                        director.selectedRoles = director.roles ? director.roles.split(',').map(role => role.trim()) : ['director'];
+                        
+                        // If roles is not set, initialize it with the default value
+                        if (!director.roles) {
+                            director.roles = 'director';
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+    // Watch for changes in the company array (e.g., when adding new directors)
+    watch(() => props.company, (newCompany) => {
+        newCompany.forEach(company => {
+            if (company.directors) {
+                company.directors.forEach(director => {
+                    // Initialize selectedRoles array for new directors
+                    if (!director.selectedRoles) {
+                        director.selectedRoles = director.roles ? director.roles.split(',').map(role => role.trim()) : ['director'];
+                        
+                        // If roles is not set, initialize it with the default value
+                        if (!director.roles) {
+                            director.roles = 'director';
+                        }
+                    }
+                });
+            }
+        });
+    }, { deep: true });
 </script>
 
 <style scoped>
     .form {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
     }
-    .sub_form {
-        grid-column: 1 / 3;
+    .company {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px 20px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
     }
     .item {
         display: flex;
         flex-direction: column;
         align-items: start;
         gap: 10px;
+    }
+    .long_item {
+        grid-column: 1 / 4;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        gap: 10px;
+    }
+    .director {
+        grid-column: 1 / 4;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        padding: 15px;
+        border: 1px solid #e1e1e1;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    .trust {
+        display: flex;
+        gap: 20px;
     }
     p {
         color: #384144;
@@ -170,20 +239,6 @@
         line-height: 12px;
         margin: 0;
     }
-    .long_item {
-        grid-column: 1 / 3;
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-        gap: 10px;
-    }
-    .line {
-        grid-column: 1 / 3;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-    }
     h1 {
         color: #384144;
         font-feature-settings: 'liga' off, 'clig' off;
@@ -192,23 +247,27 @@
         font-weight: 500;
         line-height: 12px;
     }
-    .address {
-        grid-column: 1 / 3;
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 15px 20px;
-    }
-    .address_long_item {
-        grid-column: 3 / 6;
+    .buttons {
         display: flex;
-        flex-direction: column;
-        align-items: start;
-        gap: 10px;
+        justify-content: flex-end;
+        align-items: flex-end;
     }
-    .address1 {
-        grid-column: 1 / 3;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 15px 20px;
+    .add {
+        grid-column: 1 / 4;
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+    }
+    :deep(.el-select) {
+        width: 100%;
+    }
+    .hint {
+        color: #8c8c8c;
+        font-size: 0.7rem;
+        font-style: italic;
+    }
+    .required {
+        color: #f56c6c;
+        margin-left: 2px;
     }
 </style>

@@ -41,11 +41,39 @@ export function addNote(params) {
     });
 }
 
+/**
+ * Creates an application with all related entities (borrowers, guarantors, etc.)
+ * @param {Object} params - The application data
+ * @returns {Promise} - Promise that resolves to [error, data]
+ */
+export function createApplicationWithCascade(params) {
+    return sendRequest({
+        url: "/api/applications/create-with-cascade/",
+        method: "post",
+        data: params,
+    }).catch(error => {
+        // Handle any unexpected errors
+        console.error("Error creating application with cascade:", error);
+        
+        const formattedErrors = error.response?.data?.errors || { general: "An unexpected error occurred" };
+            
+        return [
+            { 
+                status: error.response?.status || 500,
+                detail: error.response?.data?.detail || "Server error",
+                errors: formattedErrors
+            }, 
+            null
+        ];
+    });
+}
+
 export const applicationApi = {
     applications,
     application,
     addApplications,
     calculator,
     notes,
-    addNote
+    addNote,
+    createApplicationWithCascade
 }

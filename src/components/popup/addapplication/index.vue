@@ -68,12 +68,7 @@
                                 <p :style="{color: isGuarantorAssetValid ? '#2984DE' : '#272727'}">Guarantor Assets & Liability</p>
                             </div>
                         </template>
-                        <GuarantorAsset :detail="application.guarantors"
-                            @addAsset="addGuarantorAsset"
-                            @removeAsset="removeGuarantorAsset"
-                            @addLiability="addGuarantorLiability"
-                            @removeLiability="removeGuarantorLiability"
-                        ></GuarantorAsset>
+                        <GuarantorAsset :asset="guarantorAsset"></GuarantorAsset>
                     </el-collapse-item>
                     <el-collapse-item name="7">
                         <template #title>
@@ -129,14 +124,16 @@
         </el-scrollbar>
         <div class="buttons">
             <Cancel @click="handleClose"></Cancel>
-            <Save @click="handleSave"></Save>
+            <Save @click="handleSave" :loading="isSubmitting"></Save>
         </div>
     </div>
 </template>
 
 <script setup>
-    import { ref, computed } from 'vue';
+    import { ref, computed, watch } from 'vue';
+    import { ElMessage } from 'element-plus';
     import { api } from '@/api';
+    import { transformGuarantorAssets } from '@/utils/guarantorAssetTransformer';
     import Company from './company.vue';
     import CompanyAssets from './companyasset.vue';
     import Enquiries from './enquiries.vue';
@@ -156,6 +153,8 @@
     })
 
     const activeNames = ref("1")
+    const isSubmitting = ref(false)
+    
     const createDirector = () => {
         return {
             name: "",
@@ -204,23 +203,13 @@
             financial_info: {
                 annual_revenue: "",
                 net_profit: "",
-                assets: totalAsset,
-                liabilities: totalLiability
+                assets: 0,  // Initialize with 0, will be computed later
+                liabilities: 0  // Initialize with 0, will be computed later
             },
             assets: [createCompanyAsset()],
             liabilities: [createCompanyLiability()]
         }
     }
-    const totalAsset = computed(() => {
-        return application.value.company_borrowers[0].assets
-            .map(a => parseFloat(a.value) || 0)
-            .reduce((sum, v) => sum + v, 0)
-    })
-    const totalLiability = computed(() => {
-        return application.value.company_borrowers[0].liabilities
-            .map(a => parseFloat(a.amount) || 0)
-            .reduce((sum, v) => sum + v, 0)
-    })
     const createBorrower = () => {
         return {
             first_name: "",
@@ -233,25 +222,6 @@
             residency_status: "",
             referral_source: "",
             tags: ""
-        }
-    }
-    const createGuarantorAsset = () => {
-        return {
-            asset_type: "",
-            description: "",
-            value: "",
-            amount_owing: "",
-            address: "",
-            bg_type: ""
-        }
-    }
-    const createGuarantorLiability = () => {
-        return {
-            liability_type: "",
-            description: "",
-            amount: "",
-            monthly_payment: "",
-            bg_type: ""
         }
     }
     const createGuarantor = () => {
@@ -280,8 +250,8 @@
             company_acn: "",
             borrower: null,
             application: null,
-            assets: [createGuarantorAsset()],
-            liabilities: [createGuarantorLiability()]
+            assets: [],
+            liabilities: []
         }
     }
     const createSecurity = () => {
@@ -298,10 +268,10 @@
             car_spaces: "",
             building_size: "",
             land_size: "",
-            has_garage: false,
-            has_carport: false,
-            is_single_story: false,
-            has_off_street_parking: false,
+            has_garage: null,
+            has_carport: null,
+            is_single_story: null,
+            has_off_street_parking: null,
             current_mortgagee: "",
             first_mortgage: "",
             second_mortgage: "",
@@ -335,7 +305,7 @@
         loan_requirements: [createRequirement()],
         loan_purpose: "",
         additional_comments: "",
-        prior_application: null,
+        prior_application: true,
         prior_application_details: "",
         exit_strategy: "",
         exit_strategy_details: "",
@@ -367,6 +337,86 @@
         has_outstanding_tax_returns: null,
         has_payment_arrangements: null,
         solvency_enquiries_details: ""
+    })
+    
+    // Add safeguards to computed properties to prevent crashes
+    const totalAsset = computed(() => {
+        if (!application.value?.company_borrowers?.[0]?.assets) {
+            return 0;
+        }
+        return application.value.company_borrowers[0].assets
+            .map(a => parseFloat(a.value) || 0)
+            .reduce((sum, v) => sum + v, 0);
+    })
+    
+    const totalLiability = computed(() => {
+        if (!application.value?.company_borrowers?.[0]?.liabilities) {
+            return 0;
+        }
+        return application.value.company_borrowers[0].liabilities
+            .map(a => parseFloat(a.amount) || 0)
+            .reduce((sum, v) => sum + v, 0);
+    })
+    
+    // Watch for changes in computed totals and update financial_info
+    watch(totalAsset, (newValue) => {
+        if (application.value.company_borrowers && application.value.company_borrowers.length > 0) {
+            application.value.company_borrowers[0].financial_info.assets = newValue;
+        }
+    });
+    
+    watch(totalLiability, (newValue) => {
+        if (application.value.company_borrowers && application.value.company_borrowers.length > 0) {
+            application.value.company_borrowers[0].financial_info.liabilities = newValue;
+        }
+    });    
+    const guarantorAsset = ref({
+        address1: "",
+        address1Value: "",
+        address1Owing: "",
+        address1G1: false,
+        address1G2: false,
+        address2: "",
+        address2Value: "",
+        address2Owing: "",
+        address2G1: false,
+        address2G2: false,
+        address3: "",
+        address3Value: "",
+        address3Owing: "",
+        address3G1: false,
+        address3G2: false,
+        address4: "",
+        address4Value: "",
+        address4Owing: "",
+        address4G1: false,
+        address4G2: false,
+        vehicleValue: "",
+        vehicleOwing: "",
+        vehicleG1: false,
+        vehicleG2: false,
+        savingValue: "",
+        savingOwing: "",
+        savingG1: false,
+        savingG2: false,
+        shareValue: "",
+        shareOwing: "",
+        shareG1: false,
+        shareG2: false,
+        cardValue: "",
+        cardOwing: "",
+        cardG1: false,
+        cardG2: false,
+        creditorValue: "",
+        creditorOwing: "",
+        creditorG1: false,
+        creditorG2: false,
+        otherValue: "",
+        otherOwing: "",
+        otherG1: false,
+        otherG2: false,
+        totalValue: "",
+        totalOwing: ""
     })
 
     const emit = defineEmits(['close', 'minimize'])
@@ -407,18 +457,6 @@
     const removeGuarantor = (idx) => {
         application.value.guarantors.splice(idx, 1)
     }
-    const addGuarantorAsset = (idx) => {
-        application.value.guarantors[idx].assets.push(createGuarantorAsset())
-    }
-    const removeGuarantorAsset = (idx) => {
-        application.value.guarantors[idx].assets.pop()
-    }
-    const addGuarantorLiability = (idx) => {
-        application.value.guarantors[idx].liabilities.push(createGuarantorLiability())
-    }
-    const removeGuarantorLiability = (idx) => {
-        application.value.guarantors[idx].liabilities.pop()
-    }
     const addSecurity = () => {
         application.value.security_properties.push(createSecurity())
     }
@@ -432,40 +470,437 @@
         application.value.loan_requirements.pop()
     }
     const isCompanyValid = computed(() => {
-        return Object.values(application.value).every(value => value !== '')
+        if (!application.value?.company_borrowers?.[0]) return false;
+        
+        const company = application.value.company_borrowers[0];
+        return company.company_name && company.company_abn && company.industry_type;
     })
+    
     const isCompanyAssetValid = computed(() => {
-        return Object.values(application.value).every(value => value !== '')
+        if (!application.value?.company_borrowers?.[0]?.assets) return false;
+        
+        const assets = application.value.company_borrowers[0].assets;
+        return assets.length > 0 && assets.every(asset => asset.asset_type && asset.value);
     })
+    
     const isEnquiryValid = computed(() => {
-        return Object.values(application.value).every(value => value !== null)
+        // Check if all required solvency fields are filled
+        return application.value.has_pending_litigation !== null &&
+               application.value.has_unsatisfied_judgements !== null &&
+               application.value.has_been_bankrupt !== null &&
+               application.value.has_been_refused_credit !== null;
     })
+    
     const isIndividualValid = computed(() => {
-        return Object.values(application.value).every(value => value !== null)
+        if (!application.value?.borrowers) return false;
+        
+        return application.value.borrowers.length > 0 && 
+               application.value.borrowers.every(borrower => 
+                   borrower.first_name && borrower.last_name && borrower.email
+               );
     })
+    
     const isGuarantorAssetValid = computed(() => {
-        return Object.values(application.value).every(value => value !== '')
+        // Check if at least one guarantor asset is defined
+        const ga = guarantorAsset.value;
+        return ga && (
+            (ga.address1 && (ga.address1G1 || ga.address1G2)) ||
+            (ga.address2 && (ga.address2G1 || ga.address2G2)) ||
+            (ga.address3 && (ga.address3G1 || ga.address3G2)) ||
+            (ga.address4 && (ga.address4G1 || ga.address4G2)) ||
+            (ga.vehicleValue && (ga.vehicleG1 || ga.vehicleG2)) ||
+            (ga.savingValue && (ga.savingG1 || ga.savingG2)) ||
+            (ga.shareValue && (ga.shareG1 || ga.shareG2)) ||
+            (ga.cardValue && (ga.cardG1 || ga.cardG2)) ||
+            (ga.creditorValue && (ga.creditorG1 || ga.creditorG2)) ||
+            (ga.otherValue && (ga.otherG1 || ga.otherG2))
+        );
     })
+    
     const isSecurityValid = computed(() => {
-        return Object.values(application.value).every(value => value !== null)
+        if (!application.value?.security_properties) return false;
+        
+        return application.value.security_properties.length > 0 && 
+               application.value.security_properties.every(property => 
+                   property.address_street_name && property.address_suburb && 
+                   property.address_state && property.address_postcode
+               );
     })
+    
     const isLoanDetailValid = computed(() => {
-        return Object.values(application.value).every(value => value !== '')
+        return application.value.loan_amount && 
+               application.value.repayment_frequency && 
+               application.value.application_type && 
+               application.value.product_id;
     })
+    
     const isRequirementValid = computed(() => {
-        return Object.values(application.value).every(value => value !== '')
+        if (!application.value?.loan_requirements) return false;
+        
+        return application.value.loan_requirements.length > 0 && 
+               application.value.loan_requirements.every(req => req.description && req.amount);
     })
+    
     const isExitValid = computed(() => {
-        return Object.values(application.value).every(value => value !== '')
+        return application.value.exit_strategy && 
+               (application.value.exit_strategy !== 'other' || application.value.exit_strategy_details);
     })
+    
+    // Format date to YYYY-MM-DD
+    const formatDate = (dateString) => {
+        if (!dateString) return null;
+        try {
+            const date = new Date(dateString);
+            return date.toISOString().split('T')[0]; // Returns YYYY-MM-DD
+        } catch (e) {
+            return null;
+        }
+    };
+    
+    // Format all dates in the application object
+    const formatDates = (obj) => {
+        if (!obj || typeof obj !== 'object') return obj;
+        
+        // Create a copy to avoid modifying the original
+        const result = Array.isArray(obj) ? [...obj] : {...obj};
+        
+        // Process each property
+        Object.keys(result).forEach(key => {
+            // If it's a date field, format it
+            if (key.includes('date') && result[key]) {
+                result[key] = formatDate(result[key]);
+            } 
+            // If it's an object or array, recursively format dates
+            else if (typeof result[key] === 'object' && result[key] !== null) {
+                result[key] = formatDates(result[key]);
+            }
+        });
+        
+        return result;
+    };
+    
+    // Transform empty strings to null for optional fields
+    const transformEmptyToNull = (obj) => {
+        if (!obj || typeof obj !== 'object') return obj;
+        
+        // Create a copy to avoid modifying the original
+        const result = Array.isArray(obj) ? [...obj] : {...obj};
+        
+        // Process each property
+        Object.keys(result).forEach(key => {
+            // If it's an empty string, set to null
+            if (result[key] === '') {
+                result[key] = null;
+            } 
+            // If it's an object or array, recursively transform
+            else if (typeof result[key] === 'object' && result[key] !== null) {
+                result[key] = transformEmptyToNull(result[key]);
+            }
+        });
+        
+        return result;
+    };
+    
+    // Validate and format application data
+    const validateAndFormatApplication = () => {
+        // Required fields validation based on schema
+        const requiredFields = [
+            'reference_number',
+            'loan_amount',
+            'repayment_frequency',
+            'application_type',
+            'product_id',
+            'stage'
+        ];
+        
+        const missingFields = requiredFields.filter(field => !application.value[field]);
+        
+        if (missingFields.length > 0) {
+            ElMessage.warning(`Please fill in all required fields: ${missingFields.join(', ')}`);
+            return false;
+        }
+        
+        // Format dates using the utility function
+        application.value = formatDates(application.value);
+        
+        // Transform empty strings to null for optional fields
+        application.value = transformEmptyToNull(application.value);
+        
+        // Validate repayment_frequency against schema choices
+        const validRepaymentFrequencies = ["weekly", "fortnightly", "monthly", "quarterly", "annually"];
+        if (!validRepaymentFrequencies.includes(application.value.repayment_frequency)) {
+            application.value.repayment_frequency = "monthly"; // Default to monthly
+        }
+        
+        // Validate application_type against schema choices
+        const validApplicationTypes = ["residential", "commercial", "construction", "refinance", "investment", "smsf"];
+        if (application.value.application_type && !validApplicationTypes.includes(application.value.application_type)) {
+            application.value.application_type = "residential"; // Default to residential
+        }
+        
+        // Validate exit_strategy against schema choices
+        const validExitStrategies = ["sale", "refinance", "income", "other"];
+        if (application.value.exit_strategy && !validExitStrategies.includes(application.value.exit_strategy)) {
+            application.value.exit_strategy = "other";
+        }
+        
+        // Validate borrowers
+        if (application.value.borrowers && application.value.borrowers.length > 0) {
+            application.value.borrowers = application.value.borrowers.filter(borrower => 
+                borrower.first_name || borrower.last_name || borrower.email
+            ).map(borrower => {
+                // Validate marital_status against schema choices
+                const validMaritalStatuses = ["single", "married", "de_facto", "divorced", "widowed"];
+                if (borrower.marital_status && !validMaritalStatuses.includes(borrower.marital_status)) {
+                    borrower.marital_status = null;
+                }
+                
+                // Validate residency_status against schema choices
+                const validResidencyStatuses = ["citizen", "permanent_resident", "temporary_resident", "foreign_investor"];
+                if (borrower.residency_status && !validResidencyStatuses.includes(borrower.residency_status)) {
+                    borrower.residency_status = null;
+                }
+                
+                return borrower;
+            });
+        }
+        
+        // Validate guarantors
+        if (application.value.guarantors && application.value.guarantors.length > 0) {
+            application.value.guarantors = application.value.guarantors.filter(guarantor => 
+                guarantor.first_name || guarantor.last_name || guarantor.email
+            ).map(guarantor => {
+                // Validate guarantor_type against schema choices
+                const validGuarantorTypes = ["individual", "company"];
+                if (!validGuarantorTypes.includes(guarantor.guarantor_type)) {
+                    guarantor.guarantor_type = "individual"; // Default to individual
+                }
+                
+                // Validate title against schema choices
+                const validTitles = ["mr", "mrs", "ms", "miss", "dr", "other"];
+                if (guarantor.title && !validTitles.includes(guarantor.title)) {
+                    guarantor.title = null;
+                }
+                
+                // Validate employment_type against schema choices
+                const validEmploymentTypes = ["full_time", "part_time", "casual", "contract"];
+                if (guarantor.employment_type && !validEmploymentTypes.includes(guarantor.employment_type)) {
+                    guarantor.employment_type = null;
+                }
+                
+                // Ensure borrower and application are set
+                if (!guarantor.borrower && application.value.borrowers.length > 0) {
+                    guarantor.borrower = 1; // Default to first borrower
+                }
+                
+                if (!guarantor.application) {
+                    guarantor.application = 1; // Default application ID
+                }
+                
+                return guarantor;
+            });
+        }
+        
+        // Validate company_borrowers
+        if (application.value.company_borrowers && application.value.company_borrowers.length > 0) {
+            application.value.company_borrowers = application.value.company_borrowers.filter(company => 
+                company.company_name || company.company_abn
+            ).map(company => {
+                // Validate industry_type against schema choices
+                const validIndustryTypes = ["agriculture", "mining", "manufacturing", "construction", "retail", "transport", 
+                                        "hospitality", "finance", "real_estate", "professional", "education", "healthcare", "arts", "other"];
+                if (company.industry_type && !validIndustryTypes.includes(company.industry_type)) {
+                    company.industry_type = "other";
+                }
+                
+                // Format financial values
+                if (company.financial_info) {
+                    company.financial_info = {
+                        ...company.financial_info,
+                        annual_revenue: parseFloat(company.financial_info.annual_revenue) || 0,
+                        net_profit: parseFloat(company.financial_info.net_profit) || 0
+                    };
+                }
+                
+                // Validate assets
+                if (company.assets && company.assets.length > 0) {
+                    company.assets = company.assets.filter(asset => asset.asset_type || asset.description).map(asset => {
+                        // Validate asset_type against schema choices
+                        const validAssetTypes = ["Property", "Vehicle", "Savings", "Investment Shares", "Credit Card", "Other Creditor", "Other", "To be refinanced"];
+                        
+                        return {
+                            ...asset,
+                            asset_type: asset.asset_type && !validAssetTypes.includes(asset.asset_type) ? "Other" : asset.asset_type,
+                            value: parseFloat(asset.value) || 0,
+                            amount_owing: parseFloat(asset.amount_owing) || 0,
+                            to_be_refinanced: asset.to_be_refinanced === "" ? null : asset.to_be_refinanced
+                        };
+                    });
+                }
+                
+                // Validate liabilities
+                if (company.liabilities && company.liabilities.length > 0) {
+                    company.liabilities = company.liabilities.filter(liability => liability.liability_type || liability.description).map(liability => {
+                        // Validate liability_type against schema choices
+                        const validLiabilityTypes = ["mortgage", "personal_loan", "car_loan", "credit_card", "tax_debt", "other_creditor", "other"];
+                        
+                        return {
+                            ...liability,
+                            liability_type: liability.liability_type && !validLiabilityTypes.includes(liability.liability_type) ? "other" : liability.liability_type,
+                            amount: parseFloat(liability.amount) || 0,
+                            monthly_payment: parseFloat(liability.monthly_payment) || 0,
+                            to_be_refinanced: liability.to_be_refinanced === "" ? null : liability.to_be_refinanced
+                        };
+                    });
+                }
+                
+                return company;
+            });
+        }
+        
+        // Validate security_properties
+        if (application.value.security_properties && application.value.security_properties.length > 0) {
+            application.value.security_properties = application.value.security_properties.filter(property => 
+                property.address_street_name || property.address_suburb
+            ).map(property => {
+                // Validate property_type against schema choices
+                const validPropertyTypes = ["residential", "commercial", "industrial", "retail", "land", "rural", "other"];
+                if (property.property_type && !validPropertyTypes.includes(property.property_type)) {
+                    property.property_type = "residential"; // Default to residential
+                }
+                
+                return {
+                    ...property,
+                    // Convert string numbers to integers
+                    bedrooms: parseInt(property.bedrooms) || null,
+                    bathrooms: parseInt(property.bathrooms) || null,
+                    car_spaces: parseInt(property.car_spaces) || null,
+                    
+                    // Set boolean fields to null if empty string
+                    is_single_story: property.is_single_story === "" ? null : property.is_single_story,
+                    has_garage: property.has_garage === "" ? null : property.has_garage,
+                    has_carport: property.has_carport === "" ? null : property.has_carport,
+                    has_off_street_parking: property.has_off_street_parking === "" ? null : property.has_off_street_parking,
+                    
+                    // Convert string numbers to floats
+                    current_debt_position: parseFloat(property.current_debt_position) || null,
+                    estimated_value: parseFloat(property.estimated_value) || null,
+                    purchase_price: parseFloat(property.purchase_price) || null
+                };
+            });
+        }
+        
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (application.value.qs_email && !emailRegex.test(application.value.qs_email)) {
+            application.value.qs_email = null; // Clear invalid email
+        }
+        if (application.value.valuer_email && !emailRegex.test(application.value.valuer_email)) {
+            application.value.valuer_email = null; // Clear invalid email
+        }
+        
+        // Validate funding_calculation_input
+        if (application.value.funding_calculation_input) {
+            application.value.funding_calculation_input = {
+                ...application.value.funding_calculation_input,
+                monthly_line_fee_rate: parseFloat(application.value.funding_calculation_input.monthly_line_fee_rate) || 0,
+                establishment_fee_rate: parseFloat(application.value.funding_calculation_input.establishment_fee_rate) || 0,
+                capped_interest_months: parseInt(application.value.funding_calculation_input.capped_interest_months) || 9,
+                brokerage_fee_rate: parseFloat(application.value.funding_calculation_input.brokerage_fee_rate) || 0,
+                application_fee: parseFloat(application.value.funding_calculation_input.application_fee) || 0,
+                due_diligence_fee: parseFloat(application.value.funding_calculation_input.due_diligence_fee) || 0,
+                legal_fee_before_gst: parseFloat(application.value.funding_calculation_input.legal_fee_before_gst) || 0,
+                valuation_fee: parseFloat(application.value.funding_calculation_input.valuation_fee) || 0,
+                monthly_account_fee: parseFloat(application.value.funding_calculation_input.monthly_account_fee) || 0,
+                working_fee: parseFloat(application.value.funding_calculation_input.working_fee) || 0
+            };
+        }
+        
+        return true;
+    };
+
+
+    
     const handleSave = async () => {
-        console.log(application.value)
-        const [err, res] = await api.addApplications(application.value)
-        if (!err) {
-            console.log(res);
-            emit('close')
-        } else {
-            console.log(err)
+        try {
+            if (!validateAndFormatApplication()) {
+                return;
+            }
+            
+            isSubmitting.value = true;
+            
+            // Create a deep copy of the application to avoid proxy issues
+            const applicationData = JSON.parse(JSON.stringify(application.value));
+            
+            // Transform guarantor assets from frontend format to backend format
+            applicationData.guarantors = transformGuarantorAssets(guarantorAsset.value, applicationData.guarantors);
+            
+            // Manually compute and add the financial totals for API submission
+            if (applicationData.company_borrowers && applicationData.company_borrowers.length > 0) {
+                applicationData.company_borrowers.forEach(company => {
+                    // Manually calculate assets total
+                    company.financial_info.assets = company.assets
+                        .map(a => parseFloat(a.value) || 0)
+                        .reduce((sum, v) => sum + v, 0);
+                    
+                    // Manually calculate liabilities total
+                    company.financial_info.liabilities = company.liabilities
+                        .map(l => parseFloat(l.amount) || 0)
+                        .reduce((sum, v) => sum + v, 0);
+                });
+            }
+            
+            const [err, res] = await api.createApplicationWithCascade(applicationData);
+            if (!err) {
+                ElMessage.success("Application created successfully");
+                handleClose();
+            } else {
+                // Enhanced error handling
+                if (typeof err === 'object' && err !== null) {
+                    // Process field-level errors
+                    const errorMessages = [];
+                    
+                    // Process top-level errors
+                    Object.entries(err).forEach(([field, messages]) => {
+                        if (Array.isArray(messages)) {
+                            errorMessages.push(`${field}: ${messages.join(', ')}`);
+                        } else if (typeof messages === 'string') {
+                            errorMessages.push(`${field}: ${messages}`);
+                        } else if (typeof messages === 'object' && messages !== null) {
+                            // Handle nested errors (e.g., for borrowers, guarantors, etc.)
+                            Object.entries(messages).forEach(([nestedField, nestedMessages]) => {
+                                if (Array.isArray(nestedMessages)) {
+                                    errorMessages.push(`${field}.${nestedField}: ${nestedMessages.join(', ')}`);
+                                } else if (typeof nestedMessages === 'string') {
+                                    errorMessages.push(`${field}.${nestedField}: ${nestedMessages}`);
+                                }
+                            });
+                        }
+                    });
+                    
+                    // Display error messages
+                    if (errorMessages.length > 0) {
+                        ElMessage({
+                            message: `Validation errors:\n${errorMessages.join('\n')}`,
+                            type: 'error',
+                            duration: 5000,
+                            showClose: true,
+                            dangerouslyUseHTMLString: false
+                        });
+                    } else {
+                        ElMessage.error("Failed to create application: Validation errors");
+                    }
+                } else {
+                    ElMessage.error("Failed to create application: Unknown error");
+                }
+                
+                console.error("API errors:", err);
+            }
+        } catch (error) {
+            console.error("Exception during application creation:", error);
+            ElMessage.error(`An unexpected error occurred: ${error.message || 'Unknown error'}`);
+        } finally {
+            isSubmitting.value = false;
         }
     }
 </script>
