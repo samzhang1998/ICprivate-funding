@@ -5,6 +5,7 @@ import { dashboardApi } from "./dashboard";
 import { applicationApi } from "./application";
 import { guarantorApi } from "./guarantor";
 import { productsApi } from "./products";
+import { documentsApi } from "./documents";
 
 export const api = {
   ...userApi,
@@ -14,4 +15,5 @@ export const api = {
   ...applicationApi,
   ...guarantorApi,
   ...productsApi,
+  ...documentsApi,
 };
