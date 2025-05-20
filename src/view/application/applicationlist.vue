@@ -41,20 +41,30 @@
                 </el-scrollbar>
             </div>
             <div class="list">
-                <ApplicationTable :selected="selected" :paginationInfo="paginationInfo"></ApplicationTable>
+                <ApplicationTable 
+                    :selected="selected" 
+                    :paginationInfo="paginationInfo"
+                    :data="applications"
+                    @getData="getApplications"
+                    @edit="handleEdit"
+                ></ApplicationTable>
                 <div class="flex">
-                    <div class="select">
+                    <!-- <div class="select">
                         <el-checkbox v-model="selectAll" :indeterminate="isSelected" @change="handleCheckAllChange" />
                         <div class="table-buttons">
                             <DeleteButton @click="deleteSelect"></DeleteButton>
                         </div>
-                    </div>
+                    </div> -->
                     <Pagination :="paginationInfo" @change="handleChange"></Pagination>
                 </div>
             </div>
         </div>
         <transition name="slide-right-popup">
-            <AddApplication v-if="popup" :action="popupAction" @close="close" @minimize="minimize"></AddApplication>
+            <AddApplication v-if="popup" 
+                :action="popupAction" 
+                @close="close" 
+                @minimize="minimize"
+            ></AddApplication>
         </transition>
     </div>
 </template>
@@ -116,9 +126,10 @@ const selectedincome = ref("")
 const dateRange = ref("")
 const action = ref("Create Application")
 const popupAction = ref("")
+const applications = ref([])
 
 const paginationInfo = ref({
-    total: 70,
+    total: 0,
 })
 const selectAll = ref(false)
 const isSelected = ref(false)
@@ -145,7 +156,8 @@ const getApplications = async () => {
     const [err, res] = await api.applications(selected.page)
     if (!err) {
         console.log(res);
-        // borrowers.value = res.results
+        paginationInfo.value.total = res.count
+        applications.value = res.results
     } else {
         console.log(err)
     }
@@ -156,17 +168,18 @@ const handleChange = (currantPage) => {
     console.log(selected.value.page);
 }
 
-const handleCheckAllChange = (row) => {
-    // if (row) {
-    //     applicationListTable.value.toggleAllSelection()
-    // } else {
-    //     applicationListTable.value.clearSelection()
-    // }
-    // isSelected.value = false
-}
+// const handleCheckAllChange = (row) => {
+//     if (row) {
+//         applicationListTable.value.toggleAllSelection()
+//     } else {
+//         applicationListTable.value.clearSelection()
+//     }
+//     isSelected.value = false
+// }
 
-const deleteSelect = () => {
-
+const handleEdit = (id) => {
+    popupAction.value = `Edit Application ${id}`
+    popup.value = true
 }
 </script>
 
@@ -244,7 +257,7 @@ h1 {
     .flex {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: end;
 
         .select {
             margin-top: 20px;

@@ -70,24 +70,9 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
 
-    const detail = ref({
-        company: "",
-        abn: "",
-        type: "",
-        contact: "",
-        income: "",
-        trustee: false,
-        smsf: false,
-        trusteeName: "",
-        name1: "",
-        position1: "",
-        id1: "",
-        name2: "",
-        position2: "",
-        id2: "",
-        address: ""
+    const { detail } = defineProps({
+        detail: Object
     })
 
     const status = (st) => {

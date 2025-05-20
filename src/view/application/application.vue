@@ -3,8 +3,8 @@
         <div class="overview">
             <div class="title">
                 <div class="title_info">
-                    <h1>{{ application.name }}</h1>
-                    <h2>{{ application.date }}</h2>
+                    <h1>{{ application.application_type }} Application</h1>
+                    <h2>Created at: {{ application.created_at }}</h2>
                     <p style="color: #2984DE">Application ID: {{ applicationId }}</p>
                 </div>
                 <div class="buttons">
@@ -58,15 +58,15 @@
                 <p>{{ i.name }}</p>
             </div>
         </div>
-        <Company v-if="activeInfo === 0"></Company>
-        <CompanyAsset v-if="activeInfo === 1"></CompanyAsset>
-        <Enquiries v-if="activeInfo === 2"></Enquiries>
-        <Individual v-if="activeInfo === 3"></Individual>
-        <GuarantorAsset v-if="activeInfo === 4"></GuarantorAsset>
-        <Security v-if="activeInfo === 5"></Security>
-        <LoanDetail v-if="activeInfo === 6"></LoanDetail>
-        <LoanRequirement v-if="activeInfo === 7"></LoanRequirement>
-        <Exit v-if="activeInfo === 8"></Exit>
+        <Company v-if="activeInfo === 0" :detail="application"></Company>
+        <CompanyAsset v-if="activeInfo === 1" :detail="application"></CompanyAsset>
+        <Enquiries v-if="activeInfo === 2" :detail="application"></Enquiries>
+        <Individual v-if="activeInfo === 3" :detail="application"></Individual>
+        <GuarantorAsset v-if="activeInfo === 4" :detail="application"></GuarantorAsset>
+        <Security v-if="activeInfo === 5" :detail="application"></Security>
+        <LoanDetail v-if="activeInfo === 6" :detail="application"></LoanDetail>
+        <LoanRequirement v-if="activeInfo === 7" :detail="application"></LoanRequirement>
+        <Exit v-if="activeInfo === 8" :detail="application"></Exit>
         <transition name="slide-right-popup">
             <Calculator
                 v-if="calculator"
@@ -86,7 +86,7 @@
 </template>
 
 <script setup>
-    import { ref, computed, onActivated } from 'vue';
+    import { ref, computed, onActivated, onMounted } from 'vue';
     import { useRoute } from 'vue-router';
     import { api } from '@/api';
     import Company from '@/components/application/company.vue';
@@ -103,31 +103,28 @@
 
     const route = useRoute()
 
-    const application = ref({
-        name: "Application Name",
-        date: "Date Create: 2025-12-23 10:13:42"
-    })
+    const application = ref({})
     const applicationId = route.params.applicationId
     const stages = ref([
-        {name: "Enquiry", status: "complete"},
-        {name: "Send to Lender", status: "complete"},
-        {name: "Funding Table lssued", status: "complete"},
-        {name: "ILOO lssued", status: "complete"},
-        {name: "ILOO Signed", status: "processing"},
-        {name: "Commitment Fee Paid", status: "incomplete"},
-        {name: "App Submitted", status: "incomplete"},
-        {name: "Valuation Ordered", status: "incomplete"},
-        {name: "Valuation Received", status: "incomplete"},
-        {name: "More Info Required", status: "incomplete"},
-        {name: "Formal Approval", status: "incomplete"},
-        {name: "Loan Docs instructed", status: "incomplete"},
-        {name: "Loan Docs lssued", status: "incomplete"},
-        {name: "Loan Docs Signed", status: "incomplete"},
-        {name: "Settlement Conditions", status: "incomplete"},
-        {name: "Settled", status: "incomplete"},
-        {name: "Closed", status: "incomplete"},
-        {name: "Declined", status: "incomplete"},
-        {name: "Withdrawn", status: "incomplete"},
+        {name: "Inquiry", value: "inquiry", status: "complete"},
+        {name: "Send to Lender", value: "sent_to_lender", status: "complete"},
+        {name: "Funding Table lssued", value: "funding_table_issued", status: "complete"},
+        {name: "ILOO lssued", value: "iloo_issued", status: "complete"},
+        {name: "ILOO Signed", value: "iloo_signed", status: "processing"},
+        {name: "Commitment Fee Paid", value: "commitment_fee_paid", status: "incomplete"},
+        {name: "App Submitted", value: "app_submitted", status: "incomplete"},
+        {name: "Valuation Ordered", value: "valuation_ordered", status: "incomplete"},
+        {name: "Valuation Received", value: "valuation_received", status: "incomplete"},
+        {name: "More Info Required", value: "more_info_required", status: "incomplete"},
+        {name: "Formal Approval", value: "formal_approval", status: "incomplete"},
+        {name: "Loan Docs instructed", value: "loan_docs_instructed", status: "incomplete"},
+        {name: "Loan Docs lssued", value: "loan_docs_issued", status: "incomplete"},
+        {name: "Loan Docs Signed", value: "loan_docs_signed", status: "incomplete"},
+        {name: "Settlement Conditions", value: "settlement_conditions", status: "incomplete"},
+        {name: "Settled", value: "settled", status: "incomplete"},
+        {name: "Closed", value: "closed", status: "incomplete"},
+        {name: "Declined", value: "declined", status: "incomplete"},
+        {name: "Withdrawn", value: "withdrawn", status: "incomplete"},
     ])
     const infos = ref([
         {name: "Company Borrower Details"},
@@ -150,15 +147,29 @@
     const hasPrev = computed(() => currentIndex.value > 0)
     const hasNext = computed(() => currentIndex.value < stages.value.length - 1)
 
-    onActivated(() => {
+    onMounted(() => {
         getApplication()
     })
 
+    const updateStages = (currentStageName) => {
+        const idx = stages.value.findIndex(s => s.value === currentStageName)
+        if (idx === -1) {
+            console.warn(`Stage "${currentStageName}" is not valid`)
+            return
+        }
+        stages.value.forEach((s, i) => {
+            if (i < idx)      s.status = 'complete'
+            else if (i === idx) s.status = 'processing'
+            else               s.status = 'incomplete'
+        })
+    }
     const getApplication = async () => {
+        console.log(applicationId)
         const [err, res] = await api.application(applicationId)
         if (!err) {
             console.log(res);
-            // borrowers.value = res.results
+            application.value = res
+            updateStages(res.stage)
         } else {
             console.log(err)
         }
@@ -175,15 +186,31 @@
     const closeNote = () => {
         note.value = false
     }
-    const nextStage = () => {
+    const nextStage = async () => {
         const i = currentIndex.value
-        stages.value[i].status = 'complete'
-        stages.value[i + 1].status = 'processing'
+        const data = {
+            stage: stages.value[i + 1].value
+        }
+        const [err, res] = await api.updateStage(applicationId, data)
+        if (!err) {
+            console.log(res)
+            getApplication()
+        } else {
+            console.log(err)
+        }
     }
-    const prevStage = () => {
+    const prevStage = async () => {
         const i = currentIndex.value
-        stages.value[i].status = 'incomplete'
-        stages.value[i - 1].status = 'processing'
+        const data = {
+            stage: stages.value[i - 1].value
+        }
+        const [err, res] = await api.updateStage(applicationId, data)
+        if (!err) {
+            console.log(res)
+            getApplication()
+        } else {
+            console.log(err)
+        }
     }
     const selectInfo = (index) => {
         activeInfo.value = index

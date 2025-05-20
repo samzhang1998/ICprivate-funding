@@ -225,7 +225,7 @@ const handleAddOrEdit = async () => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .popup {
     position: fixed;
     top: 0;

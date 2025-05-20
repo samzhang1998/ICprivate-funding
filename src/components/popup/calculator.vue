@@ -108,7 +108,7 @@
 <script setup>
     import { ref, computed, onMounted } from 'vue';
     import { ElMessage } from 'element-plus';
-    import { applicationApi } from '@/api/application';
+    import { api } from '@/api';
 
     const emit = defineEmits(['close', 'minimize']);
 
@@ -192,7 +192,7 @@
 
         loading.value = true;
         try {
-            const [error, response] = await applicationApi.calculateFunding(payload);
+            const [error, response] = await api.calculator(payload);
 
             if (error) {
                 console.error("Calculation error:", error);
