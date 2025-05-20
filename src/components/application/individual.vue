@@ -1,30 +1,33 @@
 <template>
     <div class="content">
-        <div class="form" v-for="(b, index) in borrowers" :key="index">
-            <div class="index"><h1>Borrower/Guarantor {{ index + 1 }}</h1></div>
+        <div v-if="!detail.guarantors.length">
+            <p>No guarantors in this application</p>
+        </div>
+        <div class="form" v-for="(b, index) in detail.guarantors" :key="index">
+            <div class="index"><h1>Guarantor {{ index + 1 }}</h1></div>
             <div class="item">
                 <p class="title">Title</p>
                 <p>{{ b.title || '-' }}</p>
             </div>
             <div class="item">
                 <p class="title">Given Name</p>
-                <p>{{ b.firstName || '-' }}</p>
+                <p>{{ b.first_name || '-' }}</p>
             </div>
             <div class="item">
                 <p class="title">Surname</p>
-                <p>{{ b.lastName || '-' }}</p>
+                <p>{{ b.last_name || '-' }}</p>
             </div>
             <div class="item">
                 <p class="title">Date of Birth</p>
-                <p>{{ b.birth || '-' }}</p>
+                <p>{{ b.date_of_birth || '-' }}</p>
             </div>
             <div class="item">
                 <p class="title">Driver Licence No.</p>
-                <p>{{ b.license || '-' }}</p>
+                <p>{{ b.drivers_licence_no || '-' }}</p>
             </div>
             <div class="item">
                 <p class="title">Phone Number - Home</p>
-                <p>{{ b.phone || '-' }}</p>
+                <p>{{ b.home_phone || '-' }}</p>
             </div>
             <div class="item">
                 <p class="title">Mobile</p>
@@ -36,7 +39,7 @@
             </div>
             <div class="item">
                 <p class="title">Full Address</p>
-                <p>{{ b.address || '-' }}</p>
+                <p>{{ b.address_unit || '-' }} {{ b.address_street_no }} {{ b.address_street_name }} {{ b.address_suburb }} {{ b.address_state }} {{ b.address_postcode }}</p>
             </div>
             <div class="item">
                 <p class="title">Occupation</p>
@@ -44,11 +47,11 @@
             </div>
             <div class="item">
                 <p class="title">Employer Name (Trading Name If self-employee)</p>
-                <p>{{ b.employer || '-' }}</p>
+                <p>{{ b.employer_name || '-' }}</p>
             </div>
             <div class="item">
                 <p class="title">Current Employment Type</p>
-                <p>{{ b.type || '-' }}</p>
+                <p>{{ b.employment_type || '-' }}</p>
             </div>
         </div>
     </div>
@@ -57,36 +60,9 @@
 <script setup>
     import { ref } from 'vue';
 
-    const borrowers = ref([
-        {
-            title: "",
-            firstName: "",
-            lastName: "",
-            birth: "",
-            license: "",
-            phone: "",
-            mobile: "",
-            email: "",
-            address: "",
-            occupation: "",
-            employer: "",
-            type: ""
-        },
-        {
-            title: "",
-            firstName: "",
-            lastName: "",
-            birth: "",
-            license: "",
-            phone: "",
-            mobile: "",
-            email: "",
-            address: "",
-            occupation: "",
-            employer: "",
-            type: ""
-        }
-    ])
+    const { detail } = defineProps({
+        detail: Object
+    })
 </script>
 
 <style scoped>

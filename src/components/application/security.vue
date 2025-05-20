@@ -1,6 +1,9 @@
 <template>
     <div class="content">
-        <div class="form" v-for="(s, index) in security" :key="index">
+        <div v-if="!detail.security_properties.length">
+            <p>No security properties in this application</p>
+        </div>
+        <div class="form" v-for="(s, index) in detail.security_properties" :key="index">
             <div class="index"><h1>Property {{ index + 1 }}</h1></div>
             <div class="item">
                 <p class="title">Full Address</p>
@@ -70,62 +73,9 @@
 <script setup>
     import { ref } from 'vue';
 
-    const security = ref([
-        {
-            address: "",
-            type: "",
-            typeOther: "",
-            bedroom: "",
-            bathroom: "",
-            carSpace: "",
-            buildingSize: "",
-            landSize: "",
-            description: "",
-            mortgage1: "",
-            mortgage2: "",
-            debt1: "",
-            debt2: "",
-            valuation: true,
-            est: "",
-            purchase: ""
-        },
-        {
-            address: "",
-            type: "",
-            typeOther: "",
-            bedroom: "",
-            bathroom: "",
-            carSpace: "",
-            buildingSize: "",
-            landSize: "",
-            description: "",
-            mortgage1: "",
-            mortgage2: "",
-            debt1: "",
-            debt2: "",
-            valuation: true,
-            est: "",
-            purchase: ""
-        },
-        {
-            address: "",
-            type: "",
-            typeOther: "",
-            bedroom: "",
-            bathroom: "",
-            carSpace: "",
-            buildingSize: "",
-            landSize: "",
-            description: "",
-            mortgage1: "",
-            mortgage2: "",
-            debt1: "",
-            debt2: "",
-            valuation: true,
-            est: "",
-            purchase: ""
-        }
-    ])
+    const { detail } = defineProps({
+        detail: Object
+    })
 </script>
 
 <style scoped>

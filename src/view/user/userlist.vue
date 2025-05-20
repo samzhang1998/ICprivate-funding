@@ -73,7 +73,7 @@
             </el-table>
             <div class="multiple">
                 <div class="select">
-                    <el-checkbox v-model="selectAll" :indeterminate="isSelected" @change="handleCheckAllChange" />
+                    <!-- <el-checkbox v-model="selectAll" :indeterminate="isSelected" @change="handleCheckAllChange" /> -->
                     <div class="table_buttons">
                         <!-- <DeleteButton @click="deleteSelect"></DeleteButton>
                         <Active></Active>

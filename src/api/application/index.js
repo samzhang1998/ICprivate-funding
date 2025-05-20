@@ -40,6 +40,13 @@ export function addNote(params) {
         data: params,
     });
 }
+export function updateStage(id, params) {
+    return sendRequest({
+        url: `/api/applications/${id}/stage/`,
+        method: "put",
+        data: params,
+    });
+}
 
 /**
  * Creates an application with all related entities (borrowers, guarantors, etc.)
@@ -67,6 +74,12 @@ export function createApplicationWithCascade(params) {
         ];
     });
 }
+export function deleteApplication(params) {
+  return sendRequest({
+    url: `/api/applications/applications/${params}`,
+    method: 'delete',
+  })
+}
 
 export const applicationApi = {
     applications,
@@ -75,5 +88,7 @@ export const applicationApi = {
     calculator,
     notes,
     addNote,
-    createApplicationWithCascade
+    updateStage,
+    createApplicationWithCascade,
+    deleteApplication
 }

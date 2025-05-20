@@ -1,7 +1,7 @@
 <template>
     <div class="content">
-        <div class="line" v-for="(l, index) in loanRequirement" :key=index>
-            <p>{{ l.require }}</p>
+        <div class="line" v-for="(l, index) in detail.loan_requirements" :key=index>
+            <p>{{ l.description }}</p>
             <p class="status">{{ l.amount }}</p>
         </div>
     </div>
@@ -10,28 +10,9 @@
 <script setup>
     import { ref } from 'vue';
 
-    const loanRequirement = ref([
-        {
-            require: "Description of Funds Required 1",
-            amount: "$2,000,000,000"
-        },
-        {
-            require: "Description of Funds Required 2",
-            amount: "$2,200,000,000"
-        },
-        {
-            require: "Description of Funds Required 3",
-            amount: "$2,000,000,500"
-        },
-        {
-            require: "Description of Funds Required 4",
-            amount: "$2,400,000,000"
-        },
-        {
-            require: "Description of Funds Required 5",
-            amount: "$2,000,600,000"
-        }
-    ])
+    const { detail } = defineProps({
+        detail: Object
+    })
 </script>
 
 <style scoped>

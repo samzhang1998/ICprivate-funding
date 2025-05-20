@@ -2,31 +2,35 @@
     <div class="content">
         <div class="line">
             <p>Do/es the Borrower(s) and the Guarantor(s) have any pending or past litigation matters (within the last 2 years)?</p>
-            <p class="status">{{ status(detail.litigation) }}</p>
+            <p class="status">{{ status(detail.has_pending_litigation) }}</p>
         </div>
         <div class="line">
             <p>Are there any unsatisfied judgements against the Borrower(s) and the Guarantor(s)?</p>
-            <p class="status">{{ status(detail.judgements) }}</p>
+            <p class="status">{{ status(detail.has_unsatisfied_judgements) }}</p>
         </div>
         <div class="line">
             <p>Have the Borrower(s) and the Guarantor(s) been bankrupt or insolvent in the past 5 years?</p>
-            <p class="status">{{ status(detail.bankrupt) }}</p>
+            <p class="status">{{ status(detail.has_been_bankrupt) }}</p>
         </div>
         <div class="line">
             <p>Has the Borrower(s) and the Guarantor(s) been refused credit by a credit provider in the last 1 year?</p>
-            <p class="status">{{ status(detail.refuse) }}</p>
+            <p class="status">{{ status(detail.has_been_refused_credit) }}</p>
         </div>
         <div class="line">
             <p>Are there any outstanding debts current or otherwise due to the ATO by the Borrower(s) and the Guarantor(s)?</p>
-            <p class="status">{{ status(detail.debt) }}</p>
+            <p class="status">{{ status(detail.has_outstanding_ato_debt) }}</p>
         </div>
         <div class="line">
             <p>Does the Borrower(s) and the Guarantor(s) have outstanding Tax or BAS returns due to be lodged with the ATO?</p>
-            <p class="status">{{ status(detail.tax) }}</p>
+            <p class="status">{{ status(detail.has_outstanding_tax_returns) }}</p>
         </div>
         <div class="line">
             <p>Has the Borrower(s) and the Guarantor(s) made payment arrangements with a creditor to payout debt that is still current?</p>
-            <p class="status">{{ status(detail.payment) }}</p>
+            <p class="status">{{ status(detail.has_payment_arrangements) }}</p>
+        </div>
+        <div class="line">
+            <p>Solvency Enquiries Details</p>
+            <p class="status">{{ detail.solvency_enquiries_details || '-' }}</p>
         </div>
     </div>
 </template>
@@ -34,14 +38,8 @@
 <script setup>
     import { ref } from 'vue';
 
-    const detail = ref({
-        litigation: false,
-        judgements: false,
-        bankrupt: false,
-        refuse: false,
-        debt: true,
-        tax: true,
-        payment: true
+    const { detail } = defineProps({
+        detail: Object
     })
 
     const status = (st) => {
