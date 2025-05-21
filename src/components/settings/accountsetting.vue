@@ -28,7 +28,7 @@
                 <h1>Account Name</h1>
                 <p>Set Account Name.</p>
             </div>
-            <el-input v-model="account.name" :placeholder=account.name style="width: 120px"/>
+            <el-input v-model="account.name" :placeholder=account.name style="width: 150px"/>
         </div>
     </div>
 </template>

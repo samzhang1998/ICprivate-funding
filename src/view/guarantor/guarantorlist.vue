@@ -49,7 +49,7 @@
                 <el-table-column prop="phone" label="Phone" width="120" />
                 <el-table-column prop="relationship" label="Relationship to Borrower" width="180" />
                 <el-table-column prop="email" label="Email Address" min-width="130" />
-                <el-table-column prop="state" label="State" width="80" />
+                <!-- <el-table-column prop="state" label="State" width="80" /> -->
                 <el-table-column label="Action" align="center" width="60">
                     <template #default="{row}">
                         <el-popover
@@ -82,7 +82,7 @@
             </el-table>
             <div class="multiple">
                 <div class="select">
-                    <el-checkbox
+                    <!-- <el-checkbox
                         v-model="selectAll"
                         :indeterminate="isSelected"
                         @change="handleCheckAllChange"
@@ -91,7 +91,7 @@
                         <DeleteButton @click="deleteSelect"></DeleteButton>
                         <Active></Active>
                         <Inactive></Inactive>
-                    </div>
+                    </div> -->
                 </div>
                 <el-pagination
                     layout="prev, pager, next"
@@ -194,6 +194,7 @@
         const [err, res] = await api.getGuarantors(selected.value)
         if (!err) {
             guarantors.value = res.results || [];
+            console.log(guarantors.value)
         } else {
             ElMessage.error({
                 message: err.message || 'Failed to fetch guarantors',

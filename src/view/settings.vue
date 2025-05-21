@@ -2,17 +2,17 @@
     <div class="setting">
         <div class="tabbar">
             <el-tabs v-model="activeName" class="tabs" >
-                <el-tab-pane name="1">
+                <!-- <el-tab-pane name="1">
                     <template #label>
                         <div class="label">General Setting</div>
                     </template>
-                </el-tab-pane>
+                </el-tab-pane> -->
                 <el-tab-pane name="2">
                     <template #label>
                         <div class="label">Account Setting</div>
                     </template>
                 </el-tab-pane>
-                <el-tab-pane name="3">
+                <!-- <el-tab-pane name="3">
                     <template #label>
                         <div class="label">Notification</div>
                     </template>
@@ -21,20 +21,22 @@
                     <template #label>
                         <div class="label">Other</div>
                     </template>
-                </el-tab-pane>
+                </el-tab-pane> -->
             </el-tabs>
             <Save @click="saveSetting"></Save>
         </div>
-        <GeneralSetting v-if="activeName === '1'" :general="general"></GeneralSetting>
-        <AccountSetting v-if="activeName === '2'" :account="account"></AccountSetting>
-        <Notification v-if="activeName === '3'" :notification="notification"></Notification>
-        <Other v-if="activeName === '4'"></Other>
+        <!-- <GeneralSetting v-if="activeName === '1'" :general="general"></GeneralSetting> -->
+        <AccountSetting v-if="activeName === '2'" :account="userInfo"></AccountSetting>
+        <!-- <Notification v-if="activeName === '3'" :notification="notification"></Notification>
+        <Other v-if="activeName === '4'"></Other> -->
     </div>
 </template>
 
 <script setup>
     import { ref, onMounted } from 'vue';
     import { useRoute } from 'vue-router';
+    import { api } from '@/api';
+    import { ElMessage, ElMessageBox } from 'element-plus';
     import Save from '@/components/buttons/save.vue';
     import GeneralSetting from '@/components/settings/generalsetting.vue';
     import AccountSetting from '@/components/settings/accountsetting.vue';
@@ -42,7 +44,7 @@
     import Other from '@/components/settings/other.vue';
 
     const route = useRoute()
-    const activeName = ref('1')
+    const activeName = ref('2')
     const general = ref({
         selectedLanguage: "English",
         selectedZone: "Sydney UTC+8",
@@ -54,29 +56,40 @@
         sms: false,
         system: false
     })
-    const account = ref({
-        email: "admin@infinitycapital.com.au",
-        password: "1234567890",
-        name: "Thomas Deo"
-    })
     const notification = ref({
         popup: false,
         application: false,
         message: false,
         change: false
     })
+    const userInfo = ref({})
 
     onMounted(() => {
         if (route.query.tab) {
             activeName.value = route.query.tab;
         }
+        userInfo.value = JSON.parse(localStorage.getItem("userInfo"))
+        console.log(userInfo.value)
     });
 
-    const saveSetting = () => {
+    const saveSetting = async () => {
         if (activeName.value === "first") {
             console.log("Current settings:", { ...general.value })
-        } else if (activeName.value === "second") {
-            console.log("Current settings:", { ...account.value })
+        } else if (activeName.value === "2") {
+            const data = {
+                email: userInfo.value.email,
+                first_name: userInfo.value.name.split(' ')[0] || '',
+                last_name: userInfo.value.name.split(' ')[1] || ''
+            }
+            const [err, res] = await api.putUser(userInfo.value.user_id, data)
+            if (!err) {
+                console.log(res)
+            } else {
+                ElMessage.error({
+                    message: err.message || 'Failed to save',
+                    type: 'error'
+                });
+            }
         } else {
             console.log("Current settings:", { ...notification.value })
         }

@@ -77,7 +77,7 @@ async function getRepaymentCompliance() {
       </div>
     </div>
     <div class="boxs">
-      <div class="box">
+      <!-- <div class="box">
         <div class="title">Recent Applications</div>
         <div class="content">
           <ApplicationTable></ApplicationTable>
@@ -88,7 +88,7 @@ async function getRepaymentCompliance() {
         <div class="content">
           <NotificationTable></NotificationTable>
         </div>
-      </div>
+      </div> -->
       <div class="box">
         <div class="title">Quick Actions</div>
         <div class="buttons">
@@ -110,12 +110,12 @@ async function getRepaymentCompliance() {
           </button>
         </div>
       </div>
-      <div class="box">
+      <!-- <div class="box">
         <div class="title">Upcoming Repayment</div>
         <div class="content">
           <UpcomingTable></UpcomingTable>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
