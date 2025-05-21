@@ -1,5 +1,6 @@
 import sendRequest from '@/server/sendRequest'
 
+// Authentication
 export function login(params) {
   return sendRequest({
     url: '/api/users/auth/login/',
@@ -8,14 +9,15 @@ export function login(params) {
   })
 }
 
-export function notifications(params) {
+export function logout(params) {
   return sendRequest({
-    url: '/api/users/notifications/',
-    method: 'get',
-    params: params,
+    url: '/api/users/auth/logout/',
+    method: 'post',
+    data: params,
   })
 }
 
+// User Management
 export function users(params) {
   return sendRequest({
     url: '/api/users/users/',
@@ -23,6 +25,7 @@ export function users(params) {
     params: params,
   })
 }
+
 export function addUsers(params) {
   return sendRequest({
     url: '/api/users/users/',
@@ -37,12 +40,14 @@ export function userInfo(params) {
     method: 'get',
   })
 }
+
 export function deleteUser(params) {
   return sendRequest({
     url: `/api/users/users/${params}`,
     method: 'delete',
   })
 }
+
 export function putUser(id, data) {
   return sendRequest({
     url: `/api/users/users/${id}`,
@@ -51,21 +56,67 @@ export function putUser(id, data) {
   })
 }
 
-export function logout(params) {
+export function patchUser(id, data) {
   return sendRequest({
-    url: '/api/users/auth/logout/',
-    method: 'post',
-    data: params,
+    url: `/api/users/users/${id}`,
+    method: 'patch',
+    data,
+  })
+}
+
+// Current User
+export function getCurrentUser() {
+  return sendRequest({
+    url: '/api/users/users/me/',
+    method: 'get',
+  })
+}
+
+// Profile Management
+export function getProfile() {
+  return sendRequest({
+    url: '/api/users/profile/',
+    method: 'get',
+  })
+}
+
+export function updateProfile(data) {
+  return sendRequest({
+    url: '/api/users/profile/update/',
+    method: 'put',
+    data,
+  })
+}
+
+// Notifications
+export function notifications(params) {
+  return sendRequest({
+    url: '/api/users/notifications/',
+    method: 'get',
+    params: params,
   })
 }
 
 export const userApi = {
+  // Authentication
   login,
-  notifications,
+  logout,
+
+  // User Management
   users,
   addUsers,
   userInfo,
   deleteUser,
   putUser,
-  logout,
+  patchUser,
+
+  // Current User
+  getCurrentUser,
+
+  // Profile Management
+  getProfile,
+  updateProfile,
+
+  // Notifications
+  notifications,
 }

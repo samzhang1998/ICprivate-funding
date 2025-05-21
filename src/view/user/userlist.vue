@@ -1,438 +1,566 @@
 <template>
     <div class="user">
-        <div class="filters">
-            <div class="left">
-                <div class="filter">
-                    <h1>Search</h1>
-                    <el-input v-model="selected.search" style="width: 200px" placeholder="Search..." />
+        <el-card class="filter-card" shadow="never">
+            <div class="filters">
+                <div class="left">
+                    <el-form :inline="true" :model="searchForm" @submit.prevent="handleSearch">
+                        <el-form-item label="Search">
+                            <el-input
+                                v-model="searchForm.search"
+                                placeholder="Search by name, email..."
+                                prefix-icon="Search"
+                                clearable
+                                @clear="handleSearch"
+                                @keyup.enter="handleSearch"
+                            />
+                        </el-form-item>
+                        <el-form-item label="Role">
+                            <el-select
+                                v-model="searchForm.role"
+                                placeholder="Select Role"
+                                clearable
+                                @clear="handleSearch"
+                                @change="handleSearch"
+                            >
+                                <el-option label="Administrator" value="admin" />
+                                <el-option label="Broker" value="broker" />
+                                <el-option label="Business Development" value="bd" />
+                                <el-option label="Client" value="client" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="handleSearch" :loading="loading">
+                                <el-icon><Search /></el-icon> Search
+                            </el-button>
+                            <el-button @click="handleClear" :disabled="loading">
+                                <el-icon><RefreshRight /></el-icon> Reset
+                            </el-button>
+                        </el-form-item>
+                    </el-form>
                 </div>
-                <div class="filter">
-                    <h1>Location</h1>
-                    <el-select v-model="selectedLocation" placeholder="Select Location" style="width: 200px">
-                        <el-option v-for="item in locations" :key="item.value" :label="item.label"
-                            :value="item.value" />
-                    </el-select>
-                </div>
-                <div class="filter">
-                    <h1>Income Type</h1>
-                    <el-select v-model="selectedincome" placeholder="Select Income Type" style="width: 200px">
-                        <el-option v-for="item in incomes" :key="item.value" :label="item.label" :value="item.value" />
-                    </el-select>
-                </div>
-                <Search @click="toUser"></Search>
-                <Clear></Clear>
+                <el-button type="primary" @click="handleAdd" :disabled="loading">
+                    <el-icon><Plus /></el-icon> Create User
+                </el-button>
             </div>
-            <Create :action="action" @click="addUser"></Create>
-        </div>
-        <div class="container">
-            <el-table ref="userListTable" :data="users" style="width: 100%"
-                :default-sort="{ prop: 'id', order: 'ascending' }" :cell-style="{ padding: '10px 0' }"
-                @selection-change="handleSelectionChange">
+        </el-card>
+
+        <el-card class="list-card" shadow="never">
+            <el-table
+                ref="userListTable" 
+                v-loading="loading"
+                :data="users" 
+                style="width: 100%"
+                :default-sort="{ prop: 'id', order: 'ascending' }" 
+                row-key="id"
+                @selection-change="handleSelectionChange"
+            >
                 <el-table-column type="selection" align="center" width="50" fixed />
-                <el-table-column prop="id" label="User ID" sortable="" width="120" />
-                <el-table-column prop="first_name" label="Name" min-width="139">
-                    <template #default="scope">
-                        <span>{{ scope.row.first_name }} {{ scope.row.last_name }}</span>
+                <el-table-column prop="id" label="User ID" sortable width="100">
+                    <template #default="{ row }">
+                        <el-link type="primary" @click="handleView(row)">#{{ row.id }}</el-link>
                     </template>
                 </el-table-column>
-                <el-table-column prop="role" label="Role" width="90" />
-                <el-table-column prop="phone" label="Phone" width="120" />
-                <el-table-column prop="email" label="Email Address" width="200" />
-                <el-table-column prop="address" label="Address" min-width="180" />
-                <el-table-column prop="state" label="State" width="80" />
-                <el-table-column label="Action" align="center" width="60" fixed="right">
+                <el-table-column label="Name" min-width="180" sortable>
                     <template #default="{ row }">
-                        <el-popover placement="bottom" trigger="hover" width="160" popper-class="user-popover">
-                            <div class="actions">
-                                <div class="action_user">Action</div>
-                                <div class="action" @click="handleView(row)">
-                                    <el-icon>
-                                        <View />
-                                    </el-icon>
-                                    View
-                                </div>
-                                <div class="action" @click="handleEdit(row)">
-                                    <el-icon>
-                                        <Edit />
-                                    </el-icon>
-                                    Edit
-                                </div>
-                                <div class="action" @click="handleDelete(row)">
-                                    <el-icon>
-                                        <Delete />
-                                    </el-icon>
-                                    Delete
-                                </div>
+                        <div class="user-info">
+                            <el-avatar :size="32">
+                                {{ getUserInitials(row) }}
+                            </el-avatar>
+                            <div class="user-details">
+                                <span class="user-name">{{ row.first_name }} {{ row.last_name }}</span>
+                                <span class="user-email">{{ row.email }}</span>
                             </div>
-                            <template #reference>
-                                <p class="show_action">···</p>
-                            </template>
-                        </el-popover>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="role" label="Role" width="150">
+                    <template #default="{ row }">
+                        <el-tag :type="getRoleType(row.role)">
+                            {{ formatRole(row.role) }}
+                        </el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="phone" label="Phone" width="150" />
+                <el-table-column prop="created_at" label="Created" width="180">
+                    <template #default="{ row }">
+                        {{ formatDate(row.created_at) }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="Actions" align="right" width="150" fixed="right">
+                    <template #default="{ row }">
+                        <el-button-group>
+                            <el-button
+                                type="primary"
+                                link
+                                @click="handleView(row)"
+                                :title="'View user details'"
+                            >
+                                <el-icon><View /></el-icon>
+                            </el-button>
+                            <el-button
+                                type="primary"
+                                link
+                                @click="handleEdit(row)"
+                                :title="'Edit user'"
+                            >
+                                <el-icon><Edit /></el-icon>
+                            </el-button>
+                            <el-button
+                                type="danger"
+                                link
+                                @click="handleDelete(row)"
+                                :title="'Delete user'"
+                            >
+                                <el-icon><Delete /></el-icon>
+                            </el-button>
+                        </el-button-group>
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="multiple">
-                <div class="select">
-                    <!-- <el-checkbox v-model="selectAll" :indeterminate="isSelected" @change="handleCheckAllChange" /> -->
-                    <div class="table_buttons">
-                        <!-- <DeleteButton @click="deleteSelect"></DeleteButton>
-                        <Active></Active>
-                        <Inactive></Inactive> -->
-                    </div>
+
+            <div class="table-footer">
+                <div class="bulk-actions" v-if="selectedItems.length">
+                    <el-button type="danger" @click="handleBatchDelete" :loading="loading">
+                        Delete Selected ({{ selectedItems.length }})
+                    </el-button>
                 </div>
-                <el-pagination layout="prev, pager, next" background :total="total" :page-size="pageSize"
-                    :current-page="selected.page" @current-change="handlePageChange" />
+                <el-pagination
+                    v-model:current-page="searchForm.page"
+                    v-model:page-size="searchForm.pageSize"
+                    :page-sizes="[10, 20, 50, 100]"
+                    :total="total"
+                    background
+                    layout="total, sizes, prev, pager, next, jumper"
+                    @size-change="handleSizeChange"
+                    @current-change="handlePageChange"
+                />
             </div>
-        </div>
-        <transition name="slide-right-popup">
-            <AddUser v-if="popup" :action="popupAction" :editId="editId" @close="close" @minimize="minimize"></AddUser>
-        </transition>
+        </el-card>
+
+        <!-- User Form Dialog -->
+        <el-dialog 
+            v-model="dialogVisible" 
+            :title="dialogTitle"
+            width="500px"
+            :close-on-click-modal="false"
+            destroy-on-close>
+            <el-form 
+                ref="userFormRef"
+                :model="userForm"
+                :rules="rules"
+                label-position="top"
+                @submit.prevent="handleSubmit">
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="First Name" prop="first_name">
+                            <el-input v-model="userForm.first_name" placeholder="First Name" />
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="Last Name" prop="last_name">
+                            <el-input v-model="userForm.last_name" placeholder="Last Name" />
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="Email" prop="email">
+                            <el-input v-model="userForm.email" type="email" placeholder="Email" />
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="Phone" prop="phone">
+                            <el-input v-model="userForm.phone" placeholder="Phone Number" />
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-form-item label="Role" prop="role">
+                    <el-select v-model="userForm.role" placeholder="Select Role" class="w-100">
+                        <el-option label="Administrator" value="admin" />
+                        <el-option label="Broker" value="broker" />
+                        <el-option label="Business Development" value="bd" />
+                        <el-option label="Client" value="client" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item v-if="!editMode" label="Password" prop="password">
+                    <el-input 
+                        v-model="userForm.password" 
+                        type="password" 
+                        placeholder="Minimum 8 characters"
+                        show-password />
+                </el-form-item>
+            </el-form>
+            <template #footer>
+                <span class="dialog-footer">
+                    <el-button @click="dialogVisible = false">Cancel</el-button>
+                    <el-button type="primary" @click="handleSubmit" :loading="submitLoading">
+                        {{ editMode ? 'Update' : 'Create' }}
+                    </el-button>
+                </span>
+            </template>
+        </el-dialog>
     </div>
 </template>
 
 <script setup>
-import { ref, onActivated, computed } from 'vue';
+import { ref, reactive, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { api } from '@/api';
-import AddUser from '@/components/popup/adduser.vue';
-import Search from '@/components/buttons/search.vue';
-import Clear from '@/components/buttons/clear.vue';
-import Create from '@/components/buttons/create.vue';
-import DeleteButton from '@/components/buttons/delete.vue';
-import Active from '@/components/buttons/active.vue';
-import Inactive from '@/components/buttons/inactive.vue';
-import { ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus';
+import { useUsers } from '@/hooks/useUsers';
+import { Search, RefreshRight, Plus, View, Edit, Delete } from '@element-plus/icons-vue';
 
+const router = useRouter();
+const { users, total, loading, getUsers, createUser, updateUser, deleteUser } = useUsers();
 
-const router = useRouter()
-const popup = ref(false)
+// State
+const userListTable = ref(null);
+const userFormRef = ref(null);
+const selectedItems = ref([]);
+const dialogVisible = ref(false);
+const editMode = ref(false);
+const submitLoading = ref(false);
+const currentUserId = ref(null);
 
-const locations = ref([
-    { value: "1", label: "1" },
-    { value: "2", label: "2" }
-])
-const incomes = ref([
-    { value: "1", label: "1" },
-    { value: "2", label: "2" }
-])
-const selected = ref({
-    search: "",
-    page: 1
-})
-const selectedLocation = ref("")
-const selectedincome = ref("")
-const action = ref("Create User")
-const popupAction = ref("")
-const users = ref([
-])
-const pageSize = 10
-const total = ref(0)
+// Form data
+const searchForm = reactive({
+  search: '',
+  role: '',
+  page: 1,
+  pageSize: 20
+});
 
-const userListTable = ref()
-const selectedItem = ref([])
-const selectAll = ref(false)
-const isSelected = ref(false)
-const editId = ref("")
+const userForm = reactive({
+  first_name: '',
+  last_name: '',
+  email: '',
+  phone: '',
+  role: '',
+  password: '',
+});
 
+// Form validation rules
+const rules = {
+  first_name: [
+    { required: true, message: 'First name is required', trigger: 'blur' },
+    { min: 2, max: 50, message: 'Length should be 2 to 50 characters', trigger: 'blur' }
+  ],
+  last_name: [
+    { required: true, message: 'Last name is required', trigger: 'blur' },
+    { min: 2, max: 50, message: 'Length should be 2 to 50 characters', trigger: 'blur' }
+  ],
+  email: [
+    { required: true, message: 'Email is required', trigger: 'blur' },
+    { type: 'email', message: 'Please enter a valid email address', trigger: 'blur' }
+  ],
+  role: [
+    { required: true, message: 'Role is required', trigger: 'change' }
+  ],
+  password: [
+    { required: true, message: 'Password is required', trigger: 'blur' },
+    { min: 8, message: 'Password must be at least 8 characters', trigger: 'blur' }
+  ],
+  username: [
+    { required: true, message: 'Username is required', trigger: 'blur' },
+    { min: 3, max: 30, message: 'Username should be 3 to 30 characters', trigger: 'blur' }
+  ]
+};
 
-onActivated(() => {
-    getUsers()
-})
+// Computed properties
+const dialogTitle = computed(() => {
+  return editMode.value ? 'Edit User' : 'Create New User';
+});
 
+// Lifecycle hooks
+onMounted(() => {
+  fetchUsers();
+});
 
-const getUsers = async () => {
-    const [err, res] = await api.users(selected.value)
-    if (!err) {
-        console.log(res);
-        users.value = res?.results || []
-        total.value = res?.count || 1
-    } else {
-        console.log(err)
-    }
-}
-const toUser = () => {
-    // router.push(`/user/16786541`)
-    getUsers()
-}
-const addUser = () => {
-    popupAction.value = "Add User"
-    popup.value = true
-    editId.value = ""
-}
-const close = () => {
-    popup.value = false
-}
-const minimize = () => {
+// Methods
+const fetchUsers = async () => {
+  await getUsers({
+    search: searchForm.search,
+    role: searchForm.role,
+    page: searchForm.page,
+    page_size: searchForm.pageSize
+  });
+};
 
-}
-const handleSelectionChange = (row) => {
-    selectedItem.value = row
-    selectAll.value = row.length === users.value.length
-    isSelected.value = row.length > 0 && row.length < users.value.length
-}
-const handleCheckAllChange = (row) => {
-    if (row) {
-        userListTable.value.toggleAllSelection()
-    } else {
-        userListTable.value.clearSelection()
-    }
-    isSelected.value = false
-}
-const handleView = (row) => {
-    router.push(`/user/${row.id}`)
-}
-const handleEdit = (row) => {
-    const id = row.name
-    popupAction.value = `Edit ${id}`
-    popup.value = true
-    editId.value = row.id
-}
-const handleDelete = (row) => {
-    users.value = users.value.filter(item => item !== row)
-}
-const deleteSelect = () => {
-    console.log("selected", selectedItem)
-    users.value = users.value.filter(
-        item => !selectedItem.value.includes(item)
-    )
-    selectedItem.value = []
-}
+const handleSearch = () => {
+  searchForm.page = 1;
+  fetchUsers();
+};
+
+const handleClear = () => {
+  searchForm.search = '';
+  searchForm.role = '';
+  searchForm.page = 1;
+  fetchUsers();
+};
+
+const handleSizeChange = (size) => {
+  searchForm.pageSize = size;
+  fetchUsers();
+};
+
 const handlePageChange = (page) => {
-    currentPage.value = page
-}
+  searchForm.page = page;
+  fetchUsers();
+};
+
+const handleSelectionChange = (selection) => {
+  selectedItems.value = selection;
+};
+
+const handleAdd = () => {
+  editMode.value = false;
+  resetForm();
+  dialogVisible.value = true;
+};
+
+const handleEdit = (row) => {
+  editMode.value = true;
+  currentUserId.value = row.id;
+  
+  // Fill the form with user data
+  userForm.first_name = row.first_name || '';
+  userForm.last_name = row.last_name || '';
+  userForm.email = row.email || '';
+  userForm.phone = row.phone || '';
+  userForm.role = row.role || '';
+  userForm.password = ''; // Don't fill password for edit mode
+  
+  dialogVisible.value = true;
+};
+
+const handleView = (row) => {
+  router.push(`/user/${row.id}`);
+};
+
+const handleDelete = (row) => {
+  ElMessageBox.confirm(
+    'Are you sure you want to delete this user? This action cannot be undone.',
+    'Delete User',
+    {
+      confirmButtonText: 'Delete',
+      cancelButtonText: 'Cancel',
+      type: 'warning',
+    }
+  ).then(async () => {
+    const [err] = await deleteUser(row.id);
+    if (!err) {
+      ElMessage.success('User deleted successfully');
+      fetchUsers();
+    }
+  }).catch(() => {
+    // User cancelled the deletion
+  });
+};
+
+const handleBatchDelete = () => {
+  if (selectedItems.value.length === 0) {
+    ElMessage.warning('Please select users to delete');
+    return;
+  }
+
+  ElMessageBox.confirm(
+    `Are you sure you want to delete ${selectedItems.value.length} selected users? This action cannot be undone.`,
+    'Delete Users',
+    {
+      confirmButtonText: 'Delete',
+      cancelButtonText: 'Cancel',
+      type: 'warning',
+    }
+  ).then(async () => {
+    const deletePromises = selectedItems.value.map(item => deleteUser(item.id));
+    
+    try {
+      await Promise.all(deletePromises);
+      ElMessage.success(`${selectedItems.value.length} users deleted successfully`);
+      fetchUsers();
+    } catch (error) {
+      ElMessage.error('Failed to delete some users');
+    }
+  }).catch(() => {
+    // User cancelled the deletion
+  });
+};
+
+const handleSubmit = async () => {
+  if (!userFormRef.value) return;
+  
+  await userFormRef.value.validate(async (valid) => {
+    if (!valid) {
+      ElMessage.warning('Please correct the form errors');
+      return;
+    }
+    
+    submitLoading.value = true;
+    
+    try {
+      if (editMode.value) {
+        // Update existing user
+        const userData = { ...userForm };
+        if (!userData.password) {
+          delete userData.password; // Don't send empty password
+        }
+        
+        const [err] = await updateUser(currentUserId.value, userData);
+        if (!err) {
+          ElMessage.success('User updated successfully');
+          dialogVisible.value = false;
+          fetchUsers();
+        }
+      } else {
+        // Create new user
+        const [err] = await createUser(userForm);
+        if (!err) {
+          ElMessage.success('User created successfully');
+          dialogVisible.value = false;
+          fetchUsers();
+        }
+      }
+    } catch (error) {
+      console.error('Error submitting user form:', error);
+      ElMessage.error('An error occurred while saving user data');
+    } finally {
+      submitLoading.value = false;
+    }
+  });
+};
+
+const resetForm = () => {
+  userForm.first_name = '';
+  userForm.last_name = '';
+  userForm.email = '';
+  userForm.phone = '';
+  userForm.role = '';
+  userForm.password = '';
+  
+  if (userFormRef.value) {
+    userFormRef.value.resetFields();
+  }
+};
+
+// Helper functions
+const formatDate = (dateString) => {
+  if (!dateString) return 'N/A';
+  const date = new Date(dateString);
+  return date.toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
+};
+
+const formatRole = (role) => {
+  if (!role) return 'N/A';
+  
+  const roles = {
+    'admin': 'Administrator',
+    'broker': 'Broker',
+    'bd': 'Business Development',
+    'client': 'Client'
+  };
+  
+  return roles[role] || role;
+};
+
+const getRoleType = (role) => {
+  const types = {
+    'admin': 'danger',
+    'broker': 'success',
+    'bd': 'warning',
+    'client': 'info'
+  };
+  
+  return types[role] || 'info';
+};
+
+const getUserInitials = (user) => {
+  if (!user) return '';
+  const first = user.first_name?.charAt(0) || '';
+  const last = user.last_name?.charAt(0) || '';
+  return (first + last).toUpperCase();
+};
 </script>
 
 <style scoped>
 .user {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  padding: 20px;
+}
+
+.filter-card {
+  margin-bottom: 20px;
 }
 
 .filters {
-    padding: 20px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: end;
-    border-radius: 6px;
-    background: #FFF;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .left {
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    align-items: end;
-    gap: 20px;
+  flex: 1;
 }
 
-.filter {
-    display: flex;
+.list-card {
+  margin-bottom: 20px;
+}
+
+.table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.bulk-actions {
+  margin-right: 20px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-details {
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-weight: 500;
+  color: #303133;
+}
+
+.user-email {
+  font-size: 12px;
+  color: #909399;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .filters {
     flex-direction: column;
-    align-items: start;
-    gap: 10px;
-}
-
-h1 {
-    color: #272727;
-    font-feature-settings: 'liga' off, 'clig' off;
-    font-size: 0.9rem;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 19px;
-    margin: 0;
-}
-
-.container {
-    padding: 20px;
-    border-radius: 3px;
-    background: #FFF;
-    display: flex;
+    align-items: flex-start;
+  }
+  
+  .left {
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  
+  .table-footer {
     flex-direction: column;
-    gap: 20px;
-}
-
-.actions {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.action_user {
-    width: 100%;
-    padding: 0 10px 10px 10px;
-    border-bottom: 1.5px solid #E1E1E1;
-    color: #272727;
-    font-feature-settings: 'liga' off, 'clig' off;
-    font-size: 0.9rem;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 19px;
-}
-
-.action {
-    padding: 0 10px;
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    gap: 10px;
-    margin-bottom: 10px;
-    align-items: center;
-    cursor: pointer;
-    color: #949494;
-    font-feature-settings: 'liga' off, 'clig' off;
-    font-size: 0.8rem;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 19px;
-}
-
-.action:hover {
-    color: #2984DE;
-}
-
-.action p:hover {
-    color: #2984DE;
-}
-
-.show_action {
-    width: 100%;
-    font-size: 1.5rem;
-    color: #969696;
-    text-align: center;
-    cursor: pointer;
-    margin: 0;
-}
-
-.multiple {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.select {
-    padding-left: 18px;
-    display: flex;
-    flex-direction: row;
-    gap: 25px;
-}
-
-.table_buttons {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-}
-
-:deep(.el-table .el-table__cell) {
-    padding: 0;
-}
-
-:deep(.el-table tbody .cell) {
-    height: auto;
-    padding: 0 5px;
-    color: #272727;
-    font-feature-settings: 'liga' off, 'clig' off;
-    font-size: 0.75rem;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 140%;
-}
-
-:deep(.el-table th.el-table__cell) {
-    background: #F8F8F8;
-}
-
-:deep(.el-table thead .cell) {
-    padding: 10px 5px;
-    color: #272727;
-    font-feature-settings: 'liga' off, 'clig' off;
-    font-size: 0.75rem;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 140%;
-}
-
-:deep(.el-checkbox) {
-    --el-checkbox-input-border: 1.5px solid #B2B3BD;
-    --el-checkbox-checked-input-border-color: #2984DE;
-    --el-checkbox-checked-bg-color: #2984DE;
-    --el-checkbox-input-border-color-hover: #2984DE;
-}
-
-:deep(.el-pagination) {
-    --el-pagination-button-bg-color: #FFF;
-    --el-pagination-button-disabled-bg-color: #FFF;
-}
-
-:deep(.el-pager li) {
-    background: #FFF;
-    color: rgba(0, 0, 0, 0.20);
-    border-radius: 4px;
-    border: 1.5px solid rgba(64, 64, 64, 0.16);
-    font-weight: 500;
-}
-
-:deep(.el-pager li):hover {
-    border: 1.5px solid #2984DE;
-}
-
-:deep(.el-pagination button) {
-    height: 32px;
-    padding: 0 15px;
-    gap: 5px;
-    border-radius: 4px;
-    color: #1F1F1F;
-    border: 1.5px solid rgba(64, 64, 64, 0.16);
-    font-size: 0.9rem;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 140%;
-}
-
-:deep(.el-pagination button):hover {
-    border: 1.5px solid #2984DE;
-}
-
-:deep(.el-pagination .btn-prev::after) {
-    content: "Previous";
-}
-
-:deep(.el-pagination .btn-next::before) {
-    content: "Next";
-}
-
-:deep(.el-pagination.is-background .btn-prev:disabled) {
-    background: #FFF;
-}
-
-:deep(.el-pagination.is-background .btn-next:disabled) {
-    background: #FFF;
-}
-
-:deep(.el-pagination.is-background .el-pager li.is-active) {
-    background: rgba(114, 114, 114, 0.08);
-    color: #625E5E;
-    font-weight: 500;
-}
-
-.slide-right-popup-enter-active,
-.slide-right-popup-leave-active {
-    transition: all 0.3s ease;
-}
-
-.slide-right-popup-enter-from,
-.slide-right-popup-leave-to {
-    opacity: 0;
-    transform: translateX(100%);
-}
-
-.slide-right-popup-enter-to,
-.slide-right-popup-leave-from {
-    opacity: 1;
-    transform: translateX(0);
+    align-items: flex-start;
+  }
+  
+  .bulk-actions {
+    margin-bottom: 15px;
+  }
 }
 </style>
