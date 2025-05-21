@@ -8,11 +8,13 @@ import Create from '@/components/buttons/create.vue'
 import AddRepayment from '@/components/popup/addrepayment.vue';
 import { Pagination } from '@/components'
 import { RepaymentTable } from './components'
+import { ElMessage } from 'element-plus';
 
 const action = ref("Add Repayment")
 const popup = ref(false)
 const repayments = ref([])
 const repayment = ref({})
+const loading = ref(false)
 const totalInfo = computed(() =>[
     {
         title: "Total Repayment",
@@ -67,6 +69,7 @@ onMounted(() => {
 })
 
 const getRepayments = async () => {
+    loading.value = true
     const [err, res] = await api.repayments()
     if (!err) {
         console.log(res);
@@ -75,6 +78,7 @@ const getRepayments = async () => {
     } else {
         console.log(err)
     }
+    loading.value = false
 }
 
 async function getRepaymentCompliance() {
@@ -96,6 +100,20 @@ const addRepayment = () => {
 
 const close = () => {
     popup.value = false
+    // Refresh the repayments list after adding a new one
+    getRepayments()
+}
+
+const handleSearch = () => {
+    // Implement search functionality
+    getRepayments()
+}
+
+const handleClear = () => {
+    searchedRepayment.value = ""
+    selectedStatus.value = ""
+    dateRange.value = ""
+    getRepayments()
 }
 </script>
 
@@ -118,14 +136,14 @@ const close = () => {
                     <el-date-picker v-model="dateRange" type="daterange" start-placeholder="start" end-placeholder="end"
                         format="DD MMM" value-format="YYYY-MM-DD" :prefix-icon="Calendar" clearable style="width: 180px;" />
                 </div>
-                <Search></Search>
-                <Clear></Clear>
+                <Search @click="handleSearch"></Search>
+                <Clear @click="handleClear"></Clear>
             </div>
             <Create :action="action" @click="addRepayment"></Create>
         </div>
         <div class="container">
             <div class="list">
-                <RepaymentTable :repayments="repayments"></RepaymentTable>
+                <RepaymentTable :repayments="repayments" @refresh="getRepayments"></RepaymentTable>
                 <div class="flex">
                     <div></div>
                     <Pagination :="paginationInfo" @change="handleChange"></Pagination>

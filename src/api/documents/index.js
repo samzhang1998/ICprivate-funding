@@ -69,5 +69,40 @@ export const documentsApi = {
       url: `/api/documents/documents/${id}/`,
       method: 'delete'
     });
-  }
+  },
+
+  // Repayments
+  repayments: () => sendRequest({
+    url: '/api/documents/repayments/',
+    method: 'get'
+  }),
+
+  repaymentCompliance: (params) => sendRequest({
+    url: '/api/reports/repayment-compliance/',
+    method: 'get',
+    params
+  }),
+
+  updateRepayments: (id, file) => {
+    const formData = new FormData()
+    formData.append('invoice', file)
+    return sendRequest({
+      url: `/api/documents/repayments/${id}/`,
+      method: 'put',
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+  },
+
+  deleteRepayment: (id) => sendRequest({
+    url: `/api/documents/repayments/${id}/`,
+    method: 'delete'
+  }),
+
+  markRepaymentAsPaid: (id) => sendRequest({
+    url: `/api/documents/repayments/${id}/mark-paid/`,
+    method: 'post'
+  })
 };
