@@ -1,7 +1,7 @@
 <template>
     <div class="popup">
         <div class="popup_title">
-            <h1>Add Repayment</h1>
+            <h1>{{ action }}</h1>
             <div class="close">
                 <!-- <el-icon :size="20" style="cursor: pointer; color: #7A858E;" @click="handleMinimize"><Minus /></el-icon> -->
                 <el-icon :size="20" style="cursor: pointer; color: #7A858E;" @click="handleClose">
@@ -77,6 +77,10 @@
     import { api } from '@/api'
     import Cancel from '../buttons/cancel.vue';
     import Save from '../buttons/save.vue';
+
+    const { action } = defineProps({
+        action: String
+    })
 
     const activeNames = ref("1")
     const applications = ref({})

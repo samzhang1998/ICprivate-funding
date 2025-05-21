@@ -10,6 +10,7 @@ const { repayments } = defineProps({
 onMounted(() => {
 })
 
+const emit = defineEmits(['edit']);
 const upload = async (id, file) => {
   const [err, res] = await api.updateRepayments(id, file)
     if (!err) {
@@ -31,6 +32,9 @@ const handleUpload = (row) => {
   }
   input.click()  
 }
+const handleEdit = (row) => {
+  emit('edit', row.id)
+}
 </script>
 
 <template>
@@ -46,7 +50,7 @@ const handleUpload = (row) => {
     <el-table-column label="Action" width="250" align="center">
       <template #default="scope">
         <el-button-group>
-          <el-button class="view" :icon="View" />
+          <el-button class="view" :icon="View" @click="handleEdit(scope.row)" />
           <!-- <el-button class="record" v-if="scope.row.index % 2 === 0">
             <el-icon class="icon">
               <CircleCheck />
