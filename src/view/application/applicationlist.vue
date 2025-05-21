@@ -1,6 +1,6 @@
 <template>
     <div class="application">
-        <div class="filters">
+        <!-- <div class="filters">
             <div class="left">
                 <div class="filter">
                     <h1>Search</h1>
@@ -26,7 +26,9 @@
                 </div>
                 <Search @click="toApplication"></Search>
                 <Clear></Clear>
-            </div>
+            </div>            
+        </div> -->
+        <div class="create">
             <Create :action="action" @click="addApplication"></Create>
         </div>
         <div class="container">
@@ -34,7 +36,7 @@
                 <el-scrollbar>
                     <div class="tab-bar">
                         <div v-for="item in tabs" :key="item.name"
-                            :class="['tab-item', { active: activeTab === item.name }]" @click="activeTab = item.name">
+                            :class="['tab-item', { active: activeTab === item.name }]" @click="selectStatus(item.name)">
                             {{ item.label }}
                         </div>
                     </div>
@@ -44,7 +46,7 @@
                 <ApplicationTable 
                     :selected="selected" 
                     :paginationInfo="paginationInfo"
-                    :data="applications"
+                    :data="filteredApplications"
                     @getData="getApplications"
                     @edit="handleEdit"
                 ></ApplicationTable>
@@ -70,7 +72,7 @@
 </template>
 
 <script setup>
-import { ref, onActivated } from 'vue';
+import { ref, onActivated, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { api } from '@/api';
 import AddApplication from '@/components/popup/addapplication/index.vue';
@@ -99,7 +101,7 @@ const tabs = [
     { name: 'Inquiry', label: 'Inquiry', width: '58px' },
     { name: 'Sent to Lender', label: 'Sent to Lender', width: '86px' },
     { name: 'Funding Table lssued', label: 'Funding Table lssued', width: '88px' },
-    { name: 'ILOO lssued', label: 'ILOO lssued', width: '37px' },
+    { name: 'ILOO Issued', label: 'ILOO Issued', width: '37px' },
     { name: 'ILOO Signed', label: 'ILOO Signed', width: '89px' },
     { name: 'Commitment Fee Paid', label: 'Commitment Fee Paid', width: '73px' },
     { name: 'App Submitted', label: 'App Submitted', width: '80px' },
@@ -138,9 +140,9 @@ onActivated(() => {
     getApplications()
 })
 
-const toApplication = () => {
-    router.push(`/application/1`)
-}
+// const toApplication = () => {
+//     router.push(`/application/1`)
+// }
 const addApplication = () => {
     popupAction.value = "Add Application"
     popup.value = true
@@ -181,6 +183,16 @@ const handleEdit = (id) => {
     popupAction.value = `Edit Application ${id}`
     popup.value = true
 }
+const selectStatus = (name) => {
+    activeTab.value = name
+}
+
+const filteredApplications = computed(() => {
+    if (activeTab.value === 'all') {
+        return applications.value
+    }
+    return applications.value.filter(app => app.stage_display === activeTab.value)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -190,7 +202,11 @@ const handleEdit = (id) => {
     gap: 20px;
     height: 100%;
 }
-
+.create {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+}
 .filters {
     padding: 20px;
     display: flex;

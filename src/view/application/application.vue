@@ -3,7 +3,7 @@
         <div class="overview">
             <div class="title">
                 <div class="title_info">
-                    <h1>{{ application.application_type }} Application</h1>
+                    <h1>{{ application.reference_number }}</h1>
                     <h2>Created at: {{ application.created_at }}</h2>
                     <p style="color: #2984DE">Application ID: {{ applicationId }}</p>
                 </div>
@@ -349,12 +349,14 @@
         margin-bottom: 20px;
     }
     .stage {
+        width: auto;
         display: flex;
         flex-direction: column;
         gap: 10px;
         align-items: center;
     }
     .stage_info {
+        width: auto;
         padding: 0 5px;
         display: flex;
         flex-direction: row;

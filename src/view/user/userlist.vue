@@ -17,6 +17,7 @@
                         <el-form-item label="Role">
                             <el-select
                                 v-model="searchForm.role"
+                                style="width: 200px;"
                                 placeholder="Select Role"
                                 clearable
                                 @clear="handleSearch"
@@ -509,7 +510,7 @@ const getUserInitials = (user) => {
 
 .table-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: end;
   align-items: center;
   margin-top: 20px;
 }

@@ -4,24 +4,37 @@ import { CircleCheck, View, Upload } from '@element-plus/icons-vue'
 import { api } from '@/api'
 
 const { repayments } = defineProps({
-  repayments: Object
+  repayments: Array
 })
 
 onMounted(() => {
 })
 
-const upload = async (row) => {
-  const [err, res] = await api.updateRepayments(row.id)
+const upload = async (id, file) => {
+  const [err, res] = await api.updateRepayments(id, file)
     if (!err) {
         console.log(res)
     } else {
         console.log(err)
     }
 }
+const handleUpload = (row) => {
+  const input = document.createElement('input')
+  input.type = 'file'
+  input.onchange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      row.file = file
+      console.log("file", row.file)
+      upload(row.id, row.file)
+    }
+  }
+  input.click()  
+}
 </script>
 
 <template>
-  <el-table :data="repayments.results" class="table" :header-cell-style="{ background: '#f8f8f8', color: '#272727' }">
+  <el-table :data="repayments" class="table" :header-cell-style="{ background: '#f8f8f8', color: '#272727' }">
     <el-table-column type="selection" width="50" align="center" />
     <el-table-column prop="id" label="ID" />
     <el-table-column prop="application" label="Application" />
@@ -40,11 +53,11 @@ const upload = async (row) => {
             </el-icon>
             Record Payment
           </el-button> -->
-          <el-button @click="upload(scope.row)">
+          <el-button @click="handleUpload(scope.row)">
             <el-icon class="icon">
               <Upload />
             </el-icon>
-            Upload Payment
+            Upload Repayment
           </el-button>
         </el-button-group>
       </template>

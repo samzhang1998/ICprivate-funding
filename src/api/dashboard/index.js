@@ -42,10 +42,11 @@ export function addRepayments(formData) {
   });
 }
 
-export function updateRepayments(params) {
+export function updateRepayments(params, data) {
   return sendRequest({
     url: `/api/documents/repayments/${params}/`,
-    method: "put",
+    method: "patch",
+    data: data
   });
 }
 

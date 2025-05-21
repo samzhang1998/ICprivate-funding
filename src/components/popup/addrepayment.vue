@@ -123,12 +123,19 @@
         }
     }
     const handleAdd = async () => {
-        const [err, res] = await api.addRepayments(repayment.value)
+        const formData = new FormData()
+        formData.append('amount', repayment.value.amount)
+        formData.append('due_date', repayment.value.due_date)
+        formData.append('paid_date', repayment.value.paid_date)
+        formData.append('application', repayment.value.application)
+        formData.append('invoice', repayment.value.invoice)
+        const [err, res] = await api.addRepayments(formData)
         if (!err) {
             console.log(res);
         } else {
             console.log(err)
         }
+        emit('close')
     }
 </script>
 
