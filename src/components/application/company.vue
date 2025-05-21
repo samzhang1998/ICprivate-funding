@@ -3,35 +3,39 @@
         <div class="form">
             <div class="item">
                 <p class="title">Company Name</p>
-                <p>{{ detail.company || '-' }}</p>
+                <p>{{ detail.company_name || '-' }}</p>
             </div>
             <div class="item">
-                <p class="title">ABN/ACN</p>
-                <p>{{ detail.abn || '-' }}</p>
+                <p class="title">ABN</p>
+                <p>{{ detail.company_abn || '-' }}</p>
+            </div>
+            <div class="item">
+                <p class="title">ACN</p>
+                <p>{{ detail.company_acn || '-' }}</p>
             </div>
             <div class="item">
                 <p class="title">Industry Type</p>
-                <p>{{ detail.type || '-' }}</p>
+                <p>{{ detail.industry_type || '-' }}</p>
             </div>
             <div class="item">
                 <p class="title">Contact Number</p>
-                <p>{{ detail.contact || '-' }}</p>
+                <p>{{ detail.contact_number || '-' }}</p>
             </div>
             <div class="item">
                 <p class="title">Annual Company Income</p>
-                <p>{{ detail.income || '-' }}</p>
+                <p>{{ formatCurrency(detail.annual_company_income) }}</p>
             </div>
             <div class="item">
                 <p class="title">Is the company a Trustee?</p>
-                <p>{{ status(detail.trustee) }}</p>
+                <p>{{ status(detail.is_trustee) }}</p>
             </div>
             <div class="item">
                 <p class="title">Is the company a Trustee for an SMSF?</p>
-                <p>{{ status(detail.smsf) }}</p>
+                <p>{{ status(detail.is_smsf_trustee) }}</p>
             </div>
             <div class="item">
                 <p class="title">Trustee Name</p>
-                <p>{{ detail.trusteeName || '-' }}</p>
+                <p>{{ detail.trustee_name || '-' }}</p>
             </div>
         </div>
         <div class="part"><h1>Position Held</h1></div>
@@ -64,15 +68,18 @@
         <div class="part"><h1>Registered Address</h1></div>
         <div class="item">
             <p class="title">Full Address</p>
-            <p>{{ detail.address || '-' }}</p>
+            <p>{{ formatAddress(detail) || '-' }}</p>
         </div>
     </div>
 </template>
 
 <script setup>
-
     const { detail } = defineProps({
-        detail: Object
+        detail: {
+            type: Object,
+            required: true,
+            default: () => ({})
+        }
     })
 
     const status = (st) => {
@@ -81,6 +88,25 @@
         } else {
             return "No"
         }
+    }
+
+    const formatCurrency = (value) => {
+        if (!value) return '-'
+        return new Intl.NumberFormat('en-AU', {
+            style: 'currency',
+            currency: 'AUD'
+        }).format(value)
+    }
+
+    const formatAddress = (detail) => {
+        if (!detail) return '-'
+        const parts = [
+            detail.registered_address_unit,
+            detail.registered_address_street_no,
+            detail.registered_address_street_name,
+            detail.registered_address_suburb
+        ]
+        return parts.filter(Boolean).join(' ')
     }
 </script>
 

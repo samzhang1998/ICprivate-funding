@@ -53,7 +53,7 @@ export function putUser(id, data) {
 
 export function logout(params) {
   return sendRequest({
-    url: '/api/users/auth/login/',
+    url: '/api/users/auth/logout/',
     method: 'post',
     data: params,
   })
@@ -64,6 +64,8 @@ export const userApi = {
   notifications,
   users,
   addUsers,
+  userInfo,
+  deleteUser,
+  putUser,
   logout,
 }
-
