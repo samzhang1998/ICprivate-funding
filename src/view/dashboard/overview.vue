@@ -6,6 +6,9 @@ import { ApplicationTable, NotificationTable, UpcomingTable } from './components
 
 const router = useRouter()
 const loadingData = ref(false)
+const dashboard = ref({})
+const repayment = ref({})
+const volume = ref({})
 
 onActivated(() => {
   getApplicationStatus()
@@ -27,18 +30,21 @@ async function getApplicationStatus() {
   const [err, res] = await api.applicationStatus(params)
   console.log('🚀 ~ getData ~ applicationStatus:', res)
   loadingData.value = false
+  dashboard.value = res
 }
 
 async function getApplicationVolume() {
   let params = {}
   const [err, res] = await api.applicationVolume(params)
   console.log('🚀 ~ getData2 ~ applicationVolume:', res)
+  volume.value = res
 }
 
 async function getRepaymentCompliance() {
   let params = {}
   const [err, res] = await api.repaymentCompliance(params)
   console.log('🚀 ~ getData3 ~ repaymentCompliance:', res)
+  repayment.value = res
 }
 </script>
 
@@ -47,25 +53,25 @@ async function getRepaymentCompliance() {
     <div class="cards">
       <div class="card">
         <h1>Application</h1>
-        <div class="num">12</div>
+        <div class="num">{{ volume.total_applications }}</div>
         <p>Total Applications</p>
         <button @click="toPage('application')">View Application</button>
       </div>
       <div class="card">
         <h1>Active Loans</h1>
-        <div class="num">12</div>
+        <div class="num">{{ dashboard.total_active }}</div>
         <p>Active Loans</p>
         <button>View Active Loans</button>
       </div>
       <div class="card">
         <h1>Total Loan Value</h1>
-        <div class="num">$24,000,000.00</div>
+        <div class="num">${{ volume.total_loan_amount }}</div>
         <p>Total Loan Value</p>
         <button>View Loan Value</button>
       </div>
       <div class="card">
         <h1>Repayment</h1>
-        <div class="num">$5,630,000.00</div>
+        <div class="num">${{ repayment.total_amount_due }}</div>
         <p>On-Time Payment Rate</p>
         <button @click="toPage('repayment')">View Repayment</button>
       </div>

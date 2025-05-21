@@ -3,44 +3,44 @@ import { ref, onMounted } from 'vue'
 import { CircleCheck, View, Upload } from '@element-plus/icons-vue'
 import { api } from '@/api'
 
+const { repayments } = defineProps({
+  repayments: Object
+})
+
 onMounted(() => {
 })
 
-const tableData = ref([])
-
-tableData.value = new Array(70)
-  .fill(null)
-  .map((_, index) => ({
-    index,
-    application: `${index}-123124`,
-    amount: '5650.00',
-    status: 'Scheduled',
-    dueDate: 'May 21, 2025',
-    paidDate: 'May 21, 2025',
-    paymentMethod: 'Credit Card',
-  }));
+const upload = async (row) => {
+  const [err, res] = await api.updateRepayments(row.id)
+    if (!err) {
+        console.log(res)
+    } else {
+        console.log(err)
+    }
+}
 </script>
 
 <template>
-  <el-table :data="tableData" class="table" :header-cell-style="{ background: '#f8f8f8', color: '#272727' }">
+  <el-table :data="repayments.results" class="table" :header-cell-style="{ background: '#f8f8f8', color: '#272727' }">
     <el-table-column type="selection" width="50" align="center" />
+    <el-table-column prop="id" label="ID" />
     <el-table-column prop="application" label="Application" />
     <el-table-column prop="amount" label="Amount" />
     <el-table-column prop="status" label="Status" />
-    <el-table-column prop="dueDate" label="Due Date" />
-    <el-table-column prop="paidDate" label="Paid Date" />
-    <el-table-column prop="paymentMethod" label="Payment Method" />
+    <el-table-column prop="due_date" label="Due Date" />
+    <el-table-column prop="paid_date" label="Paid Date" />
+    <el-table-column prop="created_by_name" label="Created By" />
     <el-table-column label="Action" width="250" align="center">
       <template #default="scope">
         <el-button-group>
           <el-button class="view" :icon="View" />
-          <el-button class="record" v-if="scope.row.index % 2 === 0">
+          <!-- <el-button class="record" v-if="scope.row.index % 2 === 0">
             <el-icon class="icon">
               <CircleCheck />
             </el-icon>
             Record Payment
-          </el-button>
-          <el-button v-else>
+          </el-button> -->
+          <el-button @click="upload(scope.row)">
             <el-icon class="icon">
               <Upload />
             </el-icon>

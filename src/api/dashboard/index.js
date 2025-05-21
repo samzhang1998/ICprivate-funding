@@ -24,8 +24,36 @@ export function repaymentCompliance(params) {
   });
 }
 
+export function repayments() {
+  return sendRequest({
+    url: "/api/documents/repayments/",
+    method: "get",
+  });
+}
+
+export function addRepayments(formData) {
+  return sendRequest({
+    url: "/api/documents/repayments/",
+    method: "post",
+    data: formData,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+}
+
+export function updateRepayments(params) {
+  return sendRequest({
+    url: `/api/documents/repayments/${params}/`,
+    method: "put",
+  });
+}
+
 export const dashboardApi = {
   applicationStatus,
   applicationVolume,
   repaymentCompliance,
+  repayments,
+  addRepayments,
+  updateRepayments
 };
