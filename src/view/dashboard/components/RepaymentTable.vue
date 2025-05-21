@@ -21,7 +21,6 @@ const loading = ref({
 onMounted(() => {
 })
 
-const emit = defineEmits(['edit']);
 const upload = async (id, file) => {
   loading.value.upload = true
   const [err, res] = await api.updateRepayments(id, file)
