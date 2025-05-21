@@ -37,6 +37,45 @@ export function putBorrower(id, data) {
   })
 }
 
+// Company assets endpoints
+export function getBorrowerAssets(borrowerId, params) {
+  return sendRequest({
+    url: `/api/borrowers/borrowers/${borrowerId}/assets/`,
+    method: 'get',
+    params,
+  })
+}
+
+export function createBorrowerAsset(borrowerId, data) {
+  return sendRequest({
+    url: `/api/borrowers/borrowers/${borrowerId}/assets/`,
+    method: 'post',
+    data,
+  })
+}
+
+export function getBorrowerAsset(borrowerId, assetId) {
+  return sendRequest({
+    url: `/api/borrowers/borrowers/${borrowerId}/assets/${assetId}/`,
+    method: 'get',
+  })
+}
+
+export function updateBorrowerAsset(borrowerId, assetId, data) {
+  return sendRequest({
+    url: `/api/borrowers/borrowers/${borrowerId}/assets/${assetId}/`,
+    method: 'put',
+    data,
+  })
+}
+
+export function deleteBorrowerAsset(borrowerId, assetId) {
+  return sendRequest({
+    url: `/api/borrowers/borrowers/${borrowerId}/assets/${assetId}/`,
+    method: 'delete',
+  })
+}
+
 export function guarantors(params) {
   return sendRequest({
     url: '/api/borrowers/guarantors/',
@@ -59,5 +98,10 @@ export const borrowerApi = {
   addBorrowers,
   deleteBorrower,
   putBorrower,
+  // Add company assets API functions
+  getBorrowerAssets,
+  createBorrowerAsset,
+  getBorrowerAsset,
+  updateBorrowerAsset,
+  deleteBorrowerAsset,
 }
-
