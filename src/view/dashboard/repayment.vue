@@ -38,15 +38,16 @@ const totalInfo = computed(() =>[
     }
 ])
 const searchedRepayment = ref("")
-const statuses = ref([
-    { value: "scheduled", label: "Scheduled" },
-    { value: "dueSoon", label: "Due Soon" },
-    { value: "paid", label: "Paid" },
-    { value: "overdue", label: "Overdue" }
-])
+// const statuses = ref([
+//     { value: "scheduled", label: "Scheduled" },
+//     { value: "dueSoon", label: "Due Soon" },
+//     { value: "paid", label: "Paid" },
+//     { value: "overdue", label: "Overdue" }
+// ])
 const paginationInfo = ref({
     total: 10,
 })
+const popupAction = ref("")
 const selectedStatus = ref("")
 const dateRange = ref("")
 const itemClass = (index) => {
@@ -96,6 +97,12 @@ const handleChange = (currantPage) => {
 
 const addRepayment = () => {
     popup.value = true
+    popupAction.value = "Add Payment"
+}
+
+const handleEdit = (id) => {
+    popup.value = true
+    popupAction.value = `Edit Payment ${id}`
 }
 
 const close = () => {
@@ -129,9 +136,9 @@ const handleClear = () => {
         <div class="filters">
             <div class="filters_left">
                 <el-input v-model="searchedRepayment" style="width: 200px" placeholder="Search..." />
-                <el-select v-model="selectedStatus" placeholder="Select Status" style="width: 200px">
+                <!-- <el-select v-model="selectedStatus" placeholder="Select Status" style="width: 200px">
                     <el-option v-for="item in statuses" :key="item.value" :label="item.label" :value="item.value" />
-                </el-select>
+                </el-select> -->
                 <div class="date_picker">
                     <el-date-picker v-model="dateRange" type="daterange" start-placeholder="start" end-placeholder="end"
                         format="DD MMM" value-format="YYYY-MM-DD" :prefix-icon="Calendar" clearable style="width: 180px;" />
@@ -151,7 +158,7 @@ const handleClear = () => {
             </div>
         </div>
         <transition name="slide-right-popup">
-            <AddRepayment v-if="popup" @close="close">
+            <AddRepayment v-if="popup" :action="popupAction" @close="close">
             </AddRepayment>
         </transition>
     </div>
