@@ -62,13 +62,17 @@
             </div>
         </div>
         <transition name="slide-right-popup">
-            <AddApplication v-if="popup" 
-                :action="popupAction" 
-                :applicationId="popupApplicationId"
-                :isEditMode="popupIsEditMode"
-                @close="close" 
-                @minimize="minimize"
-            ></AddApplication>
+            <div v-if="popup" class="popup-container">
+                <AddApplication v-if="!isEditMode" 
+                    :action="popupAction" 
+                    @close="close" 
+                    @minimize="minimize"
+                ></AddApplication>
+                <EditApplication v-else
+                    :applicationId="editApplicationId"
+                    @close="close"
+                ></EditApplication>
+            </div>
         </transition>
     </div>
 </template>
@@ -78,6 +82,7 @@ import { ref, onActivated, onMounted, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { api } from '@/api';
 import AddApplication from '@/components/popup/addapplication/index.vue';
+import EditApplication from '@/view/application/edit/EditApplication.vue';
 import Calendar from '@/components/icons/calendar.vue';
 import Search from '@/components/buttons/search.vue';
 import Clear from '@/components/buttons/clear.vue';
@@ -89,8 +94,8 @@ import { ApplicationTable } from './components'
 
 const router = useRouter()
 const popup = ref(false)
-const popupApplicationId = ref(null)
-const popupIsEditMode = ref(false)
+const isEditMode = ref(false)
+const editApplicationId = ref(null)
 
 const locations = ref([
     { value: "1", label: "1" },
@@ -148,14 +153,15 @@ onActivated(() => {
 //     router.push(`/application/1`)
 // }
 const addApplication = () => {
-    popupAction.value = "Add Application"
-    popup.value = true
+    popupAction.value = "Add Application";
+    isEditMode.value = false;
+    popup.value = true;
 }
 const close = () => {
     popup.value = false;
     // Reset the edit mode and application ID when closing the popup
-    popupApplicationId.value = null;
-    popupIsEditMode.value = false;
+    editApplicationId.value = null;
+    isEditMode.value = false;
 }
 const minimize = () => {
 
@@ -192,12 +198,9 @@ const handleChange = (currantPage) => {
 
 const handleEdit = (id) => {
     console.log("Edit button clicked for application ID:", id);
-    popupAction.value = `Edit Application ${id}`;
+    editApplicationId.value = id;
+    isEditMode.value = true;
     popup.value = true;
-    
-    // Pass the application ID to the AddApplication component as a prop
-    popupApplicationId.value = id;
-    popupIsEditMode.value = true;
 }
 const selectStatus = (name) => {
     activeTab.value = name
@@ -351,6 +354,11 @@ h1 {
         color: white;
         font-weight: 600;
     }
+}
+
+.popup-container {
+    /* This is just a wrapper that doesn't affect styling */
+    display: contents;
 }
 
 .slide-right-popup-enter-active,
