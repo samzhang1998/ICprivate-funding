@@ -29,7 +29,7 @@
                     </div>
                     <div class="info">
                         <p style="color: #7A858E">Branch</p>
-                        <p class="text">{{ brokers.branch?.name || '' }}</p>
+                        <p class="text">{{ brokers.branch?.name || '-' }}</p>
                     </div>
                     <div class="info">
                         <p style="color: #7A858E">BD</p>

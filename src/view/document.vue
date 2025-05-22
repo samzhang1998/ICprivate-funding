@@ -273,6 +273,7 @@
             }
             
             docs.value = data.results
+            console.log(docs.value)
         } catch (error) {
             handleError(error)
         } finally {

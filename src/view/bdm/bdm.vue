@@ -1,8 +1,8 @@
 <template>
     <div class="bdm">
         <div class="title">
-            <h1>{{ bdm.name }}</h1>
-            <h2>{{ bdm.date }}</h2>
+            <h1>{{ overview.name }}</h1>
+            <!-- <h2>{{ bdm.date }}</h2> -->
             <p style="color: #2984DE">BDM ID: {{ bdmId }}</p>
         </div>
         <el-tabs v-model="activeName" class="tabs">
@@ -16,8 +16,8 @@
                         <p class="text">{{ overview.name }}</p>
                     </div>
                     <div class="info">
-                        <p style="color: #7A858E">Brand</p>
-                        <p class="text">{{ overview.brand }}</p>
+                        <p style="color: #7A858E">Branch</p>
+                        <p class="text">{{ overview.branch.name }}</p>
                     </div>
                     <div class="info">
                         <p style="color: #7A858E">Phone Number</p>
@@ -46,12 +46,7 @@ const bdm = ref({
 })
 const activeName = ref('1')
 const bdmId = route.params.bdmId
-const overview = ref({
-    name: "BDM One",
-    brand: "Brand",
-    email: "BDM@gmail.com",
-    phone: "0456875426"
-})
+const overview = ref({})
 
 onMounted(() => {
     getBdm()
@@ -60,8 +55,8 @@ onMounted(() => {
 const getBdm = async () => {
     const [err, res] = await api.bdm(bdmId)
     if (!err) {
-        console.log(res);
         overview.value = res
+        console.log(overview.value);
     } else {
         console.log(err)
     }
