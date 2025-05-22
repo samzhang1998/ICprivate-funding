@@ -26,6 +26,10 @@ export function validateApplicationPayload(applicationData) {
   if (!applicationData.stage) {
     errors.stage = 'Application stage is required';
   }
+
+  if (!applicationData.application_type) {
+    errors.application_type = 'Application type is required';
+  }
   
   // Validate borrowers if present
   if (applicationData.borrowers && applicationData.borrowers.length > 0) {
@@ -41,6 +45,10 @@ export function validateApplicationPayload(applicationData) {
       
       if (!borrower.last_name) {
         borrowerFieldErrors.last_name = 'Last name is required';
+      }
+
+      if (!borrower.email) {
+        borrowerFieldErrors.email = 'Email is required';
       }
       
       if (Object.keys(borrowerFieldErrors).length > 0) {
@@ -66,6 +74,39 @@ export function validateApplicationPayload(applicationData) {
       
       if (!companyBorrower.company_abn && !companyBorrower.company_acn) {
         companyBorrowerFieldErrors.company_identification = 'Either ABN or ACN is required';
+      }
+
+      if (!companyBorrower.industry_type) {
+        companyBorrowerFieldErrors.industry_type = 'Industry type is required';
+      }
+
+      if (!companyBorrower.contact_number) {
+        companyBorrowerFieldErrors.contact_number = 'Contact number is required';
+      }
+      
+      // Validate directors if present
+      if (companyBorrower.directors && companyBorrower.directors.length > 0) {
+        const directorErrors = [];
+        
+        companyBorrower.directors.forEach((director, dirIndex) => {
+          const directorFieldErrors = {};
+          
+          if (!director.name) {
+            directorFieldErrors.name = 'Director name is required';
+          }
+          
+          if (!director.roles) {
+            directorFieldErrors.roles = 'Director roles are required';
+          }
+          
+          if (Object.keys(directorFieldErrors).length > 0) {
+            directorErrors[dirIndex] = directorFieldErrors;
+          }
+        });
+        
+        if (directorErrors.length > 0) {
+          companyBorrowerFieldErrors.directors = directorErrors;
+        }
       }
       
       if (Object.keys(companyBorrowerFieldErrors).length > 0) {
@@ -96,6 +137,14 @@ export function validateApplicationPayload(applicationData) {
       if (!guarantor.last_name) {
         guarantorFieldErrors.last_name = 'Last name is required';
       }
+
+      if (!guarantor.email) {
+        guarantorFieldErrors.email = 'Email is required';
+      }
+
+      if (!guarantor.mobile) {
+        guarantorFieldErrors.mobile = 'Mobile number is required';
+      }
       
       // Validate guarantor assets if present
       if (guarantor.assets && guarantor.assets.length > 0) {
@@ -111,6 +160,10 @@ export function validateApplicationPayload(applicationData) {
           if (!asset.bg_type) {
             assetFieldErrors.bg_type = 'BG type is required for guarantor assets';
           }
+
+          if (!asset.value) {
+            assetFieldErrors.value = 'Asset value is required';
+          }
           
           if (Object.keys(assetFieldErrors).length > 0) {
             assetErrors[assetIndex] = assetFieldErrors;
@@ -119,6 +172,39 @@ export function validateApplicationPayload(applicationData) {
         
         if (assetErrors.length > 0) {
           guarantorFieldErrors.assets = assetErrors;
+        }
+      }
+
+      // Validate guarantor liabilities if present
+      if (guarantor.liabilities && guarantor.liabilities.length > 0) {
+        const liabilityErrors = [];
+        
+        guarantor.liabilities.forEach((liability, liabilityIndex) => {
+          const liabilityFieldErrors = {};
+          
+          if (!liability.liability_type) {
+            liabilityFieldErrors.liability_type = 'Liability type is required';
+          }
+          
+          if (!liability.description) {
+            liabilityFieldErrors.description = 'Description is required';
+          }
+
+          if (!liability.amount) {
+            liabilityFieldErrors.amount = 'Amount is required';
+          }
+
+          if (!liability.bg_type) {
+            liabilityFieldErrors.bg_type = 'BG type is required';
+          }
+          
+          if (Object.keys(liabilityFieldErrors).length > 0) {
+            liabilityErrors[liabilityIndex] = liabilityFieldErrors;
+          }
+        });
+        
+        if (liabilityErrors.length > 0) {
+          guarantorFieldErrors.liabilities = liabilityErrors;
         }
       }
       
@@ -153,6 +239,14 @@ export function validateApplicationPayload(applicationData) {
           propertyFieldErrors[field] = `${label} is required`;
         }
       });
+
+      if (!property.property_type) {
+        propertyFieldErrors.property_type = 'Property type is required';
+      }
+
+      if (!property.estimated_value) {
+        propertyFieldErrors.estimated_value = 'Estimated value is required';
+      }
       
       if (Object.keys(propertyFieldErrors).length > 0) {
         propertyErrors[index] = propertyFieldErrors;
@@ -161,6 +255,73 @@ export function validateApplicationPayload(applicationData) {
     
     if (propertyErrors.length > 0) {
       errors.security_properties = propertyErrors;
+    }
+  }
+
+  // Validate loan requirements if present
+  if (applicationData.loan_requirements && applicationData.loan_requirements.length > 0) {
+    const requirementErrors = [];
+    
+    applicationData.loan_requirements.forEach((requirement, index) => {
+      const requirementFieldErrors = {};
+      
+      if (!requirement.description) {
+        requirementFieldErrors.description = 'Description is required';
+      }
+      
+      if (!requirement.amount) {
+        requirementFieldErrors.amount = 'Amount is required';
+      }
+      
+      if (Object.keys(requirementFieldErrors).length > 0) {
+        requirementErrors[index] = requirementFieldErrors;
+      }
+    });
+    
+    if (requirementErrors.length > 0) {
+      errors.loan_requirements = requirementErrors;
+    }
+  }
+
+  // Validate funding calculation input if present
+  if (applicationData.funding_calculation_input) {
+    const fundingErrors = {};
+    const input = applicationData.funding_calculation_input;
+    
+    if (!input.establishment_fee_rate) {
+      fundingErrors.establishment_fee_rate = 'Establishment fee rate is required';
+    }
+    
+    if (!input.monthly_line_fee_rate) {
+      fundingErrors.monthly_line_fee_rate = 'Monthly line fee rate is required';
+    }
+    
+    if (!input.brokerage_fee_rate) {
+      fundingErrors.brokerage_fee_rate = 'Brokerage fee rate is required';
+    }
+    
+    if (!input.application_fee) {
+      fundingErrors.application_fee = 'Application fee is required';
+    }
+    
+    if (!input.due_diligence_fee) {
+      fundingErrors.due_diligence_fee = 'Due diligence fee is required';
+    }
+    
+    if (!input.legal_fee_before_gst) {
+      fundingErrors.legal_fee_before_gst = 'Legal fee is required';
+    }
+    
+    if (!input.valuation_fee) {
+      fundingErrors.valuation_fee = 'Valuation fee is required';
+    }
+    
+    if (!input.monthly_account_fee) {
+      fundingErrors.monthly_account_fee = 'Monthly account fee is required';
+    }
+    
+    if (Object.keys(fundingErrors).length > 0) {
+      errors.funding_calculation_input = fundingErrors;
     }
   }
   
@@ -246,6 +407,7 @@ export function createSampleApplicationPayload() {
     stage: "inquiry",
     purpose: "Investment property purchase",
     application_type: "residential",
+    loan_purpose: "purchase",
     borrowers: [
       {
         first_name: "John",
@@ -261,8 +423,25 @@ export function createSampleApplicationPayload() {
         first_name: "Jane",
         last_name: "Smith",
         email: "jane.smith@example.com",
-        phone: "0412345679",
-        date_of_birth: "1982-02-02"
+        mobile: "0412345679",
+        date_of_birth: "1982-02-02",
+        assets: [
+          {
+            asset_type: "Property",
+            description: "Investment property",
+            value: "750000.00",
+            bg_type: "BG1"
+          }
+        ],
+        liabilities: [
+          {
+            liability_type: "mortgage",
+            description: "Home loan",
+            amount: "400000.00",
+            monthly_payment: "2500.00",
+            bg_type: "bg1"
+          }
+        ]
       }
     ],
     company_borrowers: [
@@ -271,7 +450,14 @@ export function createSampleApplicationPayload() {
         company_abn: "12345678901",
         company_acn: "123456789",
         industry_type: "real_estate",
-        contact_number: "0298765432"
+        contact_number: "0298765432",
+        directors: [
+          {
+            name: "John Director",
+            roles: "Director, Secretary",
+            director_id: "DIR123"
+          }
+        ]
       }
     ],
     security_properties: [
@@ -285,6 +471,24 @@ export function createSampleApplicationPayload() {
         property_type: "house",
         estimated_value: "750000.00"
       }
-    ]
+    ],
+    loan_requirements: [
+      {
+        description: "Property purchase",
+        amount: "500000.00"
+      }
+    ],
+    funding_calculation_input: {
+      establishment_fee_rate: "2.5",
+      capped_interest_months: 9,
+      monthly_line_fee_rate: "0.25",
+      brokerage_fee_rate: "1.0",
+      application_fee: "500.00",
+      due_diligence_fee: "1000.00",
+      legal_fee_before_gst: "2000.00",
+      valuation_fee: "800.00",
+      monthly_account_fee: "50.00",
+      working_fee: "0.00"
+    }
   };
 }

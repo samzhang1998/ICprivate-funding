@@ -1,6 +1,6 @@
 <template>
     <div class="content">
-        <div v-if="!detail.guarantors.length">
+        <div v-if="!detail.guarantors || !detail.guarantors.length">
             <p>No guarantors in this application</p>
         </div>
         <div class="form" v-for="(b, index) in detail.guarantors" :key="index">
@@ -39,7 +39,7 @@
             </div>
             <div class="item">
                 <p class="title">Full Address</p>
-                <p>{{ b.address_unit || '-' }} {{ b.address_street_no }} {{ b.address_street_name }} {{ b.address_suburb }} {{ b.address_state }} {{ b.address_postcode }}</p>
+                <p>{{ formatAddress(b) }}</p>
             </div>
             <div class="item">
                 <p class="title">Occupation</p>
@@ -62,7 +62,22 @@
 
     const { detail } = defineProps({
         detail: Object
-    })
+    });
+    
+    const formatAddress = (guarantor) => {
+        if (!guarantor) return '-';
+        
+        const addressParts = [
+            guarantor.address_unit,
+            guarantor.address_street_no,
+            guarantor.address_street_name,
+            guarantor.address_suburb,
+            guarantor.address_state,
+            guarantor.address_postcode
+        ].filter(part => part && part.trim() !== '');
+        
+        return addressParts.length > 0 ? addressParts.join(' ') : '-';
+    };
 </script>
 
 <style scoped>

@@ -89,6 +89,7 @@
     import { ref, computed, onActivated, onMounted } from 'vue';
     import { useRoute } from 'vue-router';
     import { api } from '@/api';
+    import { ElMessage } from 'element-plus';
     import Company from '@/components/application/company.vue';
     import CompanyAsset from '@/components/application/companyasset.vue';
     import Enquiries from '@/components/application/enquiries.vue';
@@ -100,6 +101,7 @@
     import Exit from '@/components/application/exit.vue';
     import Calculator from '@/components/popup/calculator.vue';
     import Note from '@/components/popup/note.vue';
+    import { SuccessFilled } from '@element-plus/icons-vue';
 
     const route = useRoute()
 
@@ -166,11 +168,15 @@
     const getApplication = async () => {
         const [err, res] = await api.application(applicationId)
         if (!err) {
-            console.log(res);
+            console.log("Application data received:", res);
             application.value = res
             updateStages(res.stage)
         } else {
-            console.log(err)
+            console.error("Error fetching application:", err)
+            ElMessage.error({
+                message: 'Failed to load application details',
+                type: 'error',
+            });
         }
     }
     const showCalculator = () => {
