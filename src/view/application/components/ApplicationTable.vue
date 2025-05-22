@@ -64,8 +64,8 @@
             </template>
         </el-table-column>
         <el-table-column prop="estimated_settlement_date" label="Settlement Date" width="150" />
-        <el-table-column prop="updated_at" label="Updated Date" width="150" />
-        <el-table-column prop="created_at" label="Create Date" width="150" />
+        <el-table-column prop="update" label="Updated Date" width="150" />
+        <el-table-column prop="create" label="Create Date" width="150" />
         <el-table-column label="Action" align="center" width="80" fixed="right">
             <template #default="scope">
                 <el-popover placement="bottom" trigger="hover" width="160" popper-class="user-popover">

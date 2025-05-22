@@ -44,10 +44,11 @@
             >
                 <el-table-column type="selection" align="center" width="50" />
                 <el-table-column prop="id" label="Broker ID" sortable="" width="120" />
-                <el-table-column prop="name" label="Name" width="139" />
+                <el-table-column prop="first_name" label="First Name" width="100" />
+                <el-table-column prop="last_name" label="Last Name" width="100" />
                 <el-table-column prop="address" label="Address" min-width="150" />
-                <el-table-column prop="phone" label="Phone" width="120" />
-                <el-table-column prop="relationship" label="Relationship to Borrower" width="180" />
+                <el-table-column prop="mobile" label="Phone" width="120" />
+                <el-table-column prop="guarantor_type" label="Guarantor Type" width="130" />
                 <el-table-column prop="email" label="Email Address" min-width="130" />
                 <!-- <el-table-column prop="state" label="State" width="80" /> -->
                 <el-table-column label="Action" align="center" width="60">

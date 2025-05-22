@@ -72,8 +72,8 @@
 </template>
 
 <script setup>
-import { ref, onActivated, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, onActivated, onMounted, computed } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { api } from '@/api';
 import AddApplication from '@/components/popup/addapplication/index.vue';
 import Calendar from '@/components/icons/calendar.vue';
@@ -137,7 +137,7 @@ const selectAll = ref(false)
 const isSelected = ref(false)
 
 onActivated(() => {
-    getApplications()
+    getApplications()    
 })
 
 // const toApplication = () => {
@@ -159,7 +159,11 @@ const getApplications = async () => {
     if (!err) {
         console.log(res);
         paginationInfo.value.total = res.count
-        applications.value = res.results
+        applications.value = res.results.map(item => ({
+            ...item,
+            create: item.created_at ? item.created_at.split('T')[0] : item.created_at,
+            update: item.updated_at ? item.updated_at.split('T')[0] : item.updated_at
+        }))
     } else {
         console.log(err)
     }

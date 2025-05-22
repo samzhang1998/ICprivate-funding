@@ -51,7 +51,7 @@
                 <div v-for="(note, index) in notes" :key="index" class="add">
                     <div class="title">
                         <p>Noted By {{ note.created_by_name }}</p>
-                        <p style="font-weight: 400;">{{ note.created_at }}</p>
+                        <p style="font-weight: 400;">{{ note.created_at.split('T')[0] }}</p>
                     </div>
                     <div class="form_content">
                         <h2>Subject: {{ note.title }}</h2>

@@ -3,12 +3,16 @@ import { ref, onMounted, onActivated } from 'vue'
 import { useRouter } from 'vue-router'
 import { api } from '@/api'
 import { ApplicationTable, NotificationTable, UpcomingTable } from './components'
+import AddApplication from '@/components/popup/addapplication/index.vue';
+import AddBorrower from '@/components/popup/addborrower.vue';
 
 const router = useRouter()
 const loadingData = ref(false)
 const dashboard = ref({})
 const repayment = ref({})
 const volume = ref({})
+const applicationPopup = ref(false)
+const borrowerPopup = ref(false)
 
 onActivated(() => {
   getApplicationStatus()
@@ -45,6 +49,25 @@ async function getRepaymentCompliance() {
   const [err, res] = await api.repaymentCompliance(params)
   console.log('🚀 ~ getData3 ~ repaymentCompliance:', res)
   repayment.value = res
+}
+
+const toAddApplication = () => {
+  applicationPopup.value = true
+}
+const closeApplication = () => {
+  applicationPopup.value = false
+}
+const toAddBorrower = () => {
+  borrowerPopup.value = true
+}
+const closeBorrower = () => {
+  borrowerPopup.value = false
+}
+const toDocument = () => {
+  router.push('/document')
+}
+const toAddNote = () => {
+
 }
 </script>
 
@@ -92,19 +115,19 @@ async function getRepaymentCompliance() {
       <div class="box">
         <div class="title">Quick Actions</div>
         <div class="buttons">
-          <button class="quick_act">
+          <button class="quick_act" @click="toAddApplication">
             <img src="/src/assets/icons/quick_act_1.png" alt="act" />
             New Application
           </button>
-          <button class="quick_act1">
+          <button class="quick_act1" @click="toAddBorrower">
             <img src="/src/assets/icons/quick_act_2.png" alt="act" />
             New Borrower
           </button>
-          <button class="quick_act1">
+          <button class="quick_act1" @click="toDocument">
             <img src="/src/assets/icons/quick_act_3.png" alt="act" />
             Upload Document
           </button>
-          <button class="quick_act1">
+          <button class="quick_act1" @click="toAddNote">
             <img src="/src/assets/icons/quick_act_4.png" alt="act" />
             Add Note
           </button>
@@ -117,6 +140,20 @@ async function getRepaymentCompliance() {
         </div>
       </div> -->
     </div>
+    <transition name="slide-right-popup">
+      <AddApplication v-if="applicationPopup" 
+        action="Add Application" 
+        @close="closeApplication" 
+        @minimize="minimize"
+      ></AddApplication>
+    </transition>
+    <transition name="slide-right-popup">
+      <AddBorrower v-if="borrowerPopup" 
+        action="Add Borrower" 
+        @close="closeBorrower" 
+        @minimize="minimize"
+      ></AddBorrower>
+    </transition>
   </div>
 </template>
 
@@ -295,5 +332,16 @@ p {
 
 .quick_act1:hover {
   background: #e8ebee;
+}
+.slide-right-popup-enter-active, .slide-right-popup-leave-active {
+  transition: all 0.3s ease;
+}
+.slide-right-popup-enter-from, .slide-right-popup-leave-to {
+  opacity: 0;
+  transform: translateX(100%);
+}
+.slide-right-popup-enter-to, .slide-right-popup-leave-from {
+  opacity: 1;
+  transform: translateX(0);
 }
 </style>

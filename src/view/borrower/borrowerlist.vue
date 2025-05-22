@@ -35,7 +35,7 @@
                         <span>{{ scope.row.first_name }} {{ scope.row.last_name }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="address" label="Address" width="130">
+                <el-table-column prop="address" label="Address" width="250">
                     <template #default="scope">
                         <span>{{ scope.row.address.street_no }} {{ scope.row.address.street_name }} {{
                             scope.row.address.state }} {{ scope.row.address.suburb }} {{ scope.row.address.unit
@@ -44,8 +44,8 @@
                 </el-table-column>
                 <el-table-column prop="phone" label="Phone" width="130" />
                 <el-table-column prop="broker" label="Broker" min-width="120" />
-                <el-table-column prop="email" label="Email Address" min-width="225" />
-                <el-table-column prop="state" label="State" width="160" />
+                <el-table-column prop="email" label="Email Address" min-width="200" />
+                <!-- <el-table-column prop="state" label="State" width="160" /> -->
                 <el-table-column label="Action" align="center" width="60" fixed="right">
                     <template #default="scope">
                         <el-popover placement="bottom" trigger="hover" width="160" popper-class="user-popover">

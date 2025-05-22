@@ -1,8 +1,8 @@
 <template>
     <div class="borrower">
         <div class="title">
-            <h1>{{ borrower.name }}</h1>
-            <h2>{{ borrower.date }}</h2>
+            <h1>{{ borrowers.first_name }} {{ borrowers.last_name }}</h1>
+            <h2>Date Created: {{ borrowers.created_at?.split('T')[0] }}</h2>
             <p style="color: #2984DE">Broker ID: {{ borrowerId }}</p>
         </div>
         <el-tabs v-model="activeName" class="tabs" >
@@ -13,23 +13,23 @@
                 <div class="tab">
                     <div class="info">
                         <p style="color: #7A858E">Contact Name</p>
-                        <p>{{ overview.name }}</p>
-                    </div>
-                    <div class="info">
-                        <p style="color: #7A858E">Address</p>
-                        <p>{{ overview.address }}</p>
-                    </div>
-                    <div class="info">
-                        <p style="color: #7A858E">Email</p>
-                        <p>{{ overview.email }}</p>
-                    </div>
-                    <div class="info">
-                        <p style="color: #7A858E">Phone</p>
-                        <p>{{ overview.phone }}</p>
+                        <p>{{ borrowers.first_name }} {{ borrowers.last_name }}</p>
                     </div>
                     <div class="info">
                         <p style="color: #7A858E">Borrower Type</p>
-                        <p>{{ overview.type }}</p>
+                        <p>{{ type }}</p>
+                    </div>
+                    <div class="info">
+                        <p style="color: #7A858E">Email</p>
+                        <p>{{ borrowers.email }}</p>
+                    </div>
+                    <div class="info">
+                        <p style="color: #7A858E">Phone</p>
+                        <p>{{ borrowers.phone }}</p>
+                    </div>
+                    <div class="info">
+                        <p style="color: #7A858E">Address</p>
+                        <p>{{ borrowers.registered_address_unit }}, {{ borrowers.registered_address_street_no }} {{ borrowers.registered_address_street_name }}</p>
                     </div>
                 </div>
             </el-tab-pane>
@@ -39,46 +39,64 @@
                 </template>
                 <div class="tab">
                     <div class="info">
-                        <p style="color: #7A858E">Total Loan</p>
-                        <p>{{ summary.total }}</p>
+                        <p style="color: #7A858E">Annual Income</p>
+                        <p>${{ borrowers.annual_income || '-' }}</p>
+                    </div>                    
+                    <div class="info">
+                        <p style="color: #7A858E">Bank BSB</p>
+                        <p>{{ borrowers.bank_bsb || '-' }}</p>
                     </div>
                     <div class="info">
-                        <p style="color: #7A858E">Active Loans</p>
-                        <p>{{ summary.active }}</p>
+                        <p style="color: #7A858E">Bank Account Number</p>
+                        <p>{{ borrowers.bank_account_number || '-' }}</p>
                     </div>
                     <div class="info">
-                        <p style="color: #7A858E">Total Loan Amount</p>
-                        <p>{{ summary.totalAmount }}</p>
-                    </div>
-                    <div class="info">
-                        <p style="color: #7A858E">Outstanding Amount</p>
-                        <p>{{ summary.outstanding }}</p>
+                        <p style="color: #7A858E">Bank Account Name</p>
+                        <p>{{ borrowers.bank_account_name || '-' }}</p>
                     </div>
                 </div>
             </el-tab-pane>
-            <el-tab-pane name="3">
+            <el-tab-pane name="3" v-if="borrowers.is_company === true">
                 <template #label>
-                    <div class="label">Borrower Repayment Account</div>
+                    <div class="label">Company Information</div>
                 </template>
-                Borrower Repayment Account
+                <div class="tab">
+                    <div class="info">
+                        <p style="color: #7A858E">Company Name</p>
+                        <p>${{ borrowers.company_name || '-' }}</p>
+                    </div>                    
+                    <div class="info">
+                        <p style="color: #7A858E">Company ABN</p>
+                        <p>{{ borrowers.company_abn || '-' }}</p>
+                    </div>
+                    <div class="info">
+                        <p style="color: #7A858E">Company ACN</p>
+                        <p>{{ borrowers.company_acn || '-' }}</p>
+                    </div>
+                    <div class="info">
+                        <p style="color: #7A858E">Company Address</p>
+                        <p>{{ borrowers.company_address || '-' }}</p>
+                    </div>
+                </div>
             </el-tab-pane>
-            <el-tab-pane name="4">
+            <!-- <el-tab-pane name="4">
                 <template #label>
                     <div class="label">Repayment History</div>
                 </template>
                 Repayment History
-            </el-tab-pane>
+            </el-tab-pane> -->
         </el-tabs>
     </div>
 </template>
 
 <script setup>
-    import { onMounted, ref } from 'vue';
+    import { onMounted, ref, computed } from 'vue';
     import { api } from '@/api';
     import { useRoute } from 'vue-router';
 
     const route = useRoute()
 
+    const borrowers = ref({})
     const borrower = ref({
         name: "Borrower Name",
         date: "Date Create: 2025-12-23 10:13:42"
@@ -107,11 +125,18 @@
         const [err, res] = await api.borrower(borrowerId)
         if (!err) {
             console.log(res);
-            // borrowers.value = res.results
+            borrowers.value = res
         } else {
             console.log(err)
         }
     }
+    const type = computed(() => {
+        if (borrowers.value.is_company === true) {
+            return 'Company'
+        } else {
+            return 'Individual'
+        }
+    })
 </script>
 
 <style scoped>

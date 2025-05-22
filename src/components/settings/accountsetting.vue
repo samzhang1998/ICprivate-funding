@@ -7,7 +7,7 @@
             </div>
             <el-input v-model="account.email" placeholder="Your email" style="width: 220px"/>
         </div>
-        <div class="setting">
+        <!-- <div class="setting">
             <div class="text">
                 <h1>Password</h1>
                 <p>Set login password.</p>
@@ -22,7 +22,7 @@
                 />
                 <button>Change</button>
             </div>
-        </div>
+        </div> -->
         <div class="setting">
             <div class="text">
                 <h1>Account Name</h1>
