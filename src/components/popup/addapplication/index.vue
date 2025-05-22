@@ -1,7 +1,7 @@
 <template>
     <div class="popup">        
         <div class="popup_title">
-            <h1>{{ action }}</h1>
+            <h1>{{ props.isEditMode ? 'Edit Application' : 'New Application' }}</h1>
             <div class="close">
                 <!-- <el-icon :size="20" style="cursor: pointer; color: #7A858E;" @click="handleMinimize"><Minus /></el-icon> -->
                 <el-icon :size="20" style="cursor: pointer; color: #7A858E;" @click="handleClose"><Close /></el-icon>                    
@@ -124,13 +124,13 @@
         </el-scrollbar>
         <div class="buttons">
             <Cancel @click="handleClose"></Cancel>
-            <Save @click="handleSave" :loading="isSubmitting"></Save>
+            <Save @click="handleSave" :loading="isSubmitting" :text="props.isEditMode ? 'Update' : 'Save'"></Save>
         </div>
     </div>
 </template>
 
 <script setup>
-    import { ref, computed, watch } from 'vue';
+    import { ref, computed, watch, onMounted } from 'vue';
     import { ElMessage } from 'element-plus';
     import { api } from '@/api';
     import { transformGuarantorAssets } from '@/utils/guarantorAssetTransformer';
@@ -149,8 +149,41 @@
     import Save from '@/components/buttons/save.vue';
 
     const props = defineProps({
-        action: String
+        action: String,
+        applicationId: {
+            type: [Number, String],
+            default: null
+        },
+        isEditMode: {
+            type: Boolean,
+            default: false
+        }
     })
+    
+    console.log("AddApplication component initialized with props:", props);
+    
+    // Watch for changes in props
+    watch(
+        () => props.applicationId,
+        (newVal, oldVal) => {
+            console.log(`applicationId changed from ${oldVal} to ${newVal}`);
+            if (newVal && props.isEditMode) {
+                console.log("Fetching application data due to prop change");
+                fetchApplicationData();
+            }
+        }
+    );
+    
+    watch(
+        () => props.isEditMode,
+        (newVal, oldVal) => {
+            console.log(`isEditMode changed from ${oldVal} to ${newVal}`);
+            if (newVal && props.applicationId) {
+                console.log("Fetching application data due to edit mode change");
+                fetchApplicationData();
+            }
+        }
+    );
 
     const activeNames = ref("1")
     const isSubmitting = ref(false)
@@ -821,6 +854,127 @@
 
 
     
+    // Fetch application data when in edit mode
+    const fetchApplicationData = async () => {
+        if (!props.applicationId) {
+            console.log("No applicationId provided, skipping fetch");
+            return;
+        }
+        
+        try {
+            console.log("Starting fetchApplicationData for ID:", props.applicationId);
+            const [err, res] = await api.application(props.applicationId);
+            
+            if (!err && res) {
+                console.log("Fetched application data successfully:", res);
+                
+                // Directly assign the API response to the application ref
+                application.value = res;
+                
+                // Handle guarantor assets if they exist
+                if (res.guarantors && res.guarantors.length > 0 && res.guarantors[0].assets) {
+                    console.log("Processing guarantor assets:", res.guarantors[0].assets);
+                    
+                    // Create a new guarantorAsset object with default values
+                    const transformedAssets = {
+                        address1: "", address1Value: "", address1Owing: "", address1G1: false, address1G2: false,
+                        address2: "", address2Value: "", address2Owing: "", address2G1: false, address2G2: false,
+                        address3: "", address3Value: "", address3Owing: "", address3G1: false, address3G2: false,
+                        address4: "", address4Value: "", address4Owing: "", address4G1: false, address4G2: false,
+                        vehicleValue: "", vehicleOwing: "", vehicleG1: false, vehicleG2: false,
+                        savingValue: "", savingOwing: "", savingG1: false, savingG2: false,
+                        shareValue: "", shareOwing: "", shareG1: false, shareG2: false,
+                        cardValue: "", cardOwing: "", cardG1: false, cardG2: false,
+                        creditorValue: "", creditorOwing: "", creditorG1: false, creditorG2: false,
+                        otherValue: "", otherOwing: "", otherG1: false, otherG2: false,
+                        totalValue: "", totalOwing: ""
+                    };
+                    
+                    // Process guarantor assets
+                    let propertyCount = 0;
+                    res.guarantors[0].assets.forEach(asset => {
+                        console.log("Processing asset:", asset);
+                        
+                        if (asset.asset_type === "Property" && propertyCount < 4) {
+                            const addressNum = propertyCount + 1;
+                            transformedAssets[`address${addressNum}`] = asset.description || "";
+                            transformedAssets[`address${addressNum}Value`] = asset.value || "";
+                            transformedAssets[`address${addressNum}Owing`] = asset.amount_owing || "";
+                            transformedAssets[`address${addressNum}G1`] = asset.bg_type === "BG1" || asset.bg_type === "bg1";
+                            transformedAssets[`address${addressNum}G2`] = asset.bg_type === "BG2" || asset.bg_type === "bg2";
+                            propertyCount++;
+                        } else if (asset.asset_type === "Vehicle") {
+                            transformedAssets.vehicleValue = asset.value || "";
+                            transformedAssets.vehicleOwing = asset.amount_owing || "";
+                            transformedAssets.vehicleG1 = asset.bg_type === "BG1" || asset.bg_type === "bg1";
+                            transformedAssets.vehicleG2 = asset.bg_type === "BG2" || asset.bg_type === "bg2";
+                        } else if (asset.asset_type === "Savings") {
+                            transformedAssets.savingValue = asset.value || "";
+                            transformedAssets.savingOwing = asset.amount_owing || "";
+                            transformedAssets.savingG1 = asset.bg_type === "BG1" || asset.bg_type === "bg1";
+                            transformedAssets.savingG2 = asset.bg_type === "BG2" || asset.bg_type === "bg2";
+                        } else if (asset.asset_type === "Investment Shares") {
+                            transformedAssets.shareValue = asset.value || "";
+                            transformedAssets.shareOwing = asset.amount_owing || "";
+                            transformedAssets.shareG1 = asset.bg_type === "BG1" || asset.bg_type === "bg1";
+                            transformedAssets.shareG2 = asset.bg_type === "BG2" || asset.bg_type === "bg2";
+                        } else if (asset.asset_type === "Credit Card") {
+                            transformedAssets.cardValue = asset.value || "";
+                            transformedAssets.cardOwing = asset.amount_owing || "";
+                            transformedAssets.cardG1 = asset.bg_type === "BG1" || asset.bg_type === "bg1";
+                            transformedAssets.cardG2 = asset.bg_type === "BG2" || asset.bg_type === "bg2";
+                        } else if (asset.asset_type === "Other Creditor") {
+                            transformedAssets.creditorValue = asset.value || "";
+                            transformedAssets.creditorOwing = asset.amount_owing || "";
+                            transformedAssets.creditorG1 = asset.bg_type === "BG1" || asset.bg_type === "bg1";
+                            transformedAssets.creditorG2 = asset.bg_type === "BG2" || asset.bg_type === "bg2";
+                        } else if (asset.asset_type === "Other") {
+                            transformedAssets.otherValue = asset.value || "";
+                            transformedAssets.otherOwing = asset.amount_owing || "";
+                            transformedAssets.otherG1 = asset.bg_type === "BG1" || asset.bg_type === "bg1";
+                            transformedAssets.otherG2 = asset.bg_type === "BG2" || asset.bg_type === "bg2";
+                        }
+                    });
+                    
+                    // Calculate totals
+                    let totalValue = 0;
+                    let totalOwing = 0;
+                    
+                    // Add up all values and owing amounts
+                    ['address1', 'address2', 'address3', 'address4', 'vehicle', 'saving', 'share', 'card', 'creditor', 'other'].forEach(prefix => {
+                        totalValue += parseFloat(transformedAssets[`${prefix}Value`] || 0);
+                        totalOwing += parseFloat(transformedAssets[`${prefix}Owing`] || 0);
+                    });
+                    
+                    transformedAssets.totalValue = totalValue.toString();
+                    transformedAssets.totalOwing = totalOwing.toString();
+                    
+                    console.log("Setting guarantorAsset.value to:", transformedAssets);
+                    guarantorAsset.value = transformedAssets;
+                }
+                
+                ElMessage.success("Application data loaded successfully");
+            } else {
+                console.error("API errors in fetchApplicationData:", err);
+                ElMessage.error("Failed to load application data");
+            }
+        } catch (error) {
+            console.error("Exception in fetchApplicationData:", error);
+            ElMessage.error(`Failed to load application: ${error.message || 'Unknown error'}`);
+        }
+    };
+
+    // Initialize data when component mounts
+    onMounted(() => {
+        console.log("Component mounted, isEditMode:", props.isEditMode, "applicationId:", props.applicationId);
+        if (props.isEditMode && props.applicationId) {
+            console.log("Fetching application data for ID:", props.applicationId);
+            fetchApplicationData();
+        } else {
+            console.log("Not in edit mode or no applicationId provided");
+        }
+    });
+
     const handleSave = async () => {
         try {
             if (!validateAndFormatApplication()) {
@@ -831,6 +985,20 @@
             
             // Create a deep copy of the application to avoid proxy issues
             const applicationData = JSON.parse(JSON.stringify(application.value));
+            
+            // CRITICAL FIX: For guarantors in new applications, set borrower and application to null
+            if (applicationData.guarantors && applicationData.guarantors.length > 0) {
+                applicationData.guarantors.forEach(guarantor => {
+                    // For new applications, set these fields to null
+                    // The backend will assign the proper values
+                    guarantor.borrower = null;
+                    guarantor.application = null;
+                    
+                    // Remove any nested objects that might cause issues
+                    delete guarantor.borrower_details;
+                    delete guarantor.application_details;
+                });
+            }
             
             // Transform guarantor assets from frontend format to backend format
             applicationData.guarantors = transformGuarantorAssets(guarantorAsset.value, applicationData.guarantors);
@@ -850,9 +1018,17 @@
                 });
             }
             
-            const [err, res] = await api.createApplicationWithCascade(applicationData);
+            let err, res;
+            if (props.isEditMode && props.applicationId) {
+                console.log("Updating application with ID:", props.applicationId);
+                [err, res] = await api.updateApplication(props.applicationId, applicationData);
+            } else {
+                console.log("Creating new application");
+                [err, res] = await api.createApplicationWithCascade(applicationData);
+            }
+
             if (!err) {
-                ElMessage.success("Application created successfully");
+                ElMessage.success(`Application ${props.isEditMode ? 'updated' : 'created'} successfully`);
                 handleClose();
             } else {
                 // Enhanced error handling
@@ -888,16 +1064,16 @@
                             dangerouslyUseHTMLString: false
                         });
                     } else {
-                        ElMessage.error("Failed to create application: Validation errors");
+                        ElMessage.error(`Failed to ${props.isEditMode ? 'update' : 'create'} application: Validation errors`);
                     }
                 } else {
-                    ElMessage.error("Failed to create application: Unknown error");
+                    ElMessage.error(`Failed to ${props.isEditMode ? 'update' : 'create'} application: Unknown error`);
                 }
                 
                 console.error("API errors:", err);
             }
         } catch (error) {
-            console.error("Exception during application creation:", error);
+            console.error("Exception during application operation:", error);
             ElMessage.error(`An unexpected error occurred: ${error.message || 'Unknown error'}`);
         } finally {
             isSubmitting.value = false;

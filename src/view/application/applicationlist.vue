@@ -64,6 +64,8 @@
         <transition name="slide-right-popup">
             <AddApplication v-if="popup" 
                 :action="popupAction" 
+                :applicationId="popupApplicationId"
+                :isEditMode="popupIsEditMode"
                 @close="close" 
                 @minimize="minimize"
             ></AddApplication>
@@ -87,6 +89,8 @@ import { ApplicationTable } from './components'
 
 const router = useRouter()
 const popup = ref(false)
+const popupApplicationId = ref(null)
+const popupIsEditMode = ref(false)
 
 const locations = ref([
     { value: "1", label: "1" },
@@ -148,7 +152,10 @@ const addApplication = () => {
     popup.value = true
 }
 const close = () => {
-    popup.value = false
+    popup.value = false;
+    // Reset the edit mode and application ID when closing the popup
+    popupApplicationId.value = null;
+    popupIsEditMode.value = false;
 }
 const minimize = () => {
 
@@ -184,8 +191,13 @@ const handleChange = (currantPage) => {
 // }
 
 const handleEdit = (id) => {
-    popupAction.value = `Edit Application ${id}`
-    popup.value = true
+    console.log("Edit button clicked for application ID:", id);
+    popupAction.value = `Edit Application ${id}`;
+    popup.value = true;
+    
+    // Pass the application ID to the AddApplication component as a prop
+    popupApplicationId.value = id;
+    popupIsEditMode.value = true;
 }
 const selectStatus = (name) => {
     activeTab.value = name
