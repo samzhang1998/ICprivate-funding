@@ -34,7 +34,7 @@
                 </el-table-column>
                 <el-table-column label="Actions" width="200">
                     <template #default="scope">
-                        <el-button-group>
+                        <el-button-group style="margin: 10px 0;">
                             <el-button 
                                 size="small" 
                                 @click="handleEdit(scope.row)"
@@ -346,6 +346,35 @@ h1 {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
+}
+
+:deep(.el-table .el-table__cell) {
+    padding: 0;
+}
+
+:deep(.el-table tbody .cell) {
+    height: auto;
+    padding: 0 5px;
+    color: #272727;
+    font-feature-settings: 'liga' off, 'clig' off;
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+}
+
+:deep(.el-table th.el-table__cell) {
+    background: #F8F8F8;
+}
+
+:deep(.el-table thead .cell) {
+    padding: 10px 5px;
+    color: #272727;
+    font-feature-settings: 'liga' off, 'clig' off;
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 140%;
 }
 
 :deep(.el-pagination) {

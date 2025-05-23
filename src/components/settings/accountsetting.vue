@@ -25,10 +25,31 @@
         </div> -->
         <div class="setting">
             <div class="text">
-                <h1>Account Name</h1>
+                <h1>Account First Name</h1>
                 <p>Set Account Name.</p>
             </div>
-            <el-input v-model="account.name" :placeholder=account.name style="width: 150px"/>
+            <el-input v-model="account.first_name" :placeholder=account.first_name style="width: 150px"/>
+        </div>
+        <div class="setting">
+            <div class="text">
+                <h1>Account Last Name</h1>
+                <p>Set Account Name.</p>
+            </div>
+            <el-input v-model="account.last_name" :placeholder=account.last_name style="width: 150px"/>
+        </div>
+        <div class="setting">
+            <div class="text">
+                <h1>Account Phone Number</h1>
+                <p>Set Account Contact Number.</p>
+            </div>
+            <el-input v-model="account.phone" :placeholder=account.phone style="width: 150px"/>
+        </div>
+        <div class="setting" v-if="account.role !== 'admin'">
+            <div class="text">
+                <h1>Your Role</h1>
+                <p>If your role changes, please contact your admin.</p>
+            </div>
+            <el-input v-model="account.role" disabled :placeholder=account.role style="width: 150px"/>
         </div>
     </div>
 </template>

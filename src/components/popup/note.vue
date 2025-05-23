@@ -24,9 +24,9 @@
                             <el-select v-model="addData.assigned_to">
                                 <el-option
                                     v-for="item in assign"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value"
+                                    :key="item.id"
+                                    :label="item.first_name"
+                                    :value="item.id"
                                 />
                             </el-select>
                         </div>
@@ -51,7 +51,7 @@
                 <div v-for="(note, index) in notes" :key="index" class="add">
                     <div class="title">
                         <p>Noted By {{ note.created_by_name }}</p>
-                        <p style="font-weight: 400;">{{ note.created_at.split('T')[0] }}</p>
+                        <p style="font-weight: 400;">{{ note.created_at?.split('T')[0] }}</p>
                     </div>
                     <div class="form_content">
                         <h2>Subject: {{ note.title }}</h2>
@@ -86,6 +86,7 @@
 
     onMounted(() => {
         getNotes()
+        getUsers()
     })
 
     const handleClose = () => {
@@ -99,6 +100,17 @@
         if (!err) {            
             notes.value = res.results
             console.log(notes.value);
+        } else {
+            console.log(err)
+        }
+    }
+    const getUsers = async () => {
+        const [err, res] = await api.users()
+        if (!err) {            
+            assign.value = res.results.filter(item => 
+                item.role === 'admin' || item.role === 'bd'
+            )
+            console.log(assign.value);
         } else {
             console.log(err)
         }

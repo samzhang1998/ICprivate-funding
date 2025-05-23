@@ -152,6 +152,26 @@ export function updateApplication(id, params) {
         ];
     });
 }
+export function generatePdf(params) {
+    return sendRequest({
+        url: `/api/applications/${params}/generate-pdf/`,
+        method: 'get',
+    })
+}
+export function fees(params) {
+    return sendRequest({
+        url: `/api/documents/fees/`,
+        method: 'get',
+        params: params
+    })
+}
+export function assignBd(params, data) {
+    return sendRequest({
+        url: `/api/applications/applications/${params}/assign_bd/`,
+        method: 'post',
+        data: data
+    })
+}
 
 export const applicationApi = {
     applications,
@@ -163,5 +183,8 @@ export const applicationApi = {
     updateStage,
     createApplicationWithCascade,
     deleteApplication,
-    updateApplication
+    updateApplication,
+    generatePdf,
+    fees,
+    assignBd
 }

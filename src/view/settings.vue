@@ -68,8 +68,7 @@
         if (route.query.tab) {
             activeName.value = route.query.tab;
         }
-        userInfo.value = JSON.parse(localStorage.getItem("userInfo"))
-        console.log(userInfo.value)
+        getProfile()        
     });
 
     const saveSetting = async () => {
@@ -78,8 +77,9 @@
         } else if (activeName.value === "2") {
             const data = {
                 email: userInfo.value.email,
-                first_name: userInfo.value.name.split(' ')[0] || '',
-                last_name: userInfo.value.name.split(' ')[1] || ''
+                first_name: userInfo.value.first_name,
+                last_name: userInfo.value.last_name,
+                phone: userInfo.value.phone
             }
             const [err, res] = await api.putUser(userInfo.value.user_id, data)
             if (!err) {
@@ -92,6 +92,19 @@
             }
         } else {
             console.log("Current settings:", { ...notification.value })
+        }
+    }
+    const getProfile = async () => {
+        const [err, res] = await api.getProfile()
+        if (!err) {
+            console.log(res)
+            userInfo.value = res
+        } else {
+            console.log(err)
+            ElMessage.error({
+                message: err.message || 'Failed to get profile',
+                type: 'error'
+            });
         }
     }
 </script>

@@ -4,7 +4,7 @@
             <div class="title">
                 <div class="title_info">
                     <h1>{{ application.reference_number }}</h1>
-                    <h2>Created at: {{ application.created_at }}</h2>
+                    <h2>Created at: {{ application.created_at?.split('T')[0] }}</h2>
                     <p style="color: #2984DE">Application ID: {{ applicationId }}</p>
                 </div>
                 <div class="buttons">
@@ -12,7 +12,7 @@
                         <img src="/src/assets/icons/calculator.png" alt="action" />
                         Calculator
                     </button>
-                    <button class="pdf">
+                    <button class="pdf" @click="generatePdf">
                         <img src="/src/assets/icons/pdf.png" alt="action" />
                         Generate PDF
                     </button>
@@ -20,7 +20,7 @@
                         <img src="/src/assets/icons/note.png" alt="action" />
                         Note
                     </button>
-                    <button class="list">
+                    <button class="list" @click="showFee">
                         <img src="/src/assets/icons/list.png" alt="action" />
                         Fee List
                     </button>
@@ -30,6 +30,11 @@
                 <div class="title">
                     <h3>Stages</h3>
                     <div class="buttons">
+                        <el-select v-model="bdm" style="width: 160px;" placeholder="Assign to BD">
+                            <el-option v-for="item in bdms" :key="item.id" :label="item.name"
+                                :value="item.id" />
+                        </el-select>
+                        <button class="move" @click="assignBd">Assign</button>
                         <button class="move" @click="prevStage" :disabled="!hasPrev">Move to Previous Stage</button>
                         <button class="move" @click="nextStage" :disabled="!hasNext">Move to Next Stage</button>
                     </div>
@@ -82,6 +87,14 @@
                 @minimize="minimize"
             ></Note>
         </transition>
+        <transition name="slide-right-popup">
+            <Fee
+                v-if="fee"
+                :id="applicationId"
+                @close="closeFee"
+                @minimize="minimize"
+            ></Fee>
+        </transition>
     </div>
 </template>
 
@@ -101,6 +114,7 @@
     import Exit from '@/components/application/exit.vue';
     import Calculator from '@/components/popup/calculator.vue';
     import Note from '@/components/popup/note.vue';
+    import Fee from '@/components/popup/fee.vue';
     import { SuccessFilled } from '@element-plus/icons-vue';
 
     const route = useRoute()
@@ -142,6 +156,9 @@
     const activeInfo = ref(0)
     const calculator = ref(false)
     const note = ref(false)
+    const fee = ref(false)
+    const bdm = ref("")
+    const bdms = ref([])
 
     const currentIndex = computed(() =>
         stages.value.findIndex(s => s.status === 'processing')
@@ -151,6 +168,7 @@
 
     onMounted(() => {
         getApplication()
+        getBd()
     })
 
     const updateStages = (currentStageName) => {
@@ -179,17 +197,59 @@
             });
         }
     }
+    const generatePdf = async () => {
+        const [err, res] = await api.generatePdf(applicationId)
+        if (!err) {
+            console.log(res);
+        } else {
+            console.error(err)
+            ElMessage.error({
+                message: 'Failed to generate PDF',
+                type: 'error',
+            });
+        }
+    }
+    const getBd = async () => {
+        const [err, res] = await api.bdms()
+        if (!err) {
+            console.log(res)
+            bdms.value = res.results
+        } else {
+            console.error(err)
+        }
+    }
+    const assignBd = async () => {
+        const data = {
+            bd_id: bdm.value
+        }
+        const [err, res] = await api.assignBd(applicationId, data)
+        if (!err) {
+            console.log(res);
+        } else {
+            console.error(err)
+            ElMessage.error({
+                message: 'Failed to assign',
+                type: 'error',
+            });
+        }
+    }
     const showCalculator = () => {
         calculator.value = true
     }
     const showNote = () => {
         note.value = true
     }
+    const showFee = () => {
+        fee.value = true
+    }
     const closeCalculator = () => {
         calculator.value = false
     }
     const closeNote = () => {
         note.value = false
+    }
+    const closeFee = () => {
+        fee.value = false
     }
     const nextStage = async () => {
         const i = currentIndex.value

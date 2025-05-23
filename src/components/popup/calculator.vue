@@ -13,10 +13,19 @@
                     <h2>Funding Calculation Inputs <span class="required">*</span></h2>
                     <span class="hint">Parameters used to calculate funding details</span>
                 </div>
+                <div class="long_item">
+                    <h2>Total Loan Amount <span class="required">*</span></h2>
+                    <el-input v-model="detail.loan_amount" type="number" step="0.01" placeholder="e.g. 2.5" />
+                </div>
                 <div class="item">
                     <p>Establishment Fee Rate (%) <span class="required">*</span></p>
                     <el-input v-model="detail.establishment_fee_rate" type="number" step="0.01" placeholder="e.g. 2.5" />
                     <span class="hint">Percentage rate for establishment fee (max 3 digits before decimal)</span>
+                </div>
+                <div class="item">
+                    <p>Interest Rate (%) <span class="required">*</span></p>
+                    <el-input v-model="detail.interest_rate" type="number" step="0.01" placeholder="e.g. 2.5" />
+                    <span class="hint">Percentage rate for interest (max 3 digits before decimal)</span>
                 </div>
                 <div class="item">
                     <p>Capped Interest Months <span class="required">*</span></p>
@@ -37,6 +46,11 @@
                     <p>Application Fee ($) <span class="required">*</span></p>
                     <el-input v-model="detail.application_fee" type="number" placeholder="e.g. 500" />
                     <span class="hint">Fixed application fee amount (max 8 digits)</span>
+                </div>
+                <div class="item">
+                    <p>Security Value ($) <span class="required">*</span></p>
+                    <el-input v-model="detail.security_value" type="number" placeholder="e.g. 500" />
+                    <span class="hint">Fixed security value amount (max 8 digits)</span>
                 </div>
                 <div class="item">
                     <p>Due Diligence Fee ($) <span class="required">*</span></p>
@@ -131,7 +145,10 @@
         legal_fee_before_gst: 400,
         valuation_fee: 700,
         monthly_account_fee: 50,
-        working_fee: 0
+        working_fee: 0,
+        loan_amount: 10000,
+        interest_rate: 2.5,
+        security_value: 1000
     });
 
     const loading = ref(false);
@@ -163,7 +180,10 @@
             'due_diligence_fee',
             'legal_fee_before_gst',
             'valuation_fee',
-            'monthly_account_fee'
+            'monthly_account_fee',
+            'loan_amount',
+            'security_value',
+            'interest_rate'
         ];
 
         const missingFields = requiredFields.filter(field => {
@@ -187,7 +207,10 @@
             monthly_account_fee: Number(detail.value.monthly_account_fee),
             monthly_line_fee_rate: Number(detail.value.monthly_line_fee_rate),
             valuation_fee: Number(detail.value.valuation_fee),
-            working_fee: Number(detail.value.working_fee) || 0
+            working_fee: Number(detail.value.working_fee) || 0,
+            loan_amount: Number(detail.value.loan_amount) || 0,
+            security_value: Number(detail.value.security_value),
+            interest_rate: Number(detail.value.interest_rate),
         };
 
         loading.value = true;
@@ -213,7 +236,7 @@
 
     // Initialize calculation with default values on mount
     onMounted(() => {
-        calculate();
+
     });
 </script>
 
