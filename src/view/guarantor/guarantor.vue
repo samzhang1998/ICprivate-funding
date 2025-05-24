@@ -1,7 +1,7 @@
 <template>
     <div class="guarantor">
         <div class="title">
-            <h1>{{ guarantor.name }}</h1>
+            <h1>{{ guarantor.name || '-'}}</h1>
             <h2>{{ guarantor.date }}</h2>
             <p style="color: #2984DE">Guarantor ID: {{ guarantorId }}</p>
         </div>
@@ -13,39 +13,39 @@
                 <div class="tab">
                     <div class="info">
                         <p style="color: #7A858E">Guarantor Name</p>
-                        <p>{{ overview.name }}</p>
+                        <p>{{ overview.name || '-' }}</p>
                     </div>
                     <div class="info">
                         <p style="color: #7A858E">Guarantor Address</p>
-                        <p>{{ overview.address }}</p>
+                        <p>{{ overview.address || '-' }}</p>
                     </div>
                     <div class="info">
                         <p style="color: #7A858E">Phone Number</p>
-                        <p>{{ overview.phone }}</p>
+                        <p>{{ overview.phone || '-' }}</p>
                     </div>
                     <div class="info">
                         <p style="color: #7A858E">Email Address</p>
-                        <p>{{ overview.email }}</p>
+                        <p>{{ overview.email || '-' }}</p>
                     </div>
                     <div class="info">
                         <p style="color: #7A858E">Relationship to Borrower</p>
-                        <p>{{ overview.relationship }}</p>
+                        <p>{{ overview.relationship || '-' }}</p>
                     </div>
                     <div class="info">
                         <p style="color: #7A858E">Date of Birth</p>
-                        <p>{{ overview.birth }}</p>
+                        <p>{{ overview.birth || '-' }}</p>
                     </div>
                     <div class="info">
                         <p style="color: #7A858E">Employment Status</p>
-                        <p>{{ overview.status }}</p>
+                        <p>{{ overview.status || '-' }}</p>
                     </div>
                     <div class="info">
                         <p style="color: #7A858E">Annual Income</p>
-                        <p>{{ overview.income }}</p>
+                        <p>{{ overview.income || '-' }}</p>
                     </div>
                     <div class="info">
                         <p style="color: #7A858E">Credit Score</p>
-                        <p>{{ overview.score }}</p>
+                        <p>{{ overview.score || '-' }}</p>
                     </div>
                 </div>
             </el-tab-pane>
@@ -148,6 +148,7 @@
         margin: 0;
     }
     p {
+        color: #000;
         font-feature-settings: 'liga' off, 'clig' off;
         font-size: 0.75rem;
         font-style: normal;

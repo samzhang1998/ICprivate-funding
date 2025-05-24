@@ -173,6 +173,7 @@
         margin: 0;
     }
     p {
+        color: #000;
         font-feature-settings: 'liga' off, 'clig' off;
         font-size: 0.75rem;
         font-style: normal;
