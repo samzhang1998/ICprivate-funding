@@ -278,12 +278,36 @@ onMounted(() => {
 
 // Methods
 const fetchUsers = async () => {
-  await getUsers({
-    search: searchForm.search,
-    role: searchForm.role,
-    page: searchForm.page,
-    page_size: searchForm.pageSize
-  });
+  // Create a custom filter function to filter users by role client-side
+  const queryParams = {};
+      
+  // Only add parameters that have values
+  if (searchForm.search) {
+    queryParams.search = searchForm.search;
+  }
+  
+  // Don't include role in API params, we'll filter client-side
+  
+  if (searchForm.page) {
+    queryParams.page = searchForm.page;
+  }
+  
+  if (searchForm.pageSize) {
+    queryParams.page_size = searchForm.pageSize;
+  }
+  
+  console.log('Fetching users with params:', queryParams);
+  const [err, data] = await getUsers(queryParams);
+  
+  if (!err && data && data.results) {
+    // If role filter is active, filter the results client-side
+    if (searchForm.role) {
+      console.log('Filtering users by role client-side:', searchForm.role);
+      const filteredUsers = data.results.filter(user => user.role === searchForm.role);
+      users.value = filteredUsers;
+      total.value = filteredUsers.length;
+    }
+  }
 };
 
 const handleSearch = () => {

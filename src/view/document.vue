@@ -261,10 +261,20 @@
     const loadDocuments = async () => {
         try {
             loading.value = true
-            const [error, data] = await api.getDocuments({
-                search: searchedApplication.value,
-                document_type: selectedDoc.value
-            });
+            
+            // Build query parameters object
+            const params = {};
+            
+            // Only add parameters if they have values
+            if (searchedApplication.value) {
+                params.search = searchedApplication.value;
+            }
+            
+            if (selectedDoc.value) {
+                params.document_type = selectedDoc.value;
+            }
+            
+            const [error, data] = await api.getDocuments(params);
             
             if (error) {
                 ElMessage.error('Failed to fetch documents');
@@ -272,8 +282,13 @@
                 return;
             }
             
-            docs.value = data.results
-            console.log(docs.value)
+            if (data && data.results) {
+                docs.value = data.results;
+                console.log('Documents loaded:', docs.value);
+            } else {
+                docs.value = [];
+                console.warn('No documents found or invalid response format');
+            }
         } catch (error) {
             handleError(error)
         } finally {

@@ -12,20 +12,38 @@ export function useUsers() {
     const getUsers = async (params) => {
         loading.value = true
         try {
-            const [err, res] = await api.users(params)
-            if (!err && res) {
-                users.value = res.results || []
-                total.value = res.count || 0
-                return [null, res]
+            // Create a clean params object with only defined values
+            const cleanParams = {};
+            
+            // Only add parameters that have values
+            if (params) {
+                Object.keys(params).forEach(key => {
+                    if (params[key] !== undefined && params[key] !== null && params[key] !== '') {
+                        cleanParams[key] = params[key];
+                    }
+                });
             }
-            ElMessage.error(err?.message || 'Failed to fetch users')
-            return [err, null]
+            
+            console.log('Fetching users with params:', cleanParams);
+            
+            const [err, res] = await api.users(cleanParams);
+            
+            if (!err && res) {
+                users.value = res.results || [];
+                total.value = res.count || 0;
+                console.log('Users fetched successfully:', users.value.length, 'Total:', total.value);
+                return [null, res];
+            }
+            
+            console.error('API Error:', err);
+            ElMessage.error(err?.message || err?.detail || 'Failed to fetch users');
+            return [err, null];
         } catch (error) {
-            console.error('Error fetching users:', error)
-            ElMessage.error('An error occurred while fetching users')
-            return [error, null]
+            console.error('Error fetching users:', error);
+            ElMessage.error('An error occurred while fetching users');
+            return [error, null];
         } finally {
-            loading.value = false
+            loading.value = false;
         }
     }
 
