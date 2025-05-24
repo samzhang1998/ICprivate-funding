@@ -24,15 +24,15 @@
                 <el-table-column type="selection" align="center" width="50" fixed />
                 <el-table-column prop="id" label="BDM ID" sortable="" width="120" />
                 <el-table-column prop="name" label="BDM Name" width="139" />
-                <el-table-column prop="branch" label="Address" min-width="150">
+                <el-table-column prop="branch" label="Branch Address" min-width="150">
                     <template #default="scope">
-                        <span>{{ scope.row.branch.address }}</span>
+                        <span>{{ scope.row.branch?.address }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="phone" label="Phone" width="120" />
                 <el-table-column prop="branch" label="Branch" width="130">
                     <template #default="scope">
-                        <span>{{ scope.row.branch.name }}</span>
+                        <span>{{ scope.row.branch?.name }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="email" label="Email Address" min-width="130" />
@@ -151,7 +151,6 @@ const getBdms = async () => {
     }
 }
 const toBdm = () => {
-    // router.push(`/bdm/1`)
     getBdms()
 }
 

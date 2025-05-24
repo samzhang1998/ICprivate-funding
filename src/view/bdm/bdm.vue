@@ -17,7 +17,7 @@
                     </div>
                     <div class="info">
                         <p style="color: #7A858E">Branch</p>
-                        <p class="text">{{ overview.branch.name }}</p>
+                        <p class="text">{{ overview.branch?.name }}</p>
                     </div>
                     <div class="info">
                         <p style="color: #7A858E">Phone Number</p>

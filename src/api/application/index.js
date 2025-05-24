@@ -168,7 +168,7 @@ export function fees(params) {
 export function assignBd(params, data) {
     return sendRequest({
         url: `/api/applications/applications/${params}/assign_bd/`,
-        method: 'post',
+        method: 'put',
         data: data
     })
 }

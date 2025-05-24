@@ -31,7 +31,7 @@
                     <h3>Stages</h3>
                     <div class="buttons">
                         <el-select v-model="bdm" style="width: 160px;" placeholder="Assign to BD">
-                            <el-option v-for="item in bdms" :key="item.id" :label="item.name"
+                            <el-option v-for="item in bdms" :key="item.id" :label="item.first_name"
                                 :value="item.id" />
                         </el-select>
                         <button class="move" @click="assignBd">Assign</button>
@@ -210,10 +210,12 @@
         }
     }
     const getBd = async () => {
-        const [err, res] = await api.bdms()
+        const [err, res] = await api.users()
         if (!err) {
             console.log(res)
-            bdms.value = res.results
+            bdms.value = res.results.filter(item =>
+                item.role === 'bd'
+            )
         } else {
             console.error(err)
         }

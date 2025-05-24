@@ -1,7 +1,7 @@
 <template>
     <div class="nav">
         <div class="top">
-            <img src="/src/assets/logo.png" alt="logo" class="logo" />
+            <img src="/src/assets/logo.png" alt="logo" class="logo" @click="toHome" />
             <template v-for="item in topList" :key="item.path">
                 <div class="menu" 
                     :class="{active: item.path === '/' ? $route.path.startsWith('/dashboard') : $route.path.startsWith(item.path)}" 
@@ -52,6 +52,9 @@ const toPage = (page) => {
     setTagViewList(tag)
     router.push(page.path)
 }
+const toHome = () => {
+    router.push('/')
+}
 </script>
 
 <style scoped>
@@ -67,6 +70,7 @@ const toPage = (page) => {
     width: 65%;
     margin-top: 27px;
     margin-bottom: 15px;
+    cursor: pointer;
 }
 
 .top {
