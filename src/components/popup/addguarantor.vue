@@ -23,8 +23,12 @@
         <div class="section">
           <h2>Basic Information</h2>
           <div class="fields">
-            <el-form-item label="Full Name" prop="name" required>
-              <el-input v-model="form.name" placeholder="Enter full name" />
+            <el-form-item label="First Name" prop="first_name" required>
+              <el-input v-model="form.first_name" placeholder="Enter first name" />
+            </el-form-item>
+            
+            <el-form-item label="Last Name" prop="last_name" required>
+              <el-input v-model="form.last_name" placeholder="Enter last name" />
             </el-form-item>
             
             <el-form-item label="Date of Birth" prop="date_of_birth" required>
@@ -76,9 +80,8 @@
               <el-select v-model="form.employment_type" placeholder="Select employment type">
                 <el-option label="Full-time" value="full_time" />
                 <el-option label="Part-time" value="part_time" />
-                <el-option label="Self-employed" value="self_employed" />
-                <el-option label="Unemployed" value="unemployed" />
-                <el-option label="Retired" value="retired" />
+                <el-option label="Casual" value="casual" />
+                <el-option label="Contract" value="contract" />
               </el-select>
             </el-form-item>
 
@@ -171,7 +174,8 @@ const loading = ref(false);
 const isEdit = computed(() => props.action.startsWith('Edit'));
 
 const form = ref({
-  name: '',
+  first_name: '',
+  last_name: '',
   date_of_birth: '',
   email: '',
   phone: '',
@@ -185,11 +189,13 @@ const form = ref({
   years_with_employer: null,
   relationship: '',
   relationship_other: '',
+  guarantor_type: 'individual',
   ...props.guarantorData
 });
 
 const rules = {
-  name: [{ required: true, message: 'Please enter full name', trigger: 'blur' }],
+  first_name: [{ required: true, message: 'Please enter first name', trigger: 'blur' }],
+  last_name: [{ required: true, message: 'Please enter last name', trigger: 'blur' }],
   date_of_birth: [{ required: true, message: 'Please select date of birth', trigger: 'change' }],
   email: [
     { required: true, message: 'Please enter email address', trigger: 'blur' },
@@ -226,9 +232,62 @@ const handleSubmit = async () => {
 
     // Prepare form data
     const formData = { ...form.value };
+    
+    // Format date_of_birth to YYYY-MM-DD string format
+    if (formData.date_of_birth) {
+      const date = new Date(formData.date_of_birth);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      formData.date_of_birth = `${year}-${month}-${day}`;
+    }
+    
+    // Convert annual_income to string if it exists
+    if (formData.annual_income !== null && formData.annual_income !== undefined) {
+      formData.annual_income = formData.annual_income.toString();
+    }
+    
+    // Convert years_with_employer to string if it exists
+    if (formData.years_with_employer !== null && formData.years_with_employer !== undefined) {
+      formData.years_with_employer = formData.years_with_employer.toString();
+    }
+    
+    // Set guarantor_type if not already set
+    if (!formData.guarantor_type) {
+      formData.guarantor_type = 'individual';
+    }
+    
+    // Map address fields to API expected format
+    if (formData.address) {
+      formData.address_street_name = formData.address;
+      delete formData.address;
+    }
+    
+    if (formData.city) {
+      formData.address_suburb = formData.city;
+      delete formData.city;
+    }
+    
+    if (formData.state) {
+      formData.address_state = formData.state;
+      delete formData.state;
+    }
+    
+    if (formData.postal_code) {
+      formData.address_postcode = formData.postal_code;
+      delete formData.postal_code;
+    }
+    
+    if (formData.phone) {
+      formData.mobile = formData.phone;
+    }
+    
     if (formData.relationship !== 'other') {
       delete formData.relationship_other;
     }
+
+    // For debugging
+    console.log('Submitting guarantor data:', formData);
 
     // Make API call
     const [error, response] = isEdit.value
@@ -236,6 +295,7 @@ const handleSubmit = async () => {
       : await api.createGuarantor(formData);
 
     if (error) {
+      console.error('API Error:', error);
       throw error;
     }
 
@@ -247,6 +307,7 @@ const handleSubmit = async () => {
     emit('refresh');
     emit('close');
   } catch (error) {
+    console.error('Form submission error:', error);
     ElMessage.error({
       message: error.message || 'An error occurred. Please try again.',
       type: 'error'
