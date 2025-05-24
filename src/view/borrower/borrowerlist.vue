@@ -6,21 +6,21 @@
                     <h1>Search</h1>
                     <el-input v-model="selected.search" style="width: 200px" placeholder="Search..." />
                 </div>
-                <div class="filter">
+                <!-- <div class="filter">
                     <h1>Location</h1>
                     <el-select v-model="selectedLocation" placeholder="Select Location" style="width: 200px">
                         <el-option v-for="item in locations" :key="item.value" :label="item.label"
                             :value="item.value" />
                     </el-select>
-                </div>
+                </div> -->
                 <div class="filter">
-                    <h1>Income Type</h1>
-                    <el-select v-model="selectedincome" placeholder="Select Income Type" style="width: 200px">
-                        <el-option v-for="item in incomes" :key="item.value" :label="item.label" :value="item.value" />
+                    <h1>Borrower Type</h1>
+                    <el-select v-model="selected.is_company" placeholder="Select Borrower Type" style="width: 200px">
+                        <el-option v-for="item in types" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
                 </div>
                 <Search @click="toBorrower"></Search>
-                <Clear></Clear>
+                <Clear @click="handleClear"></Clear>
             </div>
             <Create :action="action" @click="addBroker"></Create>
         </div>
@@ -43,7 +43,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="phone" label="Phone" width="130" />
-                <el-table-column prop="broker" label="Broker" min-width="120" />
+                <el-table-column prop="is_company" label="Company Borrower" min-width="150" />
                 <el-table-column prop="email" label="Email Address" min-width="200" />
                 <!-- <el-table-column prop="state" label="State" width="160" /> -->
                 <el-table-column label="Action" align="center" width="60" fixed="right">
@@ -117,13 +117,14 @@ const locations = ref([
     { value: "1", label: "1" },
     { value: "2", label: "2" }
 ])
-const incomes = ref([
-    { value: "1", label: "1" },
-    { value: "2", label: "2" }
+const types = ref([
+    { value: true, label: "Company" },
+    { value: false, label: "Individual" }
 ])
 const selected = ref({
     search: "",
     page: 1,
+    is_company: null
 })
 const selectedLocation = ref("")
 const selectedincome = ref("")
@@ -160,7 +161,10 @@ const getBorrowers = async () => {
     }
 }
 const toBorrower = () => {
-    // router.push(`/borrower/1`)
+    getBorrowers()
+}
+const handleClear = () => {
+    selected.value = {page: 1}
     getBorrowers()
 }
 const addBroker = () => {

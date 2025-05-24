@@ -6,7 +6,7 @@
                     <h1>Search</h1>
                     <el-input v-model="selected.search" style="width: 200px" placeholder="Search..." />
                 </div>
-                <div class="filter">
+                <!-- <div class="filter">
                     <h1>Location</h1>
                     <el-select v-model="selectedLocation" placeholder="Select Location" style="width: 200px">
                         <el-option
@@ -16,12 +16,12 @@
                             :value="item.value"
                         />
                     </el-select>
-                </div>
+                </div> -->
                 <div class="filter">
-                    <h1>Income Type</h1>
-                    <el-select v-model="selectedincome" placeholder="Select Income Type" style="width: 200px">
+                    <h1>Guarantor Type</h1>
+                    <el-select v-model="selected.guarantor_type" placeholder="Select Guarantor Type" style="width: 200px">
                         <el-option
-                            v-for="item in incomes"
+                            v-for="item in types"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value"
@@ -29,7 +29,7 @@
                     </el-select>
                 </div>
                 <Search @click="toGuarantor"></Search>
-                <Clear></Clear>
+                <Clear @click="handleClear"></Clear>
             </div>
             <Create :action="action" @click="addGuarantor"></Create>
         </div>
@@ -136,47 +136,20 @@
         {value: "1", label: "1"},
         {value: "2", label: "2"}
     ])
-    const incomes = ref([
-        {value: "1", label: "1"},
-        {value: "2", label: "2"}
+    const types = ref([
+        {value: "individual", label: "Individual"},
+        {value: "company", label: "Company"}
     ])
     const selected = ref({
         search: "",
-        page: 1
+        page: 1,
+        guarantor_type: ""
     })
     const selectedLocation = ref("")
     const selectedincome = ref("")
     const action = ref("Create Guarantor")
     const popupAction = ref("")
-    const guarantors = ref([
-        {
-            id: 11111,
-            name: "Broker Name",
-            address: "address",
-            phone: "0000 000 0000",
-            relationship: "Riley Smith",
-            email: "rileysmith@example.com",
-            state: "Xxx",
-        },
-        {
-            id: 22222,
-            name: "Broker Name",
-            address: "address",
-            phone: "0000 000 0000",
-            relationship: "Riley Smith",
-            email: "rileysmith@example.com",
-            state: "Xxx",
-        },
-        {
-            id: 33333,
-            name: "Broker Name",
-            address: "address",
-            phone: "0000 000 0000",
-            relationship: "Riley Smith",
-            email: "rileysmith@example.com",
-            state: "Xxx",
-        }
-    ])
+    const guarantors = ref([])
     const pageSize = 2
     const guarantorListTable = ref()
     const selectedItem = ref([])
@@ -204,7 +177,11 @@
         }
     }
     const toGuarantor = () => {
-        router.push(`/guarantor/1`)
+        getGuarantors()
+    }
+    const handleClear = () => {
+        selected.value = {page: 1}
+        getGuarantors()
     }
     const addGuarantor = () => {
         popupAction.value = "Add Guarantor"
