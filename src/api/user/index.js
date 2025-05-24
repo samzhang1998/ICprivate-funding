@@ -19,6 +19,14 @@ export function logout(params) {
 
 // User Management
 export function users(params) {
+  // Log the actual parameters being sent to the API
+  console.log('API call to /api/users/users/ with params:', params);
+  
+  // Ensure role parameter is correctly formatted if present
+  if (params && params.role) {
+    console.log('Role filter being applied:', params.role);
+  }
+  
   return sendRequest({
     url: '/api/users/users/',
     method: 'get',

@@ -16,6 +16,14 @@ const sendRequest = axios.create({
 // 添加请求拦截器
 sendRequest.interceptors.request.use(
   async (config) => {
+    // Log the request configuration for debugging
+    console.log('Request config:', {
+      url: config.url,
+      method: config.method,
+      params: config.params,
+      data: config.data
+    });
+    
     // 发送之前 处理请求头等信息
     let userInfo = localStorage.getItem('userInfo')
     if (userInfo) {
