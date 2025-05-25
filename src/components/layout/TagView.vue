@@ -29,18 +29,24 @@ const handleShowView = (item, index) => {
 </script>
 
 <template>
-    <div class="tag-view">
-        <div :class="selectTagView === index ? 'item active' : 'item'" v-for="(item, index) in tagViewList" :key="index"
-            @click="handleShowView(item, index)">
-            {{ item?.name || '' }}
-            <el-icon class="icon" @click.prevent.stop="closeTag(item)">
-                <Close />
-            </el-icon>
+    <el-scrollbar class="scroll-view">
+        <div class="tag-view">
+            <div :class="selectTagView === index ? 'item active' : 'item'" v-for="(item, index) in tagViewList"
+                :key="index" @click="handleShowView(item, index)">
+                {{ item?.name || '' }}
+                <el-icon class="icon" @click.prevent.stop="closeTag(item)">
+                    <Close />
+                </el-icon>
+            </div>
         </div>
-    </div>
+    </el-scrollbar>
 </template>
 
 <style lang="scss" scoped>
+.scroll-view {
+    height: 30px;
+}
+
 .tag-view {
     width: 100%;
     height: 30px;
