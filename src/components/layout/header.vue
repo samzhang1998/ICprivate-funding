@@ -12,7 +12,7 @@
         <div class="tool">
             <div class="search">
                 <img src="/src/assets/icons/search.png" alt="search" />
-                <input placeholder="search..." />
+                <input v-model="search" @keyup.enter="onEnter" placeholder="search..." />
             </div>
             <el-select class="language" v-model="language" size="large" placeholder="" @change="handleLanguageChange">
                 <template #prefix>
@@ -75,7 +75,7 @@ const user = ref({
     location: 'Sydney CBD',
     role: 'Admin'
 })
-
+const search = ref("")
 const language = ref('en')
 const { handleLanguageChange } = useLocale()
 
@@ -89,6 +89,14 @@ const pageTitle = computed(() => route.meta.title || '')
 const breadcrumbs = computed(() => route.meta.breadcrumb || [])
 const goToSetting = () => {
     router.push({ path: '/setting', query: { tab: 'second' } })
+}
+const onEnter = () => {
+    if (!search.value) return
+    router.push({
+        path: '/application/index',
+        query: { search: search.value }
+    })
+    search.value = ""
 }
 </script>
 

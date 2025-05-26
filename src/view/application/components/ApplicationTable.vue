@@ -49,7 +49,7 @@
 <template>
     <el-table :data="paginatedData" class="table" :header-cell-style="{ background: '#f8f8f8', color: '#272727' }">
         <el-table-column type="selection" width="50" align="center" fixed />
-        <el-table-column prop="id" label="Case Id" sortable width="100" />
+        <el-table-column prop="reference_number" label="Reference Number" sortable width="200" />
         <el-table-column prop="borrower_name" label="Borrower" width="150" />
         <el-table-column prop="stage" label="Status" width="150" />
         <el-table-column prop="bdm_name" label="BDM" width="100" />

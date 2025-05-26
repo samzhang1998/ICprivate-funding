@@ -210,7 +210,7 @@
         router.push(`/guarantor/${row.id}`)
     }
     const handleEdit = (row) => {
-        popupAction.value = `Edit ${row.name}`;
+        popupAction.value = `Edit ${row.id}`;
         editData.value = { ...row };
         popup.value = true;
     }

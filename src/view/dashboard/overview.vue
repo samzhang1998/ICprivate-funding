@@ -84,13 +84,13 @@ const toAddNote = () => {
         <h1>Active Loans</h1>
         <div class="num">{{ dashboard.total_active }}</div>
         <p>Active Loans</p>
-        <button>View Active Loans</button>
+        <button @click="toPage('application')">View Active Loans</button>
       </div>
       <div class="card">
         <h1>Total Loan Value</h1>
         <div class="num">${{ volume.total_loan_amount }}</div>
         <p>Total Loan Value</p>
-        <button>View Loan Value</button>
+        <button @click="toPage('application')">View Loan Value</button>
       </div>
       <div class="card">
         <h1>Repayment</h1>
@@ -127,10 +127,10 @@ const toAddNote = () => {
             <img src="/src/assets/icons/quick_act_3.png" alt="act" />
             Upload Document
           </button>
-          <button class="quick_act1" @click="toAddNote">
+          <!-- <button class="quick_act1" @click="toAddNote">
             <img src="/src/assets/icons/quick_act_4.png" alt="act" />
             Add Note
-          </button>
+          </button> -->
         </div>
       </div>
       <!-- <div class="box">

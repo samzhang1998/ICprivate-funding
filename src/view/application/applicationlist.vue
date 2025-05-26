@@ -1,12 +1,12 @@
 <template>
     <div class="application">
-        <!-- <div class="filters">
+        <div class="filters">
             <div class="left">
                 <div class="filter">
                     <h1>Search</h1>
                     <el-input v-model="selected.search" style="width: 180px" placeholder="Search..." />
                 </div>
-                <div class="filter">
+                <!-- <div class="filter">
                     <h1>Location</h1>
                     <el-select v-model="selectedLocation" placeholder="Select Location" style="width: 180px">
                         <el-option v-for="item in locations" :key="item.value" :label="item.label"
@@ -23,14 +23,15 @@
                     <el-date-picker v-model="dateRange" type="daterange" start-placeholder="start" end-placeholder="end"
                         format="DD MMM" value-format="YYYY-MM-DD" :prefix-icon="Calendar" clearable
                         style="width: 180px;" />
-                </div>
+                </div> -->
                 <Search @click="toApplication"></Search>
-                <Clear></Clear>
-            </div>            
-        </div> -->
-        <div class="create">
-            <Create :action="action" @click="addApplication"></Create>
+                <Clear @click="handleClear"></Clear>
+            </div>
+            <Create :action="action" @click="addApplication"></Create>            
         </div>
+        <!-- <div class="create">
+            <Create :action="action" @click="addApplication"></Create>
+        </div> -->
         <div class="container">
             <div class="tabs-scroll">
                 <el-scrollbar>
@@ -92,7 +93,7 @@ import DeleteButton from '@/components/buttons/delete.vue';
 import { Pagination } from '@/components'
 import { ApplicationTable } from './components'
 
-const router = useRouter()
+const route = useRoute()
 const popup = ref(false)
 const isEditMode = ref(false)
 const editApplicationId = ref(null)
@@ -146,12 +147,20 @@ const selectAll = ref(false)
 const isSelected = ref(false)
 
 onActivated(() => {
-    getApplications()    
+    getApplications()
+    if (route.query.search) {
+        selected.value.search = route.query.search
+        getApplications()
+    }    
 })
 
-// const toApplication = () => {
-//     router.push(`/application/1`)
-// }
+const toApplication = () => {
+    getApplications()
+}
+const handleClear = () => {
+    selected.value = ({page: 1})
+    getApplications()
+}
 const addApplication = () => {
     popupAction.value = "Add Application";
     isEditMode.value = false;
@@ -168,7 +177,7 @@ const minimize = () => {
 }
 
 const getApplications = async () => {
-    const [err, res] = await api.applications(selected.page)
+    const [err, res] = await api.applications(selected.value)
     if (!err) {
         console.log(res);
         paginationInfo.value.total = res.count
