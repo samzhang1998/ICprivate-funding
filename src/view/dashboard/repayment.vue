@@ -61,6 +61,8 @@ const itemClass = (index) => {
 }
 const selected = ref({
     search: "",
+    due_after: "",
+    due_before: "",
     page: 1
 })
 
@@ -71,7 +73,9 @@ onMounted(() => {
 
 const getRepayments = async () => {
     loading.value = true
-    const [err, res] = await api.repayments()
+    selected.value.due_after = dateRange.value[0]
+    selected.value.due_before = dateRange.value[1]
+    const [err, res] = await api.repayments(selected.value)
     if (!err) {
         console.log(res);
         repayments.value = res?.results || []
@@ -112,7 +116,7 @@ const close = () => {
 }
 
 const handleSearch = () => {
-    // Implement search functionality
+    console.log(dateRange.value)
     getRepayments()
 }
 

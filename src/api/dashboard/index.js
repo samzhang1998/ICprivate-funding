@@ -24,10 +24,11 @@ export function repaymentCompliance(params) {
   });
 }
 
-export function repayments() {
+export function repayments(params) {
   return sendRequest({
     url: "/api/documents/repayments/",
     method: "get",
+    params,
   });
 }
 
