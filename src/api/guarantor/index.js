@@ -27,11 +27,20 @@ export const guarantorApi = {
     });
   },
 
-  // Update a guarantor
+  // Update a guarantor (PUT method - full update)
   updateGuarantor: async (id, data) => {
     return sendRequest({
       url: `/api/borrowers/guarantors/${id}/`,
       method: 'put',
+      data
+    });
+  },
+
+  // Partially update a guarantor (PATCH method)
+  patchGuarantor: async (id, data) => {
+    return sendRequest({
+      url: `/api/borrowers/guarantors/${id}/`,
+      method: 'patch',
       data
     });
   },

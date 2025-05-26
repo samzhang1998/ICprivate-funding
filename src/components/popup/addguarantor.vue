@@ -136,6 +136,36 @@
             >
               <el-input v-model="form.relationship_other" placeholder="Please specify relationship" />
             </el-form-item>
+            
+            <el-form-item label="Related Borrower" prop="borrower_id">
+              <el-select 
+                v-model="form.borrower_id" 
+                placeholder="Select related borrower"
+                filterable
+              >
+                <el-option 
+                  v-for="borrower in borrowerOptions" 
+                  :key="borrower.id" 
+                  :label="borrower.name" 
+                  :value="borrower.id" 
+                />
+              </el-select>
+            </el-form-item>
+            
+            <el-form-item label="Related Application" prop="application_id">
+              <el-select 
+                v-model="form.application_id" 
+                placeholder="Select related application"
+                filterable
+              >
+                <el-option 
+                  v-for="application in applicationOptions" 
+                  :key="application.id" 
+                  :label="application.name" 
+                  :value="application.id" 
+                />
+              </el-select>
+            </el-form-item>
           </div>
         </div>
 
@@ -151,7 +181,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { api } from '@/api';
 
@@ -163,6 +193,14 @@ const props = defineProps({
   guarantorData: {
     type: Object,
     default: () => ({})
+  },
+  borrowerId: {
+    type: [String, Number],
+    default: null
+  },
+  applicationId: {
+    type: [String, Number],
+    default: null
   }
 });
 
@@ -170,6 +208,10 @@ const emit = defineEmits(['close', 'minimize', 'refresh']);
 
 const formRef = ref(null);
 const loading = ref(false);
+const loadingBorrowers = ref(false);
+const loadingApplications = ref(false);
+const borrowerOptions = ref([]);
+const applicationOptions = ref([]);
 
 const isEdit = computed(() => props.action.startsWith('Edit'));
 
@@ -190,6 +232,8 @@ const form = ref({
   relationship: '',
   relationship_other: '',
   guarantor_type: 'individual',
+  borrower_id: props.borrowerId || null,
+  application_id: props.applicationId || null,
   ...props.guarantorData
 });
 
@@ -222,6 +266,82 @@ const rules = {
     }
   }]
 };
+
+// Load all borrowers
+const loadAllBorrowers = async () => {
+  loadingBorrowers.value = true;
+  try {
+    const [error, response] = await api.borrowers();
+    if (error) {
+      console.error('Error loading borrowers:', error);
+      return;
+    }
+    
+    borrowerOptions.value = response.results.map(borrower => ({
+      id: borrower.id,
+      name: `${borrower.first_name || ''} ${borrower.last_name || ''}`.trim() || 'Unnamed Borrower'
+    }));
+  } catch (error) {
+    console.error('Error loading borrowers:', error);
+  } finally {
+    loadingBorrowers.value = false;
+  }
+};
+
+// Load all applications
+const loadAllApplications = async () => {
+  loadingApplications.value = true;
+  try {
+    const [error, response] = await api.applications();
+    if (error) {
+      console.error('Error loading applications:', error);
+      return;
+    }
+    
+    applicationOptions.value = response.results.map(application => ({
+      id: application.id,
+      name: `Application #${application.id} - ${application.borrower_name || 'Untitled'}`
+    }));
+  } catch (error) {
+    console.error('Error loading applications:', error);
+  } finally {
+    loadingApplications.value = false;
+  }
+};
+
+// Load related data if editing
+const loadRelatedData = async () => {
+  if (isEdit.value && props.guarantorData.id) {
+    try {
+      // Load related borrowers
+      const [borrowerError, borrowerResponse] = await api.getGuarantorBorrowers(props.guarantorData.id);
+      if (!borrowerError && borrowerResponse.results && borrowerResponse.results.length > 0) {
+        const borrower = borrowerResponse.results[0];
+        form.value.borrower_id = borrower.id;
+      }
+      
+      // Load related applications
+      const [appError, appResponse] = await api.getGuarantorApplications(props.guarantorData.id);
+      if (!appError && appResponse.results && appResponse.results.length > 0) {
+        const application = appResponse.results[0];
+        form.value.application_id = application.id;
+      }
+    } catch (error) {
+      console.error('Error loading related data:', error);
+    }
+  }
+};
+
+onMounted(() => {
+  // Load all borrowers and applications
+  loadAllBorrowers();
+  loadAllApplications();
+  
+  // Load related data if editing
+  if (isEdit.value) {
+    loadRelatedData();
+  }
+});
 
 const handleSubmit = async () => {
   if (!formRef.value) return;
@@ -286,23 +406,48 @@ const handleSubmit = async () => {
       delete formData.relationship_other;
     }
 
+    // Extract relationship data
+    const borrowerId = formData.borrower_id;
+    const applicationId = formData.application_id;
+    
+    // Add borrower and application IDs directly to the guarantor data
+    // The API will handle the relationships
+    formData.borrower = borrowerId;
+    formData.application = applicationId;
+    
+    delete formData.borrower_id;
+    delete formData.application_id;
+
     // For debugging
     console.log('Submitting guarantor data:', formData);
 
-    // Make API call
-    const [error, response] = isEdit.value
-      ? await api.updateGuarantor(props.guarantorData.id, formData)
-      : await api.createGuarantor(formData);
-
-    if (error) {
-      console.error('API Error:', error);
-      throw error;
+    // Make API call to create/update guarantor
+    let guarantorId;
+    if (isEdit.value) {
+      const [error, response] = await api.guarantorApi.updateGuarantor(props.guarantorData.id, formData);
+      if (error) {
+        console.error('API Error:', error);
+        throw error;
+      }
+      guarantorId = props.guarantorData.id;
+      
+      ElMessage.success({
+        message: 'Guarantor successfully updated!',
+        type: 'success'
+      });
+    } else {
+      const [error, response] = await api.guarantorApi.createGuarantor(formData);
+      if (error) {
+        console.error('API Error:', error);
+        throw error;
+      }
+      guarantorId = response.id;
+      
+      ElMessage.success({
+        message: 'Guarantor successfully created!',
+        type: 'success'
+      });
     }
-
-    ElMessage.success({
-      message: `Guarantor successfully ${isEdit.value ? 'updated' : 'created'}!`,
-      type: 'success'
-    });
 
     emit('refresh');
     emit('close');

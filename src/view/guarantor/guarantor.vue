@@ -49,6 +49,65 @@
                     </div>
                 </div>
             </el-tab-pane>
+            <el-tab-pane name="2">
+                <template #label>
+                    <div class="label">Related Borrowers</div>
+                </template>
+                <div class="tab">
+                    <el-table 
+                        v-loading="loadingBorrowers"
+                        :data="relatedBorrowers"
+                        style="width: 100%"
+                        empty-text="No related borrowers found"
+                    >
+                        <el-table-column prop="id" label="ID" width="80" />
+                        <el-table-column prop="name" label="Borrower Name" />
+                        <el-table-column prop="relationship" label="Relationship" />
+                        <el-table-column prop="email" label="Email" />
+                        <el-table-column prop="phone" label="Phone" />
+                        <el-table-column label="Actions" width="120">
+                            <template #default="scope">
+                                <el-button 
+                                    type="primary" 
+                                    size="small" 
+                                    @click="viewBorrower(scope.row.id)"
+                                >
+                                    View
+                                </el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane name="3">
+                <template #label>
+                    <div class="label">Related Applications</div>
+                </template>
+                <div class="tab">
+                    <el-table 
+                        v-loading="loadingApplications"
+                        :data="relatedApplications"
+                        style="width: 100%"
+                        empty-text="No related applications found"
+                    >
+                        <el-table-column prop="id" label="ID" width="80" />
+                        <el-table-column prop="title" label="Application Title" />
+                        <el-table-column prop="status" label="Status" />
+                        <el-table-column prop="created_at" label="Created Date" />
+                        <el-table-column label="Actions" width="120">
+                            <template #default="scope">
+                                <el-button 
+                                    type="primary" 
+                                    size="small" 
+                                    @click="viewApplication(scope.row.id)"
+                                >
+                                    View
+                                </el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </el-tab-pane>
         </el-tabs>
     </div>
 </template>
@@ -57,16 +116,17 @@
     import { onMounted, ref } from 'vue';
     import { ElMessage } from 'element-plus';
     import { api } from '@/api';
-    import { useRoute } from 'vue-router';
+    import { useRoute, useRouter } from 'vue-router';
 
-    const route = useRoute()
+    const route = useRoute();
+    const router = useRouter();
 
     const guarantor = ref({
         name: "Guarantor Name",
         date: "Date Create: 2025-12-23 10:13:42"
-    })
-    const activeName = ref('1')
-    const guarantorId = route.params.guarantorId
+    });
+    const activeName = ref('1');
+    const guarantorId = route.params.guarantorId;
     const overview = ref({
         name: "Broker One",
         address: "Address",
@@ -77,23 +137,30 @@
         status: "Full-time",
         income: "$200,000.00",
         score: "85"
-    })
+    });
+    
+    const relatedBorrowers = ref([]);
+    const relatedApplications = ref([]);
+    const loadingBorrowers = ref(false);
+    const loadingApplications = ref(false);
 
     onMounted(() => {
-        getGuarantor()
-    })
+        getGuarantor();
+        getRelatedBorrowers();
+        getRelatedApplications();
+    });
 
     const getGuarantor = async () => {
-        const [err, res] = await api.getGuarantor(guarantorId)
+        const [err, res] = await api.getGuarantor(guarantorId);
         if (!err) {
             guarantor.value = {
-                name: res.name,
+                name: `${res.first_name} ${res.last_name}`,
                 date: new Date(res.created_at).toLocaleString()
             };
             overview.value = {
-                name: res.name,
-                address: `${res.address}, ${res.city}, ${res.state} ${res.postal_code}`,
-                phone: res.phone,
+                name: `${res.first_name} ${res.last_name}`,
+                address: `${res.address_street_name || ''}, ${res.address_suburb || ''}, ${res.address_state || ''} ${res.address_postcode || ''}`,
+                phone: res.mobile || res.phone,
                 email: res.email,
                 relationship: res.relationship === 'other' ? res.relationship_other : res.relationship,
                 birth: new Date(res.date_of_birth).toLocaleDateString(),
@@ -103,7 +170,8 @@
                     currency: 'USD' 
                 }).format(res.annual_income),
                 employer: res.employer_name || 'N/A',
-                years_employed: res.years_with_employer ? `${res.years_with_employer} years` : 'N/A'
+                years_employed: res.years_with_employer ? `${res.years_with_employer} years` : 'N/A',
+                score: res.credit_score || 'N/A'
             };
         } else {
             ElMessage.error({
@@ -111,7 +179,58 @@
                 type: 'error'
             });
         }
-    }
+    };
+    
+    const getRelatedBorrowers = async () => {
+        loadingBorrowers.value = true;
+        try {
+            const [err, res] = await api.getGuarantorBorrowers(guarantorId);
+            if (!err && res.results) {
+                relatedBorrowers.value = res.results.map(borrower => ({
+                    id: borrower.id,
+                    name: `${borrower.first_name} ${borrower.last_name}`,
+                    relationship: borrower.relationship === 'other' ? borrower.relationship_other : borrower.relationship,
+                    email: borrower.email,
+                    phone: borrower.mobile || borrower.phone
+                }));
+            } else if (err) {
+                console.error('Error fetching related borrowers:', err);
+            }
+        } catch (error) {
+            console.error('Error fetching related borrowers:', error);
+        } finally {
+            loadingBorrowers.value = false;
+        }
+    };
+    
+    const getRelatedApplications = async () => {
+        loadingApplications.value = true;
+        try {
+            const [err, res] = await api.getGuarantorApplications(guarantorId);
+            if (!err && res.results) {
+                relatedApplications.value = res.results.map(app => ({
+                    id: app.id,
+                    title: app.title || `Application #${app.id}`,
+                    status: app.status,
+                    created_at: new Date(app.created_at).toLocaleDateString()
+                }));
+            } else if (err) {
+                console.error('Error fetching related applications:', err);
+            }
+        } catch (error) {
+            console.error('Error fetching related applications:', error);
+        } finally {
+            loadingApplications.value = false;
+        }
+    };
+    
+    const viewBorrower = (borrowerId) => {
+        router.push(`/borrowers/${borrowerId}`);
+    };
+    
+    const viewApplication = (applicationId) => {
+        router.push(`/applications/${applicationId}`);
+    };
 </script>
 
 <style scoped>
