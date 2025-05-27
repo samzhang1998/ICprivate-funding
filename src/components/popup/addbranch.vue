@@ -20,47 +20,33 @@
                             <p :style="{ color: isOverviewValid ? '#2984DE' : '#272727' }">Overview</p>
                         </div>
                     </template>
-                    <div class="form">
-                        <div class="item">
-                            <p>Branch Name</p>
+                    <el-form ref="ruleFormRef" class="form" :model="overview" label-position="top" :rules="rules"
+                        label-width="auto">
+                        <el-form-item class="item" label="Branch Name" prop="name">
                             <el-input v-model="overview.name" />
-                        </div>
-                        <div class="item">
-                            <p>Branch Address</p>
+                        </el-form-item>
+                        <el-form-item class="item" label="Branch Address" prop="address">
                             <el-input v-model="overview.address" />
-                        </div>
-                        <div class="item">
-                            <p>Phone Number</p>
+                        </el-form-item>
+                        <el-form-item class="item" label="Phone Number" prop="phone">
                             <el-input v-model="overview.phone" />
-                        </div>
-                        <div class="item">
-                            <p>Email Address</p>
+                        </el-form-item>
+                        <el-form-item class="item" label="Email Address" prop="email">
                             <el-input v-model="overview.email" />
-                        </div>
-                        <!-- <div class="item">
-                            <p>Manager</p>
-                            <el-select v-model="overview.manager" placeholder="Please Select...">
-                                <el-option
-                                    v-for="item in managers"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value"
-                                />
-                            </el-select>
-                        </div> -->
-                    </div>
+                        </el-form-item>
+                    </el-form>
                 </el-collapse-item>
             </el-collapse>
         </div>
         <div class="buttons">
             <Cancel @click="handleClose"></Cancel>
-            <Save @click="handleAddOrEdit"></Save>
+            <Save @click="handleAddOrEdit(ruleFormRef)"></Save>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, reactive } from 'vue';
 import { api } from '@/api';
 import Cancel from '../buttons/cancel.vue';
 import Save from '../buttons/save.vue';
@@ -92,6 +78,33 @@ const managers = ref([
     { value: "1", label: "1" },
     { value: "2", label: "2" }
 ])
+
+const ruleFormRef = ref(null)
+//select trigger触发使用'change'
+const rules = reactive({
+    name: [
+        { required: true, message: 'Please input Branch Name', trigger: 'blur' },
+    ],
+    address: [
+        { required: true, message: 'Please input Activity name', trigger: 'blur' },
+    ],
+    phone: [
+        { required: true, message: 'Please input Activity name', trigger: 'blur' },
+    ],
+    email: [
+        { required: true, message: 'Please input Activity name', trigger: 'blur' },
+        { validator: validateEmail, trigger: 'blur' }
+    ],
+})
+
+//校验邮箱格式
+function validateEmail(rule, value, callback) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(value)) {
+        callback(new Error('Please enter a valid email address'));
+    }
+    callback();
+}
 
 watch(() => props.data, (newVal) => {
     if (newVal) {
@@ -145,12 +158,19 @@ const editBranch = async () => {
     }
 }
 
-const handleAddOrEdit = async () => {
-    if (editId.value) {
-        editBranch()
-    } else {
-        addBranch()
-    }
+const handleAddOrEdit = (formEl) => {
+    if (!formEl) return
+    formEl.validate((valid) => {
+        if (valid) {
+            if (editId.value) {
+                editBranch()
+            } else {
+                addBranch()
+            }
+        } else {
+            console.log('error submit!')
+        }
+    })
 }
 </script>
 
@@ -229,7 +249,7 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: start;
-    gap: 10px;
+    /* gap: 10px; */
 }
 
 .item p {
@@ -252,5 +272,9 @@ h1 {
     align-items: center;
     border-top: 1.5px solid #E1E1E1;
     gap: 10px;
+}
+
+.el-form-item {
+    margin-bottom: 0;
 }
 </style>
