@@ -198,9 +198,16 @@
         }
     }
     const generatePdf = async () => {
-        const [err, res] = await api.generatePdf(applicationId)
+        const [err, blob] = await api.generatePdf(applicationId)
         if (!err) {
-            console.log(res);
+            const url = window.URL.createObjectURL(blob)
+            const link = document.createElement('a')
+            link.href = url
+            link.download = `application_${applicationId}.pdf`
+            document.body.appendChild(link)
+            link.click()
+            link.remove()
+            window.URL.revokeObjectURL(url)
         } else {
             console.error(err)
             ElMessage.error({

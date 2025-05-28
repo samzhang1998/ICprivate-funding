@@ -156,6 +156,7 @@ export function generatePdf(params) {
     return sendRequest({
         url: `/api/applications/${params}/generate-pdf/`,
         method: 'get',
+        responseType: 'blob'
     })
 }
 export function fees(params) {
