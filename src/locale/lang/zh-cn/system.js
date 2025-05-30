@@ -11,4 +11,5 @@ export const system = {
   user: "用户",
   setting: "设置",
   notification: "通知",
+  inbox: "收件箱",
 };

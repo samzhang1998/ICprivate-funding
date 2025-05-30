@@ -1,8 +1,9 @@
 openapi: 3.0.3
 info:
-  title: CRM Loan Management API
+  title: CRM Loan Management System API
   version: 1.0.0
-  description: API for CRM Loan Management System
+  description: A comprehensive CRM system for loan applications with fully synchronized
+    frontend and backend development.
 paths:
   /api/applications/{application_id}/generate-pdf/:
     get:
@@ -26,6 +27,7 @@ paths:
       - applications
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -56,15 +58,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GeneratePDF'
+              $ref: '#/components/schemas/GeneratePDFRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/GeneratePDF'
+              $ref: '#/components/schemas/GeneratePDFRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/GeneratePDF'
+              $ref: '#/components/schemas/GeneratePDFRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -88,15 +91,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -120,15 +124,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -152,15 +157,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -182,6 +188,7 @@ paths:
       - applications
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -205,15 +212,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -237,15 +245,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -269,15 +278,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -290,16 +300,29 @@ paths:
       operationId: applications_applications_list
       description: ViewSet for viewing and editing Application instances.
       parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
       - name: page
         required: false
         in: query
         description: A page number within the paginated result set.
         schema:
           type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
       tags:
       - applications
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -316,15 +339,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApplicationCreate'
+              $ref: '#/components/schemas/ApplicationCreateRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ApplicationCreate'
+              $ref: '#/components/schemas/ApplicationCreateRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ApplicationCreate'
+              $ref: '#/components/schemas/ApplicationCreateRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '201':
           content:
@@ -347,6 +371,7 @@ paths:
       - applications
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -370,15 +395,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -402,15 +428,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedApplicationList'
+              $ref: '#/components/schemas/PatchedApplicationListRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedApplicationList'
+              $ref: '#/components/schemas/PatchedApplicationListRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedApplicationList'
+              $ref: '#/components/schemas/PatchedApplicationListRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -432,6 +459,110 @@ paths:
       - applications
       security:
       - jwtAuth: []
+      - Bearer: []
+      responses:
+        '204':
+          description: No response body
+  /api/applications/applications/{id}/assign_bd/:
+    post:
+      operationId: applications_applications_assign_bd_create
+      description: |-
+        Manage BD assignment for an application
+
+        Methods:
+        - POST: Assign a BD to an application that doesn't have one
+        - PUT: Update/reassign the BD for an application
+        - DELETE: Remove the BD assignment from an application
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this application.
+        required: true
+      tags:
+      - applications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationListRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ApplicationListRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ApplicationListRequest'
+      security:
+      - jwtAuth: []
+      - Bearer: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationList'
+          description: ''
+    put:
+      operationId: applications_applications_assign_bd_update
+      description: |-
+        Manage BD assignment for an application
+
+        Methods:
+        - POST: Assign a BD to an application that doesn't have one
+        - PUT: Update/reassign the BD for an application
+        - DELETE: Remove the BD assignment from an application
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this application.
+        required: true
+      tags:
+      - applications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationListRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ApplicationListRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ApplicationListRequest'
+      security:
+      - jwtAuth: []
+      - Bearer: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationList'
+          description: ''
+    delete:
+      operationId: applications_applications_assign_bd_destroy
+      description: |-
+        Manage BD assignment for an application
+
+        Methods:
+        - POST: Assign a BD to an application that doesn't have one
+        - PUT: Update/reassign the BD for an application
+        - DELETE: Remove the BD assignment from an application
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this application.
+        required: true
+      tags:
+      - applications
+      security:
+      - jwtAuth: []
+      - Bearer: []
       responses:
         '204':
           description: No response body
@@ -452,15 +583,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -485,15 +617,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -518,15 +651,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -549,6 +683,7 @@ paths:
       - applications
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -573,15 +708,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -606,15 +742,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -639,15 +776,68 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationList'
+          description: ''
+  /api/applications/applications/{id}/validate_schema/:
+    post:
+      operationId: applications_applications_validate_schema_create
+      description: ViewSet for viewing and editing Application instances.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this application.
+        required: true
+      tags:
+      - applications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationListRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ApplicationListRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ApplicationListRequest'
+      security:
+      - jwtAuth: []
+      - Bearer: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationList'
+          description: ''
+  /api/applications/applications/enhanced_applications/:
+    get:
+      operationId: applications_applications_enhanced_applications_retrieve
+      description: |-
+        Enhanced list view with additional fields for the application dashboard
+        with advanced filtering capabilities
+      tags:
+      - applications
+      security:
+      - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -663,32 +853,7 @@ paths:
       - applications
       security:
       - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApplicationList'
-          description: ''
-  /api/applications/applications/validate_schema/:
-    post:
-      operationId: applications_applications_validate_schema_create
-      description: ViewSet for viewing and editing Application instances.
-      tags:
-      - applications
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ApplicationList'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/ApplicationList'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/ApplicationList'
-      security:
-      - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -706,15 +871,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApplicationCreate'
+              $ref: '#/components/schemas/ApplicationCreateRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ApplicationCreate'
+              $ref: '#/components/schemas/ApplicationCreateRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ApplicationCreate'
+              $ref: '#/components/schemas/ApplicationCreateRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '201':
           content:
@@ -730,6 +896,7 @@ paths:
       - applications
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -747,7 +914,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ManualFundingCalculation'
+              $ref: '#/components/schemas/ManualFundingCalculationRequest'
             examples:
               ExampleRequest:
                 value:
@@ -767,13 +934,14 @@ paths:
                 summary: Example Request
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ManualFundingCalculation'
+              $ref: '#/components/schemas/ManualFundingCalculationRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ManualFundingCalculation'
+              $ref: '#/components/schemas/ManualFundingCalculationRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -809,15 +977,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ApplicationList'
+              $ref: '#/components/schemas/ApplicationListRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -830,16 +999,75 @@ paths:
       operationId: borrowers_borrowers_list
       description: ViewSet for managing borrowers
       parameters:
+      - in: query
+        name: company_name
+        schema:
+          type: string
+      - in: query
+        name: company_name__icontains
+        schema:
+          type: string
+      - in: query
+        name: created_at__gte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_at__lte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: email
+        schema:
+          type: string
+      - in: query
+        name: email__icontains
+        schema:
+          type: string
+      - in: query
+        name: first_name
+        schema:
+          type: string
+      - in: query
+        name: first_name__icontains
+        schema:
+          type: string
+      - in: query
+        name: is_company
+        schema:
+          type: boolean
+      - in: query
+        name: last_name
+        schema:
+          type: string
+      - in: query
+        name: last_name__icontains
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
       - name: page
         required: false
         in: query
         description: A page number within the paginated result set.
         schema:
           type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
       tags:
       - borrowers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -856,15 +1084,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BorrowerDetail'
+              $ref: '#/components/schemas/BorrowerDetailRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/BorrowerDetail'
+              $ref: '#/components/schemas/BorrowerDetailRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/BorrowerDetail'
+              $ref: '#/components/schemas/BorrowerDetailRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '201':
           content:
@@ -882,16 +1111,29 @@ paths:
         schema:
           type: integer
         required: true
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
       - name: page
         required: false
         in: query
         description: A page number within the paginated result set.
         schema:
           type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
       tags:
       - borrowers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -914,16 +1156,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CompanyAsset'
+              $ref: '#/components/schemas/CompanyAssetRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/CompanyAsset'
+              $ref: '#/components/schemas/CompanyAssetRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/CompanyAsset'
+              $ref: '#/components/schemas/CompanyAssetRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '201':
           content:
@@ -950,6 +1193,7 @@ paths:
       - borrowers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -977,16 +1221,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CompanyAsset'
+              $ref: '#/components/schemas/CompanyAssetRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/CompanyAsset'
+              $ref: '#/components/schemas/CompanyAssetRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/CompanyAsset'
+              $ref: '#/components/schemas/CompanyAssetRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1014,15 +1259,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedCompanyAsset'
+              $ref: '#/components/schemas/PatchedCompanyAssetRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedCompanyAsset'
+              $ref: '#/components/schemas/PatchedCompanyAssetRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedCompanyAsset'
+              $ref: '#/components/schemas/PatchedCompanyAssetRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1048,6 +1294,7 @@ paths:
       - borrowers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '204':
           description: No response body
@@ -1066,6 +1313,7 @@ paths:
       - borrowers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1089,15 +1337,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BorrowerDetail'
+              $ref: '#/components/schemas/BorrowerDetailRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/BorrowerDetail'
+              $ref: '#/components/schemas/BorrowerDetailRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/BorrowerDetail'
+              $ref: '#/components/schemas/BorrowerDetailRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1121,15 +1370,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedBorrowerDetail'
+              $ref: '#/components/schemas/PatchedBorrowerDetailRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedBorrowerDetail'
+              $ref: '#/components/schemas/PatchedBorrowerDetailRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedBorrowerDetail'
+              $ref: '#/components/schemas/PatchedBorrowerDetailRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1151,6 +1401,7 @@ paths:
       - borrowers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '204':
           description: No response body
@@ -1159,16 +1410,89 @@ paths:
       operationId: borrowers_guarantors_list
       description: ViewSet for managing guarantors
       parameters:
+      - in: query
+        name: application
+        schema:
+          type: integer
+      - in: query
+        name: borrower
+        schema:
+          type: integer
+      - in: query
+        name: company_name
+        schema:
+          type: string
+      - in: query
+        name: company_name__icontains
+        schema:
+          type: string
+      - in: query
+        name: created_at__gte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_at__lte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: email
+        schema:
+          type: string
+      - in: query
+        name: email__icontains
+        schema:
+          type: string
+      - in: query
+        name: first_name
+        schema:
+          type: string
+      - in: query
+        name: first_name__icontains
+        schema:
+          type: string
+      - in: query
+        name: guarantor_type
+        schema:
+          type: string
+          enum:
+          - company
+          - individual
+        description: |-
+          * `individual` - Individual
+          * `company` - Company
+      - in: query
+        name: last_name
+        schema:
+          type: string
+      - in: query
+        name: last_name__icontains
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
       - name: page
         required: false
         in: query
         description: A page number within the paginated result set.
         schema:
           type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
       tags:
       - borrowers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1185,15 +1509,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BorrowerGuarantor'
+              $ref: '#/components/schemas/BorrowerGuarantorRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/BorrowerGuarantor'
+              $ref: '#/components/schemas/BorrowerGuarantorRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/BorrowerGuarantor'
+              $ref: '#/components/schemas/BorrowerGuarantorRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '201':
           content:
@@ -1211,16 +1536,29 @@ paths:
         schema:
           type: integer
         required: true
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
       - name: page
         required: false
         in: query
         description: A page number within the paginated result set.
         schema:
           type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
       tags:
       - borrowers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1243,16 +1581,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GuarantorAsset'
+              $ref: '#/components/schemas/GuarantorAssetRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/GuarantorAsset'
+              $ref: '#/components/schemas/GuarantorAssetRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/GuarantorAsset'
+              $ref: '#/components/schemas/GuarantorAssetRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '201':
           content:
@@ -1279,6 +1618,7 @@ paths:
       - borrowers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1306,16 +1646,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GuarantorAsset'
+              $ref: '#/components/schemas/GuarantorAssetRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/GuarantorAsset'
+              $ref: '#/components/schemas/GuarantorAssetRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/GuarantorAsset'
+              $ref: '#/components/schemas/GuarantorAssetRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1343,15 +1684,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedGuarantorAsset'
+              $ref: '#/components/schemas/PatchedGuarantorAssetRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedGuarantorAsset'
+              $ref: '#/components/schemas/PatchedGuarantorAssetRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedGuarantorAsset'
+              $ref: '#/components/schemas/PatchedGuarantorAssetRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1377,6 +1719,7 @@ paths:
       - borrowers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '204':
           description: No response body
@@ -1395,6 +1738,7 @@ paths:
       - borrowers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1418,15 +1762,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BorrowerGuarantor'
+              $ref: '#/components/schemas/BorrowerGuarantorRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/BorrowerGuarantor'
+              $ref: '#/components/schemas/BorrowerGuarantorRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/BorrowerGuarantor'
+              $ref: '#/components/schemas/BorrowerGuarantorRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1450,15 +1795,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedBorrowerGuarantor'
+              $ref: '#/components/schemas/PatchedBorrowerGuarantorRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedBorrowerGuarantor'
+              $ref: '#/components/schemas/PatchedBorrowerGuarantorRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedBorrowerGuarantor'
+              $ref: '#/components/schemas/PatchedBorrowerGuarantorRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1480,6 +1826,7 @@ paths:
       - borrowers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '204':
           description: No response body
@@ -1518,6 +1865,7 @@ paths:
       - brokers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1534,16 +1882,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BrokerDetail'
+              $ref: '#/components/schemas/BrokerDetailRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/BrokerDetail'
+              $ref: '#/components/schemas/BrokerDetailRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/BrokerDetail'
+              $ref: '#/components/schemas/BrokerDetailRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '201':
           content:
@@ -1566,6 +1915,7 @@ paths:
       - brokers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1589,16 +1939,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BrokerDetail'
+              $ref: '#/components/schemas/BrokerDetailRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/BrokerDetail'
+              $ref: '#/components/schemas/BrokerDetailRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/BrokerDetail'
+              $ref: '#/components/schemas/BrokerDetailRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1622,15 +1973,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedBrokerDetail'
+              $ref: '#/components/schemas/PatchedBrokerDetailRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedBrokerDetail'
+              $ref: '#/components/schemas/PatchedBrokerDetailRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedBrokerDetail'
+              $ref: '#/components/schemas/PatchedBrokerDetailRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1652,6 +2004,7 @@ paths:
       - brokers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '204':
           description: No response body
@@ -1670,6 +2023,7 @@ paths:
       - brokers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1692,6 +2046,7 @@ paths:
       - brokers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1724,6 +2079,7 @@ paths:
       - brokers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1740,16 +2096,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BDM'
+              $ref: '#/components/schemas/BDMRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/BDM'
+              $ref: '#/components/schemas/BDMRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/BDM'
+              $ref: '#/components/schemas/BDMRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '201':
           content:
@@ -1772,6 +2129,7 @@ paths:
       - brokers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1795,16 +2153,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BDM'
+              $ref: '#/components/schemas/BDMRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/BDM'
+              $ref: '#/components/schemas/BDMRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/BDM'
+              $ref: '#/components/schemas/BDMRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1828,15 +2187,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedBDM'
+              $ref: '#/components/schemas/PatchedBDMRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedBDM'
+              $ref: '#/components/schemas/PatchedBDMRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedBDM'
+              $ref: '#/components/schemas/PatchedBDMRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1858,6 +2218,7 @@ paths:
       - brokers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '204':
           description: No response body
@@ -1876,6 +2237,35 @@ paths:
       - brokers
       security:
       - jwtAuth: []
+      - Bearer: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BDM'
+          description: ''
+  /api/brokers/bdms/claim_application/:
+    post:
+      operationId: brokers_bdms_claim_application_create
+      description: Allow a BD to claim an unassigned application
+      tags:
+      - brokers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BDMRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BDMRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BDMRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1893,16 +2283,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BDM'
+              $ref: '#/components/schemas/BDMRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/BDM'
+              $ref: '#/components/schemas/BDMRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/BDM'
+              $ref: '#/components/schemas/BDMRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1931,6 +2322,7 @@ paths:
       - brokers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -1947,16 +2339,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Branch'
+              $ref: '#/components/schemas/BranchRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Branch'
+              $ref: '#/components/schemas/BranchRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Branch'
+              $ref: '#/components/schemas/BranchRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '201':
           content:
@@ -1979,6 +2372,7 @@ paths:
       - brokers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2002,16 +2396,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Branch'
+              $ref: '#/components/schemas/BranchRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Branch'
+              $ref: '#/components/schemas/BranchRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Branch'
+              $ref: '#/components/schemas/BranchRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2035,15 +2430,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedBranch'
+              $ref: '#/components/schemas/PatchedBranchRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedBranch'
+              $ref: '#/components/schemas/PatchedBranchRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedBranch'
+              $ref: '#/components/schemas/PatchedBranchRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2065,6 +2461,7 @@ paths:
       - brokers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '204':
           description: No response body
@@ -2083,6 +2480,7 @@ paths:
       - brokers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2105,6 +2503,7 @@ paths:
       - brokers
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2126,6 +2525,7 @@ paths:
       - documents
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2206,6 +2606,7 @@ paths:
       - documents
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2222,13 +2623,14 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Document'
+              $ref: '#/components/schemas/DocumentRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Document'
+              $ref: '#/components/schemas/DocumentRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '201':
           content:
@@ -2251,6 +2653,7 @@ paths:
       - documents
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2274,13 +2677,14 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Document'
+              $ref: '#/components/schemas/DocumentRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Document'
+              $ref: '#/components/schemas/DocumentRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2304,12 +2708,13 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedDocument'
+              $ref: '#/components/schemas/PatchedDocumentRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedDocument'
+              $ref: '#/components/schemas/PatchedDocumentRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2331,6 +2736,7 @@ paths:
       - documents
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '204':
           description: No response body
@@ -2350,13 +2756,14 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Document'
+              $ref: '#/components/schemas/DocumentRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Document'
+              $ref: '#/components/schemas/DocumentRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2379,6 +2786,7 @@ paths:
       - documents
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2457,6 +2865,7 @@ paths:
       - documents
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2473,16 +2882,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Fee'
+              $ref: '#/components/schemas/FeeRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Fee'
+              $ref: '#/components/schemas/FeeRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Fee'
+              $ref: '#/components/schemas/FeeRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '201':
           content:
@@ -2505,6 +2915,7 @@ paths:
       - documents
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2528,16 +2939,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Fee'
+              $ref: '#/components/schemas/FeeRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Fee'
+              $ref: '#/components/schemas/FeeRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Fee'
+              $ref: '#/components/schemas/FeeRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2561,15 +2973,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedFee'
+              $ref: '#/components/schemas/PatchedFeeRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedFee'
+              $ref: '#/components/schemas/PatchedFeeRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedFee'
+              $ref: '#/components/schemas/PatchedFeeRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2591,6 +3004,7 @@ paths:
       - documents
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '204':
           description: No response body
@@ -2610,16 +3024,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Fee'
+              $ref: '#/components/schemas/FeeRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Fee'
+              $ref: '#/components/schemas/FeeRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Fee'
+              $ref: '#/components/schemas/FeeRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2672,6 +3087,7 @@ paths:
       - documents
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2688,16 +3104,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NoteComment'
+              $ref: '#/components/schemas/NoteCommentRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/NoteComment'
+              $ref: '#/components/schemas/NoteCommentRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/NoteComment'
+              $ref: '#/components/schemas/NoteCommentRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '201':
           content:
@@ -2720,6 +3137,7 @@ paths:
       - documents
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2743,16 +3161,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NoteComment'
+              $ref: '#/components/schemas/NoteCommentRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/NoteComment'
+              $ref: '#/components/schemas/NoteCommentRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/NoteComment'
+              $ref: '#/components/schemas/NoteCommentRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2776,15 +3195,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedNoteComment'
+              $ref: '#/components/schemas/PatchedNoteCommentRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedNoteComment'
+              $ref: '#/components/schemas/PatchedNoteCommentRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedNoteComment'
+              $ref: '#/components/schemas/PatchedNoteCommentRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2806,6 +3226,7 @@ paths:
       - documents
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '204':
           description: No response body
@@ -2854,6 +3275,7 @@ paths:
       - documents
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2870,15 +3292,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Note'
+              $ref: '#/components/schemas/NoteRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Note'
+              $ref: '#/components/schemas/NoteRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Note'
+              $ref: '#/components/schemas/NoteRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '201':
           content:
@@ -2901,6 +3324,7 @@ paths:
       - documents
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2924,15 +3348,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Note'
+              $ref: '#/components/schemas/NoteRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Note'
+              $ref: '#/components/schemas/NoteRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Note'
+              $ref: '#/components/schemas/NoteRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2956,15 +3381,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedNote'
+              $ref: '#/components/schemas/PatchedNoteRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedNote'
+              $ref: '#/components/schemas/PatchedNoteRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedNote'
+              $ref: '#/components/schemas/PatchedNoteRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -2986,6 +3412,7 @@ paths:
       - documents
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '204':
           description: No response body
@@ -3006,15 +3433,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Note'
+              $ref: '#/components/schemas/NoteRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Note'
+              $ref: '#/components/schemas/NoteRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Note'
+              $ref: '#/components/schemas/NoteRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3037,6 +3465,7 @@ paths:
       - documents
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3097,6 +3526,7 @@ paths:
       - documents
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3113,16 +3543,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Repayment'
+              $ref: '#/components/schemas/RepaymentRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Repayment'
+              $ref: '#/components/schemas/RepaymentRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Repayment'
+              $ref: '#/components/schemas/RepaymentRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '201':
           content:
@@ -3145,6 +3576,7 @@ paths:
       - documents
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3168,16 +3600,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Repayment'
+              $ref: '#/components/schemas/RepaymentRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Repayment'
+              $ref: '#/components/schemas/RepaymentRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Repayment'
+              $ref: '#/components/schemas/RepaymentRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3201,15 +3634,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedRepayment'
+              $ref: '#/components/schemas/PatchedRepaymentRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedRepayment'
+              $ref: '#/components/schemas/PatchedRepaymentRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedRepayment'
+              $ref: '#/components/schemas/PatchedRepaymentRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3231,6 +3665,7 @@ paths:
       - documents
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '204':
           description: No response body
@@ -3250,16 +3685,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Repayment'
+              $ref: '#/components/schemas/RepaymentRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Repayment'
+              $ref: '#/components/schemas/RepaymentRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Repayment'
+              $ref: '#/components/schemas/RepaymentRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3326,6 +3762,7 @@ paths:
       - products
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3342,16 +3779,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Product'
+              $ref: '#/components/schemas/ProductRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Product'
+              $ref: '#/components/schemas/ProductRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Product'
+              $ref: '#/components/schemas/ProductRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '201':
           content:
@@ -3374,6 +3812,7 @@ paths:
       - products
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3397,16 +3836,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Product'
+              $ref: '#/components/schemas/ProductRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Product'
+              $ref: '#/components/schemas/ProductRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Product'
+              $ref: '#/components/schemas/ProductRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3430,15 +3870,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedProduct'
+              $ref: '#/components/schemas/PatchedProductRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedProduct'
+              $ref: '#/components/schemas/PatchedProductRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedProduct'
+              $ref: '#/components/schemas/PatchedProductRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3460,6 +3901,197 @@ paths:
       - products
       security:
       - jwtAuth: []
+      - Bearer: []
+      responses:
+        '204':
+          description: No response body
+  /api/reminders/:
+    get:
+      operationId: reminders_list
+      description: API endpoint for managing reminders
+      parameters:
+      - in: query
+        name: is_sent
+        schema:
+          type: boolean
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: recipient_type
+        schema:
+          type: string
+          enum:
+          - bdm
+          - broker
+          - client
+          - custom
+        description: |-
+          * `client` - Client
+          * `bdm` - Business Development Manager
+          * `broker` - Broker
+          * `custom` - Custom Email
+      - in: query
+        name: related_application
+        schema:
+          type: integer
+      - in: query
+        name: related_borrower
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - reminders
+      security:
+      - jwtAuth: []
+      - Bearer: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedReminderList'
+          description: ''
+    post:
+      operationId: reminders_create
+      description: API endpoint for managing reminders
+      tags:
+      - reminders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReminderRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReminderRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReminderRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reminder'
+          description: ''
+  /api/reminders/{id}/:
+    get:
+      operationId: reminders_retrieve
+      description: API endpoint for managing reminders
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this reminder.
+        required: true
+      tags:
+      - reminders
+      security:
+      - jwtAuth: []
+      - Bearer: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reminder'
+          description: ''
+    put:
+      operationId: reminders_update
+      description: API endpoint for managing reminders
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this reminder.
+        required: true
+      tags:
+      - reminders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReminderRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReminderRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReminderRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reminder'
+          description: ''
+    patch:
+      operationId: reminders_partial_update
+      description: API endpoint for managing reminders
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this reminder.
+        required: true
+      tags:
+      - reminders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedReminderRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedReminderRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedReminderRequest'
+      security:
+      - jwtAuth: []
+      - Bearer: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reminder'
+          description: ''
+    delete:
+      operationId: reminders_destroy
+      description: API endpoint for managing reminders
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this reminder.
+        required: true
+      tags:
+      - reminders
+      security:
+      - jwtAuth: []
+      - Bearer: []
       responses:
         '204':
           description: No response body
@@ -3471,6 +4103,7 @@ paths:
       - reports
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3486,6 +4119,7 @@ paths:
       - reports
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3501,6 +4135,7 @@ paths:
       - reports
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3518,16 +4153,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserLogin'
+              $ref: '#/components/schemas/UserLoginRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/UserLogin'
+              $ref: '#/components/schemas/UserLoginRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/UserLogin'
+              $ref: '#/components/schemas/UserLoginRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       - {}
       responses:
         '200':
@@ -3551,16 +4187,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Logout'
+              $ref: '#/components/schemas/LogoutRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Logout'
+              $ref: '#/components/schemas/LogoutRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Logout'
+              $ref: '#/components/schemas/LogoutRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3583,14 +4220,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TokenRefresh'
+              $ref: '#/components/schemas/TokenRefreshRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/TokenRefresh'
+              $ref: '#/components/schemas/TokenRefreshRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/TokenRefresh'
+              $ref: '#/components/schemas/TokenRefreshRequest'
         required: true
+      security:
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3608,16 +4247,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserCreate'
+              $ref: '#/components/schemas/UserCreateRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/UserCreate'
+              $ref: '#/components/schemas/UserCreateRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/UserCreate'
+              $ref: '#/components/schemas/UserCreateRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       - {}
       responses:
         '200':
@@ -3636,16 +4276,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PasswordResetConfirm'
+              $ref: '#/components/schemas/PasswordResetConfirmRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PasswordResetConfirm'
+              $ref: '#/components/schemas/PasswordResetConfirmRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PasswordResetConfirm'
+              $ref: '#/components/schemas/PasswordResetConfirmRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       - {}
       responses:
         '200':
@@ -3667,16 +4308,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PasswordResetRequest'
+              $ref: '#/components/schemas/PasswordResetRequestRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PasswordResetRequest'
+              $ref: '#/components/schemas/PasswordResetRequestRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PasswordResetRequest'
+              $ref: '#/components/schemas/PasswordResetRequestRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       - {}
       responses:
         '200':
@@ -3698,6 +4340,7 @@ paths:
       - users
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3715,6 +4358,7 @@ paths:
       - users
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3730,6 +4374,7 @@ paths:
       - users
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3746,15 +4391,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NotificationPreference'
+              $ref: '#/components/schemas/NotificationPreferenceRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/NotificationPreference'
+              $ref: '#/components/schemas/NotificationPreferenceRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/NotificationPreference'
+              $ref: '#/components/schemas/NotificationPreferenceRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3807,6 +4453,7 @@ paths:
       - users
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3859,6 +4506,7 @@ paths:
       - users
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3880,6 +4528,7 @@ paths:
       - users
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3903,16 +4552,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Notification'
+              $ref: '#/components/schemas/NotificationRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Notification'
+              $ref: '#/components/schemas/NotificationRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Notification'
+              $ref: '#/components/schemas/NotificationRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3930,16 +4580,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Notification'
+              $ref: '#/components/schemas/NotificationRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Notification'
+              $ref: '#/components/schemas/NotificationRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Notification'
+              $ref: '#/components/schemas/NotificationRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3955,6 +4606,7 @@ paths:
       - users
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3970,6 +4622,7 @@ paths:
       - users
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -3987,16 +4640,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Notification'
+              $ref: '#/components/schemas/NotificationRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Notification'
+              $ref: '#/components/schemas/NotificationRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Notification'
+              $ref: '#/components/schemas/NotificationRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -4012,6 +4666,7 @@ paths:
       - users
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -4029,16 +4684,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/UserRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/UserRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/UserRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -4055,15 +4711,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedUser'
+              $ref: '#/components/schemas/PatchedUserRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedUser'
+              $ref: '#/components/schemas/PatchedUserRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedUser'
+              $ref: '#/components/schemas/PatchedUserRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -4092,6 +4749,7 @@ paths:
       - users
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -4108,16 +4766,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserCreate'
+              $ref: '#/components/schemas/UserCreateRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/UserCreate'
+              $ref: '#/components/schemas/UserCreateRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/UserCreate'
+              $ref: '#/components/schemas/UserCreateRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '201':
           content:
@@ -4140,6 +4799,7 @@ paths:
       - users
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -4163,16 +4823,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/UserRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/UserRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/UserRequest'
         required: true
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -4196,15 +4857,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedUser'
+              $ref: '#/components/schemas/PatchedUserRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedUser'
+              $ref: '#/components/schemas/PatchedUserRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedUser'
+              $ref: '#/components/schemas/PatchedUserRequest'
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -4226,6 +4888,7 @@ paths:
       - users
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '204':
           description: No response body
@@ -4237,6 +4900,7 @@ paths:
       - users
       security:
       - jwtAuth: []
+      - Bearer: []
       responses:
         '200':
           content:
@@ -4262,6 +4926,8 @@ components:
           nullable: true
         loan_term:
           type: integer
+          maximum: 2147483647
+          minimum: 0
           nullable: true
           description: Loan term in months
         interest_rate:
@@ -4413,6 +5079,161 @@ components:
       - bd_id
       - branch_id
       - id
+    ApplicationCreateRequest:
+      type: object
+      properties:
+        reference_number:
+          type: string
+          minLength: 1
+          maxLength: 20
+        loan_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          nullable: true
+        loan_term:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+          description: Loan term in months
+        interest_rate:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+          nullable: true
+        purpose:
+          type: string
+          nullable: true
+        repayment_frequency:
+          $ref: '#/components/schemas/RepaymentFrequencyEnum'
+        application_type:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/ApplicationTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        product_id:
+          type: string
+          nullable: true
+          maxLength: 50
+        estimated_settlement_date:
+          type: string
+          format: date
+          nullable: true
+        stage:
+          $ref: '#/components/schemas/StageEnum'
+        borrowers:
+          type: array
+          items:
+            $ref: '#/components/schemas/BorrowerRequest'
+        guarantors:
+          type: array
+          items:
+            $ref: '#/components/schemas/GuarantorRequest'
+        company_borrowers:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompanyBorrowerRequest'
+        security_properties:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityPropertyRequest'
+        loan_requirements:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoanRequirementRequest'
+        loan_purpose:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/LoanPurposeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        additional_comments:
+          type: string
+          nullable: true
+        prior_application:
+          type: boolean
+        prior_application_details:
+          type: string
+          nullable: true
+        exit_strategy:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/ExitStrategyEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        exit_strategy_details:
+          type: string
+          nullable: true
+        valuer_company_name:
+          type: string
+          nullable: true
+          maxLength: 255
+        valuer_contact_name:
+          type: string
+          nullable: true
+          maxLength: 255
+        valuer_phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        valuer_email:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 254
+        qs_company_name:
+          type: string
+          nullable: true
+          maxLength: 255
+        qs_contact_name:
+          type: string
+          nullable: true
+          maxLength: 255
+        qs_phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        qs_email:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 254
+        funding_calculation_input:
+          $ref: '#/components/schemas/FundingCalculationInputRequest'
+        has_pending_litigation:
+          type: boolean
+          description: Do the Borrower(s) and the Guarantor(s) have any pending or
+            past litigation matters (within the last 2 years)?
+        has_unsatisfied_judgements:
+          type: boolean
+          description: Are there any unsatisfied judgements against the Borrower(s)
+            and the Guarantor(s)?
+        has_been_bankrupt:
+          type: boolean
+          description: Have the Borrower(s) and the Guarantor(s) been bankrupt or
+            insolvent in the past 5 years?
+        has_been_refused_credit:
+          type: boolean
+          description: Has the Borrower(s) and the Guarantor(s) been refused credit
+            by a credit provider in the last 1 year?
+        has_outstanding_ato_debt:
+          type: boolean
+          description: Are there any outstanding debts current or otherwise due to
+            the ATO by the Borrower(s) and the Guarantor(s)?
+        has_outstanding_tax_returns:
+          type: boolean
+          description: Does the Borrower(s) and the Guarantor(s) have outstanding
+            Tax or BAS returns due to be lodged with the ATO?
+        has_payment_arrangements:
+          type: boolean
+          description: Has the Borrower(s) and the Guarantor(s) made payment arrangements
+            with a creditor to payout debt that is still current?
+        solvency_enquiries_details:
+          type: string
+          nullable: true
+          description: Additional details for any 'Yes' answers to solvency enquiries
     ApplicationDetail:
       type: object
       properties:
@@ -4429,6 +5250,8 @@ components:
           nullable: true
         loan_term:
           type: integer
+          maximum: 2147483647
+          minimum: 0
           nullable: true
           description: Loan term in months
         interest_rate:
@@ -4736,6 +5559,36 @@ components:
       - description
       - id
       - liability_type
+    ApplicationLiabilityRequest:
+      type: object
+      description: Liability serializer specifically for application context
+      properties:
+        liability_type:
+          $ref: '#/components/schemas/LiabilityTypeEnum'
+        description:
+          type: string
+          minLength: 1
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        monthly_payment:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+        bg_type:
+          allOf:
+          - $ref: '#/components/schemas/BgType856Enum'
+          description: |-
+            Indicates if this liability belongs to B/G1 or B/G2
+
+            * `bg1` - B/G1
+            * `bg2` - B/G2
+      required:
+      - amount
+      - description
+      - liability_type
     ApplicationList:
       type: object
       description: Serializer for listing applications with summary information
@@ -4818,6 +5671,31 @@ components:
       - solvency_issues
       - stage_display
       - updated_at
+    ApplicationListRequest:
+      type: object
+      description: Serializer for listing applications with summary information
+      properties:
+        reference_number:
+          type: string
+          minLength: 1
+          maxLength: 20
+        stage:
+          $ref: '#/components/schemas/StageEnum'
+        loan_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          nullable: true
+        estimated_settlement_date:
+          type: string
+          format: date
+          nullable: true
+        application_type:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/ApplicationTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
     ApplicationStatusReport:
       type: object
       description: Serializer for application status report data
@@ -4957,25 +5835,48 @@ components:
           allOf:
           - $ref: '#/components/schemas/Branch'
           readOnly: true
+      required:
+      - branch
+      - id
+      - name
+    BDMRequest:
+      type: object
+      description: Serializer for BDM information
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 254
+        phone:
+          type: string
+          nullable: true
+          maxLength: 20
         branch_id:
           type: integer
           writeOnly: true
         branch_name:
           type: string
           writeOnly: true
+          minLength: 1
         address:
           type: string
           writeOnly: true
+          minLength: 1
         branch_phone:
           type: string
           writeOnly: true
+          minLength: 1
         branch_email:
           type: string
           format: email
           writeOnly: true
+          minLength: 1
       required:
-      - branch
-      - id
       - name
     BgType856Enum:
       enum:
@@ -5134,6 +6035,8 @@ components:
           maxLength: 100
         employment_duration:
           type: integer
+          maximum: 2147483647
+          minimum: 0
           nullable: true
           description: Duration in months
         annual_income:
@@ -5258,6 +6161,186 @@ components:
       - created_by
       - id
       - updated_at
+    BorrowerDetailRequest:
+      type: object
+      description: Serializer for detailed borrower information
+      properties:
+        first_name:
+          type: string
+          nullable: true
+          maxLength: 100
+        last_name:
+          type: string
+          nullable: true
+          maxLength: 100
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+        email:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 254
+        phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        residential_address:
+          type: string
+          nullable: true
+        mailing_address:
+          type: string
+          nullable: true
+        tax_id:
+          type: string
+          nullable: true
+          description: Tax File Number or equivalent
+          maxLength: 50
+        marital_status:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/MaritalStatusEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        residency_status:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/ResidencyStatusEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        employment_type:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/EmploymentTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        employer_name:
+          type: string
+          nullable: true
+          maxLength: 255
+        employer_address:
+          type: string
+          nullable: true
+        job_title:
+          type: string
+          nullable: true
+          maxLength: 100
+        employment_duration:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+          description: Duration in months
+        annual_income:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          nullable: true
+        other_income:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          nullable: true
+        monthly_expenses:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          nullable: true
+        bank_name:
+          type: string
+          nullable: true
+          maxLength: 100
+        bank_account_name:
+          type: string
+          nullable: true
+          maxLength: 100
+        bank_account_number:
+          type: string
+          nullable: true
+          maxLength: 30
+        bank_bsb:
+          type: string
+          nullable: true
+          maxLength: 10
+        referral_source:
+          type: string
+          nullable: true
+          maxLength: 100
+        tags:
+          type: string
+          nullable: true
+          maxLength: 255
+        notes_text:
+          type: string
+          nullable: true
+        is_company:
+          type: boolean
+        company_name:
+          type: string
+          nullable: true
+          maxLength: 255
+        company_abn:
+          type: string
+          nullable: true
+          maxLength: 20
+        company_acn:
+          type: string
+          nullable: true
+          maxLength: 20
+        industry_type:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/IndustryTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        contact_number:
+          type: string
+          nullable: true
+          maxLength: 20
+        annual_company_income:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          nullable: true
+        is_trustee:
+          type: boolean
+        is_smsf_trustee:
+          type: boolean
+        trustee_name:
+          type: string
+          nullable: true
+          maxLength: 255
+        registered_address_unit:
+          type: string
+          nullable: true
+          maxLength: 20
+        registered_address_street_no:
+          type: string
+          nullable: true
+          maxLength: 20
+        registered_address_street_name:
+          type: string
+          nullable: true
+          maxLength: 100
+        registered_address_suburb:
+          type: string
+          nullable: true
+          maxLength: 100
+        registered_address_state:
+          type: string
+          nullable: true
+          maxLength: 50
+        registered_address_postcode:
+          type: string
+          nullable: true
+          maxLength: 10
+        company_address:
+          type: string
+          nullable: true
+        user:
+          type: integer
+          nullable: true
     BorrowerGuarantor:
       type: object
       description: Serializer for guarantor information
@@ -5383,6 +6466,111 @@ components:
       - created_by
       - id
       - updated_at
+    BorrowerGuarantorRequest:
+      type: object
+      description: Serializer for guarantor information
+      properties:
+        guarantor_type:
+          $ref: '#/components/schemas/GuarantorTypeEnum'
+        title:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/TitleEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        first_name:
+          type: string
+          nullable: true
+          maxLength: 100
+        last_name:
+          type: string
+          nullable: true
+          maxLength: 100
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+        drivers_licence_no:
+          type: string
+          nullable: true
+          maxLength: 50
+        home_phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        mobile:
+          type: string
+          nullable: true
+          maxLength: 20
+        email:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 254
+        address_unit:
+          type: string
+          nullable: true
+          maxLength: 20
+        address_street_no:
+          type: string
+          nullable: true
+          maxLength: 20
+        address_street_name:
+          type: string
+          nullable: true
+          maxLength: 100
+        address_suburb:
+          type: string
+          nullable: true
+          maxLength: 100
+        address_state:
+          type: string
+          nullable: true
+          maxLength: 50
+        address_postcode:
+          type: string
+          nullable: true
+          maxLength: 10
+        address:
+          type: string
+          nullable: true
+        occupation:
+          type: string
+          nullable: true
+          maxLength: 100
+        employer_name:
+          type: string
+          nullable: true
+          maxLength: 255
+        employment_type:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/GuarantorEmploymentTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        annual_income:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          nullable: true
+        company_name:
+          type: string
+          nullable: true
+          maxLength: 255
+        company_abn:
+          type: string
+          nullable: true
+          maxLength: 20
+        company_acn:
+          type: string
+          nullable: true
+          maxLength: 20
+        borrower:
+          type: integer
+          nullable: true
+        application:
+          type: integer
+          nullable: true
     BorrowerList:
       type: object
       description: Serializer for listing borrowers with minimal information
@@ -5438,6 +6626,55 @@ components:
       - created_at
       - id
       - related_brokers
+    BorrowerRequest:
+      type: object
+      properties:
+        first_name:
+          type: string
+          nullable: true
+          maxLength: 100
+        last_name:
+          type: string
+          nullable: true
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 254
+        phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+        tax_id:
+          type: string
+          nullable: true
+          description: Tax File Number or equivalent
+          maxLength: 50
+        marital_status:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/MaritalStatusEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        residency_status:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/ResidencyStatusEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        referral_source:
+          type: string
+          nullable: true
+          maxLength: 100
+        tags:
+          type: string
+          nullable: true
+          maxLength: 255
     Branch:
       type: object
       description: Serializer for branch information
@@ -5462,6 +6699,28 @@ components:
           maxLength: 254
       required:
       - id
+      - name
+    BranchRequest:
+      type: object
+      description: Serializer for branch information
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        address:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        email:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 254
+      required:
       - name
     BrokerDetail:
       type: object
@@ -5537,6 +6796,51 @@ components:
       - id
       - name
       - updated_at
+    BrokerDetailRequest:
+      type: object
+      description: Serializer for detailed broker information
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        company:
+          type: string
+          nullable: true
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 254
+        phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        address:
+          type: string
+          nullable: true
+        commission_bank_name:
+          type: string
+          nullable: true
+          maxLength: 100
+        commission_account_name:
+          type: string
+          nullable: true
+          maxLength: 100
+        commission_account_number:
+          type: string
+          nullable: true
+          maxLength: 30
+        commission_bsb:
+          type: string
+          nullable: true
+          maxLength: 10
+        user:
+          type: integer
+          nullable: true
+      required:
+      - name
     BrokerList:
       type: object
       description: Serializer for listing brokers with minimal information
@@ -5593,6 +6897,32 @@ components:
       required:
       - asset_type
       - id
+    CompanyAssetRequest:
+      type: object
+      description: Serializer for company assets
+      properties:
+        asset_type:
+          $ref: '#/components/schemas/AssetTypeEnum'
+        description:
+          type: string
+          nullable: true
+        value:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          nullable: true
+        amount_owing:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          nullable: true
+        to_be_refinanced:
+          type: boolean
+        address:
+          type: string
+          nullable: true
+      required:
+      - asset_type
     CompanyBorrower:
       type: object
       properties:
@@ -5674,6 +7004,82 @@ components:
             $ref: '#/components/schemas/Liability'
       required:
       - id
+    CompanyBorrowerRequest:
+      type: object
+      properties:
+        company_name:
+          type: string
+          nullable: true
+          maxLength: 255
+        company_abn:
+          type: string
+          nullable: true
+          maxLength: 20
+        company_acn:
+          type: string
+          nullable: true
+          maxLength: 20
+        industry_type:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/IndustryTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        contact_number:
+          type: string
+          nullable: true
+          maxLength: 20
+        annual_company_income:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          nullable: true
+        is_trustee:
+          type: boolean
+        is_smsf_trustee:
+          type: boolean
+        trustee_name:
+          type: string
+          nullable: true
+          maxLength: 255
+        registered_address_unit:
+          type: string
+          nullable: true
+          maxLength: 20
+        registered_address_street_no:
+          type: string
+          nullable: true
+          maxLength: 20
+        registered_address_street_name:
+          type: string
+          nullable: true
+          maxLength: 100
+        registered_address_suburb:
+          type: string
+          nullable: true
+          maxLength: 100
+        registered_address_state:
+          type: string
+          nullable: true
+          maxLength: 50
+        registered_address_postcode:
+          type: string
+          nullable: true
+          maxLength: 10
+        directors:
+          type: array
+          items:
+            $ref: '#/components/schemas/DirectorRequest'
+        financial_info:
+          $ref: '#/components/schemas/FinancialInfoRequest'
+        assets:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompanyAssetRequest'
+        liabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/LiabilityRequest'
     Director:
       type: object
       description: Serializer for company directors
@@ -5694,6 +7100,26 @@ components:
           maxLength: 50
       required:
       - id
+      - name
+      - roles
+    DirectorRequest:
+      type: object
+      description: Serializer for company directors
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        roles:
+          type: string
+          minLength: 1
+          description: Comma-separated list of roles
+          maxLength: 255
+        director_id:
+          type: string
+          nullable: true
+          maxLength: 50
+      required:
       - name
       - roles
     Document:
@@ -5775,6 +7201,33 @@ components:
       - id
       - updated_at
       - version
+    DocumentRequest:
+      type: object
+      description: Serializer for documents
+      properties:
+        title:
+          type: string
+          nullable: true
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        document_type:
+          $ref: '#/components/schemas/DocumentTypeEnum'
+        file:
+          type: string
+          format: binary
+        previous_version:
+          type: integer
+          nullable: true
+        application:
+          type: integer
+          nullable: true
+        borrower:
+          type: integer
+          nullable: true
+      required:
+      - file
     DocumentTypeEnum:
       enum:
       - application_form
@@ -5917,6 +7370,37 @@ components:
       - invoice_url
       - status
       - updated_at
+    FeeRequest:
+      type: object
+      description: Serializer for fees
+      properties:
+        fee_type:
+          $ref: '#/components/schemas/FeeTypeEnum'
+        description:
+          type: string
+          nullable: true
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        paid_date:
+          type: string
+          format: date
+          nullable: true
+        invoice:
+          type: string
+          format: binary
+          nullable: true
+        application:
+          type: integer
+      required:
+      - amount
+      - application
+      - fee_type
     FeeTypeEnum:
       enum:
       - application
@@ -5934,6 +7418,30 @@ components:
         * `settlement` - Settlement Fee
         * `other` - Other Fee
     FinancialInfo:
+      type: object
+      properties:
+        annual_revenue:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        net_profit:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        assets:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        liabilities:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+      required:
+      - annual_revenue
+      - assets
+      - liabilities
+      - net_profit
+    FinancialInfoRequest:
       type: object
       properties:
         annual_revenue:
@@ -6011,12 +7519,77 @@ components:
       - monthly_account_fee
       - monthly_line_fee_rate
       - valuation_fee
+    FundingCalculationInputRequest:
+      type: object
+      description: Serializer for funding calculation input fields
+      properties:
+        establishment_fee_rate:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        capped_interest_months:
+          type: integer
+          minimum: 1
+          default: 9
+        monthly_line_fee_rate:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        brokerage_fee_rate:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        application_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        due_diligence_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        legal_fee_before_gst:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        valuation_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        monthly_account_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        working_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          default: '0.00'
+      required:
+      - application_fee
+      - brokerage_fee_rate
+      - due_diligence_fee
+      - establishment_fee_rate
+      - legal_fee_before_gst
+      - monthly_account_fee
+      - monthly_line_fee_rate
+      - valuation_fee
     GeneratePDF:
       type: object
       description: Serializer for PDF generation endpoint
       properties:
         template_name:
           type: string
+        output_format:
+          allOf:
+          - $ref: '#/components/schemas/OutputFormatEnum'
+          default: pdf
+    GeneratePDFRequest:
+      type: object
+      description: Serializer for PDF generation endpoint
+      properties:
+        template_name:
+          type: string
+          minLength: 1
         output_format:
           allOf:
           - $ref: '#/components/schemas/OutputFormatEnum'
@@ -6129,12 +7702,16 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/GuarantorAsset'
+          readOnly: true
         liabilities:
           type: array
           items:
             $ref: '#/components/schemas/ApplicationLiability'
+          readOnly: true
       required:
+      - assets
       - id
+      - liabilities
     GuarantorAsset:
       type: object
       description: Serializer for guarantor assets
@@ -6174,6 +7751,41 @@ components:
       required:
       - asset_type
       - id
+    GuarantorAssetRequest:
+      type: object
+      description: Serializer for guarantor assets
+      properties:
+        asset_type:
+          $ref: '#/components/schemas/AssetTypeEnum'
+        description:
+          type: string
+          nullable: true
+        value:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          nullable: true
+        amount_owing:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          nullable: true
+        address:
+          type: string
+          nullable: true
+        bg_type:
+          nullable: true
+          description: |-
+            Indicates if this asset belongs to BG1 or BG2 (only for guarantor assets)
+
+            * `BG1` - BG1
+            * `BG2` - BG2
+          oneOf:
+          - $ref: '#/components/schemas/BgTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+      required:
+      - asset_type
     GuarantorEmploymentTypeEnum:
       enum:
       - full_time
@@ -6186,6 +7798,107 @@ components:
         * `part_time` - Part Time
         * `casual` - Casual/Temp
         * `contract` - Contract
+    GuarantorRequest:
+      type: object
+      properties:
+        guarantor_type:
+          $ref: '#/components/schemas/GuarantorTypeEnum'
+        title:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/TitleEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        first_name:
+          type: string
+          nullable: true
+          maxLength: 100
+        last_name:
+          type: string
+          nullable: true
+          maxLength: 100
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+        drivers_licence_no:
+          type: string
+          nullable: true
+          maxLength: 50
+        home_phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        mobile:
+          type: string
+          nullable: true
+          maxLength: 20
+        email:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 254
+        address_unit:
+          type: string
+          nullable: true
+          maxLength: 20
+        address_street_no:
+          type: string
+          nullable: true
+          maxLength: 20
+        address_street_name:
+          type: string
+          nullable: true
+          maxLength: 100
+        address_suburb:
+          type: string
+          nullable: true
+          maxLength: 100
+        address_state:
+          type: string
+          nullable: true
+          maxLength: 50
+        address_postcode:
+          type: string
+          nullable: true
+          maxLength: 10
+        occupation:
+          type: string
+          nullable: true
+          maxLength: 100
+        employer_name:
+          type: string
+          nullable: true
+          maxLength: 255
+        employment_type:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/GuarantorEmploymentTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        annual_income:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          nullable: true
+        company_name:
+          type: string
+          nullable: true
+          maxLength: 255
+        company_abn:
+          type: string
+          nullable: true
+          maxLength: 20
+        company_acn:
+          type: string
+          nullable: true
+          maxLength: 20
+        borrower:
+          type: integer
+          nullable: true
+        application:
+          type: integer
+          nullable: true
     GuarantorTypeEnum:
       enum:
       - individual
@@ -6318,6 +8031,42 @@ components:
       - description
       - id
       - liability_type
+    LiabilityRequest:
+      type: object
+      description: Serializer for liabilities
+      properties:
+        liability_type:
+          $ref: '#/components/schemas/LiabilityTypeEnum'
+        description:
+          type: string
+          minLength: 1
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        lender:
+          type: string
+          nullable: true
+          maxLength: 100
+        monthly_payment:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+        to_be_refinanced:
+          type: boolean
+        bg_type:
+          allOf:
+          - $ref: '#/components/schemas/BgType856Enum'
+          description: |-
+            Indicates if this liability belongs to B/G1 or B/G2
+
+            * `bg1` - B/G1
+            * `bg2` - B/G2
+      required:
+      - amount
+      - description
+      - liability_type
     LiabilityTypeEnum:
       enum:
       - mortgage
@@ -6374,16 +8123,32 @@ components:
       - amount
       - description
       - id
-    Logout:
+    LoanRequirementRequest:
+      type: object
+      description: Serializer for loan requirements
+      properties:
+        description:
+          type: string
+          minLength: 1
+          maxLength: 255
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+      required:
+      - amount
+      - description
+    LogoutRequest:
       type: object
       description: Serializer for user logout endpoint
       properties:
         refresh:
           type: string
+          minLength: 1
           description: Refresh token to blacklist
       required:
       - refresh
-    ManualFundingCalculation:
+    ManualFundingCalculationRequest:
       type: object
       description: Serializer for manual funding calculation with application parameters
       properties:
@@ -6558,6 +8323,42 @@ components:
       - id
       - note
       - updated_at
+    NoteCommentRequest:
+      type: object
+      description: Serializer for note comments
+      properties:
+        note:
+          type: integer
+        content:
+          type: string
+          minLength: 1
+      required:
+      - content
+      - note
+    NoteRequest:
+      type: object
+      description: Serializer for notes
+      properties:
+        title:
+          type: string
+          nullable: true
+          maxLength: 255
+        content:
+          type: string
+          nullable: true
+        remind_date:
+          type: string
+          format: date-time
+          nullable: true
+        application:
+          type: integer
+          nullable: true
+        borrower:
+          type: integer
+          nullable: true
+        assigned_to:
+          type: integer
+          nullable: true
     Notification:
       type: object
       description: Serializer for Notification model
@@ -6574,6 +8375,8 @@ components:
           $ref: '#/components/schemas/NotificationTypeEnum'
         related_object_id:
           type: integer
+          maximum: 2147483647
+          minimum: -2147483648
           nullable: true
         related_object_type:
           type: string
@@ -6666,6 +8469,77 @@ components:
           type: boolean
       required:
       - id
+    NotificationPreferenceRequest:
+      type: object
+      description: Serializer for NotificationPreference model
+      properties:
+        application_status_in_app:
+          type: boolean
+        repayment_upcoming_in_app:
+          type: boolean
+        repayment_overdue_in_app:
+          type: boolean
+        note_reminder_in_app:
+          type: boolean
+        document_uploaded_in_app:
+          type: boolean
+        signature_required_in_app:
+          type: boolean
+        system_in_app:
+          type: boolean
+        application_status_email:
+          type: boolean
+        repayment_upcoming_email:
+          type: boolean
+        repayment_overdue_email:
+          type: boolean
+        note_reminder_email:
+          type: boolean
+        document_uploaded_email:
+          type: boolean
+        signature_required_email:
+          type: boolean
+        system_email:
+          type: boolean
+        daily_digest:
+          type: boolean
+        weekly_digest:
+          type: boolean
+    NotificationRequest:
+      type: object
+      description: Serializer for Notification model
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+        message:
+          type: string
+          minLength: 1
+        notification_type:
+          $ref: '#/components/schemas/NotificationTypeEnum'
+        related_object_id:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        related_object_type:
+          type: string
+          nullable: true
+          maxLength: 50
+        is_read:
+          type: boolean
+        read_at:
+          type: string
+          format: date-time
+          nullable: true
+        user:
+          type: integer
+      required:
+      - message
+      - notification_type
+      - title
+      - user
     NotificationTypeEnum:
       enum:
       - application_status
@@ -6983,6 +8857,26 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Product'
+    PaginatedReminderList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reminder'
     PaginatedRepaymentList:
       type: object
       properties:
@@ -7023,67 +8917,43 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/User'
-    PasswordResetConfirm:
+    PasswordResetConfirmRequest:
       type: object
       description: Serializer for password reset confirmation
       properties:
         uid:
           type: string
+          minLength: 1
         token:
           type: string
+          minLength: 1
         new_password:
           type: string
+          minLength: 1
       required:
       - new_password
       - token
       - uid
-    PasswordResetRequest:
+    PasswordResetRequestRequest:
       type: object
       description: Serializer for password reset request
       properties:
         email:
           type: string
           format: email
+          minLength: 1
       required:
       - email
-    PatchedApplicationList:
+    PatchedApplicationListRequest:
       type: object
       description: Serializer for listing applications with summary information
       properties:
-        id:
-          type: integer
-          readOnly: true
         reference_number:
           type: string
+          minLength: 1
           maxLength: 20
-        borrower_name:
-          type: string
-          description: Get the primary borrower name(s)
-          readOnly: true
         stage:
           $ref: '#/components/schemas/StageEnum'
-        stage_display:
-          type: string
-          readOnly: true
-        bdm_name:
-          type: string
-          description: Get the BDM name
-          readOnly: true
-        guarantor_name:
-          type: string
-          description: Get the guarantor name(s)
-          readOnly: true
-        purpose:
-          type: string
-          readOnly: true
-        product_name:
-          type: string
-          description: Get the product name
-          readOnly: true
-        security_address:
-          type: string
-          description: Get the security property address
-          readOnly: true
         loan_amount:
           type: string
           format: decimal
@@ -7093,37 +8963,19 @@ components:
           type: string
           format: date
           nullable: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
         application_type:
           nullable: true
           oneOf:
           - $ref: '#/components/schemas/ApplicationTypeEnum'
           - $ref: '#/components/schemas/BlankEnum'
           - $ref: '#/components/schemas/NullEnum'
-        borrower_count:
-          type: integer
-          readOnly: true
-        solvency_issues:
-          type: object
-          additionalProperties: {}
-          description: Get solvency issues summary
-          readOnly: true
-    PatchedBDM:
+    PatchedBDMRequest:
       type: object
       description: Serializer for BDM information
       properties:
-        id:
-          type: integer
-          readOnly: true
         name:
           type: string
+          minLength: 1
           maxLength: 100
         email:
           type: string
@@ -7134,37 +8986,30 @@ components:
           type: string
           nullable: true
           maxLength: 20
-        branch:
-          allOf:
-          - $ref: '#/components/schemas/Branch'
-          readOnly: true
         branch_id:
           type: integer
           writeOnly: true
         branch_name:
           type: string
           writeOnly: true
+          minLength: 1
         address:
           type: string
           writeOnly: true
+          minLength: 1
         branch_phone:
           type: string
           writeOnly: true
+          minLength: 1
         branch_email:
           type: string
           format: email
           writeOnly: true
-    PatchedBorrowerDetail:
+          minLength: 1
+    PatchedBorrowerDetailRequest:
       type: object
       description: Serializer for detailed borrower information
       properties:
-        id:
-          type: integer
-          readOnly: true
-        created_by:
-          allOf:
-          - $ref: '#/components/schemas/User'
-          readOnly: true
         first_name:
           type: string
           nullable: true
@@ -7228,6 +9073,8 @@ components:
           maxLength: 100
         employment_duration:
           type: integer
+          maximum: 2147483647
+          minimum: 0
           nullable: true
           description: Duration in months
         annual_income:
@@ -7336,28 +9183,13 @@ components:
         company_address:
           type: string
           nullable: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
         user:
           type: integer
           nullable: true
-    PatchedBorrowerGuarantor:
+    PatchedBorrowerGuarantorRequest:
       type: object
       description: Serializer for guarantor information
       properties:
-        id:
-          type: integer
-          readOnly: true
-        created_by:
-          allOf:
-          - $ref: '#/components/schemas/User'
-          readOnly: true
         guarantor_type:
           $ref: '#/components/schemas/GuarantorTypeEnum'
         title:
@@ -7453,29 +9285,19 @@ components:
           type: string
           nullable: true
           maxLength: 20
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
         borrower:
           type: integer
           nullable: true
         application:
           type: integer
           nullable: true
-    PatchedBranch:
+    PatchedBranchRequest:
       type: object
       description: Serializer for branch information
       properties:
-        id:
-          type: integer
-          readOnly: true
         name:
           type: string
+          minLength: 1
           maxLength: 100
         address:
           type: string
@@ -7489,28 +9311,13 @@ components:
           format: email
           nullable: true
           maxLength: 254
-    PatchedBrokerDetail:
+    PatchedBrokerDetailRequest:
       type: object
       description: Serializer for detailed broker information
       properties:
-        id:
-          type: integer
-          readOnly: true
-        branch:
-          allOf:
-          - $ref: '#/components/schemas/Branch'
-          readOnly: true
-        bdms:
-          type: array
-          items:
-            $ref: '#/components/schemas/BDM'
-          readOnly: true
-        created_by:
-          allOf:
-          - $ref: '#/components/schemas/User'
-          readOnly: true
         name:
           type: string
+          minLength: 1
           maxLength: 100
         company:
           type: string
@@ -7544,24 +9351,13 @@ components:
           type: string
           nullable: true
           maxLength: 10
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
         user:
           type: integer
           nullable: true
-    PatchedCompanyAsset:
+    PatchedCompanyAssetRequest:
       type: object
       description: Serializer for company assets
       properties:
-        id:
-          type: integer
-          readOnly: true
         asset_type:
           $ref: '#/components/schemas/AssetTypeEnum'
         description:
@@ -7582,22 +9378,10 @@ components:
         address:
           type: string
           nullable: true
-    PatchedDocument:
+    PatchedDocumentRequest:
       type: object
       description: Serializer for documents
       properties:
-        id:
-          type: integer
-          readOnly: true
-        document_type_display:
-          type: string
-          readOnly: true
-        created_by_name:
-          type: string
-          readOnly: true
-        file_url:
-          type: string
-          readOnly: true
         title:
           type: string
           nullable: true
@@ -7609,32 +9393,7 @@ components:
           $ref: '#/components/schemas/DocumentTypeEnum'
         file:
           type: string
-          format: uri
-        file_name:
-          type: string
-          readOnly: true
-          nullable: true
-        file_size:
-          type: integer
-          readOnly: true
-          nullable: true
-          description: File size in bytes
-        file_type:
-          type: string
-          readOnly: true
-          nullable: true
-          description: MIME type
-        version:
-          type: integer
-          readOnly: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
+          format: binary
         previous_version:
           type: integer
           nullable: true
@@ -7644,29 +9403,10 @@ components:
         borrower:
           type: integer
           nullable: true
-        created_by:
-          type: integer
-          readOnly: true
-          nullable: true
-    PatchedFee:
+    PatchedFeeRequest:
       type: object
       description: Serializer for fees
       properties:
-        id:
-          type: integer
-          readOnly: true
-        fee_type_display:
-          type: string
-          readOnly: true
-        created_by_name:
-          type: string
-          readOnly: true
-        status:
-          type: string
-          readOnly: true
-        invoice_url:
-          type: string
-          readOnly: true
         fee_type:
           $ref: '#/components/schemas/FeeTypeEnum'
         description:
@@ -7686,29 +9426,14 @@ components:
           nullable: true
         invoice:
           type: string
-          format: uri
+          format: binary
           nullable: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
         application:
           type: integer
-        created_by:
-          type: integer
-          readOnly: true
-          nullable: true
-    PatchedGuarantorAsset:
+    PatchedGuarantorAssetRequest:
       type: object
       description: Serializer for guarantor assets
       properties:
-        id:
-          type: integer
-          readOnly: true
         asset_type:
           $ref: '#/components/schemas/AssetTypeEnum'
         description:
@@ -7738,24 +9463,19 @@ components:
           - $ref: '#/components/schemas/BgTypeEnum'
           - $ref: '#/components/schemas/BlankEnum'
           - $ref: '#/components/schemas/NullEnum'
-    PatchedNote:
+    PatchedNoteCommentRequest:
+      type: object
+      description: Serializer for note comments
+      properties:
+        note:
+          type: integer
+        content:
+          type: string
+          minLength: 1
+    PatchedNoteRequest:
       type: object
       description: Serializer for notes
       properties:
-        id:
-          type: integer
-          readOnly: true
-        created_by_name:
-          type: string
-          readOnly: true
-        assigned_to_name:
-          type: string
-          readOnly: true
-        comments:
-          type: array
-          items:
-            $ref: '#/components/schemas/NoteComment'
-          readOnly: true
         title:
           type: string
           nullable: true
@@ -7767,14 +9487,6 @@ components:
           type: string
           format: date-time
           nullable: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
         application:
           type: integer
           nullable: true
@@ -7784,45 +9496,13 @@ components:
         assigned_to:
           type: integer
           nullable: true
-        created_by:
-          type: integer
-          readOnly: true
-          nullable: true
-    PatchedNoteComment:
-      type: object
-      description: Serializer for note comments
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        note:
-          type: integer
-        content:
-          type: string
-        created_by:
-          type: integer
-          readOnly: true
-          nullable: true
-        created_by_name:
-          type: string
-          readOnly: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
-    PatchedProduct:
+    PatchedProductRequest:
       type: object
       description: Serializer for the Product model
       properties:
-        id:
-          type: integer
-          readOnly: true
         name:
           type: string
+          minLength: 1
           maxLength: 255
         applications:
           type: array
@@ -7836,30 +9516,43 @@ components:
           type: array
           items:
             type: integer
-        created_at:
+    PatchedReminderRequest:
+      type: object
+      description: Serializer for reminders
+      properties:
+        recipient_type:
+          $ref: '#/components/schemas/RecipientTypeEnum'
+        recipient_email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 254
+        send_datetime:
           type: string
           format: date-time
-          readOnly: true
-        updated_at:
+        email_body:
           type: string
-          format: date-time
-          readOnly: true
-    PatchedRepayment:
+          minLength: 1
+        subject:
+          type: string
+          minLength: 1
+          maxLength: 255
+        send_as_user:
+          type: integer
+          nullable: true
+        reply_to_user:
+          type: integer
+          nullable: true
+        related_application:
+          type: integer
+          nullable: true
+        related_borrower:
+          type: integer
+          nullable: true
+    PatchedRepaymentRequest:
       type: object
       description: Serializer for repayments
       properties:
-        id:
-          type: integer
-          readOnly: true
-        created_by_name:
-          type: string
-          readOnly: true
-        status:
-          type: string
-          readOnly: true
-        invoice_url:
-          type: string
-          readOnly: true
         amount:
           type: string
           format: decimal
@@ -7874,44 +9567,18 @@ components:
           nullable: true
         invoice:
           type: string
-          format: uri
+          format: binary
           nullable: true
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
-        reminder_sent:
-          type: boolean
-          readOnly: true
-        overdue_3_day_sent:
-          type: boolean
-          readOnly: true
-        overdue_7_day_sent:
-          type: boolean
-          readOnly: true
-        overdue_10_day_sent:
-          type: boolean
-          readOnly: true
         application:
           type: integer
-        created_by:
-          type: integer
-          readOnly: true
-          nullable: true
-    PatchedUser:
+    PatchedUserRequest:
       type: object
       description: Serializer for User model
       properties:
-        id:
-          type: integer
-          readOnly: true
         email:
           type: string
           format: email
+          minLength: 1
           title: Email address
           maxLength: 254
         first_name:
@@ -7961,6 +9628,28 @@ components:
       - id
       - name
       - updated_at
+    ProductRequest:
+      type: object
+      description: Serializer for the Product model
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        applications:
+          type: array
+          items:
+            type: integer
+        documents:
+          type: array
+          items:
+            type: integer
+        borrowers:
+          type: array
+          items:
+            type: integer
+      required:
+      - name
     PropertyTypeEnum:
       enum:
       - residential
@@ -7979,6 +9668,138 @@ components:
         * `land` - Land
         * `rural` - Rural
         * `other` - Other
+    RecipientTypeEnum:
+      enum:
+      - client
+      - bdm
+      - broker
+      - custom
+      type: string
+      description: |-
+        * `client` - Client
+        * `bdm` - Business Development Manager
+        * `broker` - Broker
+        * `custom` - Custom Email
+    Reminder:
+      type: object
+      description: Serializer for reminders
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        recipient_type:
+          $ref: '#/components/schemas/RecipientTypeEnum'
+        recipient_email:
+          type: string
+          format: email
+          maxLength: 254
+        send_datetime:
+          type: string
+          format: date-time
+        email_body:
+          type: string
+        subject:
+          type: string
+          maxLength: 255
+        created_by:
+          type: integer
+          readOnly: true
+        created_by_name:
+          type: string
+          readOnly: true
+        send_as_user:
+          type: integer
+          nullable: true
+        send_as_user_email:
+          type: string
+          readOnly: true
+        reply_to_user:
+          type: integer
+          nullable: true
+        reply_to_user_email:
+          type: string
+          readOnly: true
+        is_sent:
+          type: boolean
+          readOnly: true
+        sent_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        error_message:
+          type: string
+          readOnly: true
+          nullable: true
+        related_application:
+          type: integer
+          nullable: true
+        related_borrower:
+          type: integer
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - created_by
+      - created_by_name
+      - email_body
+      - error_message
+      - id
+      - is_sent
+      - recipient_email
+      - recipient_type
+      - reply_to_user_email
+      - send_as_user_email
+      - send_datetime
+      - sent_at
+      - subject
+      - updated_at
+    ReminderRequest:
+      type: object
+      description: Serializer for reminders
+      properties:
+        recipient_type:
+          $ref: '#/components/schemas/RecipientTypeEnum'
+        recipient_email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 254
+        send_datetime:
+          type: string
+          format: date-time
+        email_body:
+          type: string
+          minLength: 1
+        subject:
+          type: string
+          minLength: 1
+          maxLength: 255
+        send_as_user:
+          type: integer
+          nullable: true
+        reply_to_user:
+          type: integer
+          nullable: true
+        related_application:
+          type: integer
+          nullable: true
+        related_borrower:
+          type: integer
+          nullable: true
+      required:
+      - email_body
+      - recipient_email
+      - recipient_type
+      - send_datetime
+      - subject
     Repayment:
       type: object
       description: Serializer for repayments
@@ -8110,6 +9931,31 @@ components:
         * `monthly` - Monthly
         * `quarterly` - Quarterly
         * `annually` - Annually
+    RepaymentRequest:
+      type: object
+      description: Serializer for repayments
+      properties:
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        paid_date:
+          type: string
+          format: date
+          nullable: true
+        invoice:
+          type: string
+          format: binary
+          nullable: true
+        application:
+          type: integer
+      required:
+      - amount
+      - application
     ResidencyStatusEnum:
       enum:
       - citizen
@@ -8190,12 +10036,18 @@ components:
           - $ref: '#/components/schemas/NullEnum'
         bedrooms:
           type: integer
+          maximum: 2147483647
+          minimum: 0
           nullable: true
         bathrooms:
           type: integer
+          maximum: 2147483647
+          minimum: 0
           nullable: true
         car_spaces:
           type: integer
+          maximum: 2147483647
+          minimum: 0
           nullable: true
         building_size:
           type: string
@@ -8235,6 +10087,108 @@ components:
           nullable: true
       required:
       - id
+    SecurityPropertyRequest:
+      type: object
+      description: Serializer for security properties
+      properties:
+        address_unit:
+          type: string
+          nullable: true
+          maxLength: 20
+        address_street_no:
+          type: string
+          nullable: true
+          maxLength: 20
+        address_street_name:
+          type: string
+          nullable: true
+          maxLength: 100
+        address_suburb:
+          type: string
+          nullable: true
+          maxLength: 100
+        address_state:
+          type: string
+          nullable: true
+          maxLength: 50
+        address_postcode:
+          type: string
+          nullable: true
+          maxLength: 10
+        current_mortgagee:
+          type: string
+          nullable: true
+          maxLength: 255
+        first_mortgage:
+          type: string
+          nullable: true
+          maxLength: 255
+        second_mortgage:
+          type: string
+          nullable: true
+          maxLength: 255
+        current_debt_position:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          nullable: true
+        property_type:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/PropertyTypeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        bedrooms:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+        bathrooms:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+        car_spaces:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+        building_size:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: Size in square meters
+        land_size:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: Size in square meters
+        is_single_story:
+          type: boolean
+        has_garage:
+          type: boolean
+        has_carport:
+          type: boolean
+        has_off_street_parking:
+          type: boolean
+        occupancy:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/OccupancyEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        estimated_value:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          nullable: true
+        purchase_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          nullable: true
     StageEnum:
       enum:
       - inquiry
@@ -8299,11 +10253,16 @@ components:
         access:
           type: string
           readOnly: true
+      required:
+      - access
+    TokenRefreshRequest:
+      type: object
+      properties:
         refresh:
           type: string
           writeOnly: true
+          minLength: 1
       required:
-      - access
       - refresh
     TransactionTypeEnum:
       enum:
@@ -8358,9 +10317,6 @@ components:
           format: email
           title: Email address
           maxLength: 254
-        password:
-          type: string
-          writeOnly: true
         first_name:
           type: string
           maxLength: 150
@@ -8378,21 +10334,107 @@ components:
       required:
       - email
       - id
+    UserCreateRequest:
+      type: object
+      description: Serializer for creating users
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+          title: Email address
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        username:
+          type: string
+          minLength: 1
+        branch_id:
+          type: integer
+          writeOnly: true
+      required:
+      - email
       - password
-    UserLogin:
+    UserLoginRequest:
       type: object
       description: Serializer for user login
       properties:
         email:
           type: string
           format: email
+          minLength: 1
         password:
           type: string
+          minLength: 1
       required:
       - email
       - password
+    UserRequest:
+      type: object
+      description: Serializer for User model
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+          title: Email address
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        phone:
+          type: string
+          nullable: true
+          maxLength: 20
+      required:
+      - email
   securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
     jwtAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
+servers:
+- url: /
+  description: Default public server
+tags:
+- name: authentication
+  description: Authentication operations
+- name: applications
+  description: Loan application operations
+- name: borrowers
+  description: Borrower management operations
+- name: brokers
+  description: Broker management operations
+- name: documents
+  description: Document management operations
+- name: products
+  description: Product management operations
+- name: users
+  description: User management operations
+- name: reports
+  description: Reporting operations
+- name: reminders
+  description: Reminder operations

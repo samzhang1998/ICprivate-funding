@@ -12,6 +12,8 @@ import product from '@/assets/icons/nav_product.png'
 import document from '@/assets/icons/nav_document.png'
 import setting from '@/assets/icons/nav_setting.png'
 import notification from '@/assets/icons/nav_notification.png'
+// TODO: Create a proper nav_inbox.png icon - temporarily using notification icon
+import inbox from '@/assets/icons/nav_notification.png'
 
 export const constantRoutes = [
   {
@@ -413,6 +415,29 @@ export const constantRoutes = [
         meta: {
           title: 'Notification',
           breadcrumb: [{ label: 'Notification', path: '/notification' }],
+        },
+      },
+    ],
+  },
+  //inbox
+  {
+    path: '/inbox',
+    component: Layout,
+    redirect: '/inbox/index',
+    meta: {
+      hidden: false,
+      title: 'Inbox',
+      icon: inbox,
+      i18nTitle: 'system.inbox',
+      isTop: false,
+    },
+    children: [
+      {
+        path: '/inbox/index',
+        component: () => import('@/view/inbox.vue'),
+        meta: {
+          title: 'Inbox',
+          breadcrumb: [{ label: 'Inbox', path: '/inbox' }],
         },
       },
     ],
