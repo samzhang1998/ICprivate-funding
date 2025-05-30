@@ -12,4 +12,5 @@ export const system = {
   product: "Product",
   setting: "Setting",
   notification: "Notification",
+  inbox: "Inbox",
 };
