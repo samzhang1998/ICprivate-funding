@@ -91,6 +91,7 @@
             <Fee
                 v-if="fee"
                 :id="applicationId"
+                :applicationId="applicationId"
                 @close="closeFee"
                 @minimize="minimize"
             ></Fee>
